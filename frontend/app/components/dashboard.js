@@ -4,12 +4,13 @@ import { Avatar } from "@nextui-org/react";
 import React from "react";
 import BarChart from "./barchart";
 import LineChart from "./linechart";
+import { FaCircle } from "react-icons/fa";
 
 const DashBoard = () => {
   return (
     <div className="flex">
       {/* Side Panel */}
-      <div className="w-[25%] h-screen bg-white">
+      <div className="w-[25%] h-screen bg-white sticky overflow-hidden">
         <div className="p-6 border-b-2">
           <Image src="/images/logo.svg" alt="logo" width={335} height={52} />
         </div>
@@ -67,8 +68,8 @@ const DashBoard = () => {
               />
             </div>
           </div>
-          <div className="mt-7 flex justify-between flex-wrap">
-            <div className="flex w-[18rem] h-[6.5rem] bg-white rounded-[14px] items-center px-4">
+          <div className="mt-7 flex justify-between text-black gap-4">
+            <div className="flex w-full h-[6.5rem] bg-white rounded-[14px] items-center px-4">
               <Image src="/images/open.svg" width={85} height={85} />
               <div className="px-4">
                 <h2 className="text-xl font-semibold leading-8">
@@ -77,14 +78,14 @@ const DashBoard = () => {
                 <p className="text-4xl font-semibold">15</p>
               </div>
             </div>
-            <div className="flex w-[18rem] h-[6.5rem] bg-white rounded-[14px] items-center px-4">
+            <div className="flex w-full h-[6.5rem] bg-white rounded-[14px] items-center px-4">
               <Image src="/images/inprogress.svg" width={85} height={85} />
               <div className="px-4">
                 <h2 className="text-xl font-semibold leading-8">In Progress</h2>
                 <p className="text-4xl font-semibold">8</p>
               </div>
             </div>
-            <div className="flex w-[18rem] h-[6.5rem] bg-white rounded-[14px] items-center px-4">
+            <div className="flex w-full h-[6.5rem] bg-white rounded-[14px] items-center px-4">
               <Image src="/images/closed.svg" width={85} height={85} />
               <div className="px-4">
                 <h2 className="text-xl font-semibold leading-8">Closed</h2>
@@ -92,18 +93,25 @@ const DashBoard = () => {
               </div>
             </div>
           </div>
-          <div className="bg-blue-200 flex mt-4 justify-between gap-4">
-            <div className="w-[27rem] h-[15rem] bg-white rounded-[14px] px-4 py-2">
+          <div className="bg-blue-200 flex mt-4 justify-between gap-6">
+            <div className="w-full h-auto bg-white rounded-[14px] px-4 py-2">
               <h3 className="text-lg font-semibold">Summary</h3>
               <BarChart />
             </div>
-            <div className="w-[27rem] h-[15rem] bg-white rounded-[14px] px-4 py-2">
-              <div>
-                <h3 className="text-lg font-semibold">Montly Report</h3>
+            <div className="w-full h-auto bg-white rounded-[14px] px-4 py-2">
+              <div className="flex  justify-between">
+                <h3 className="text-lg font-semibold">Monthly Report</h3>
+                <span className="flex items-center">
+                  <div class="w-[8px] h-[8px] bg-purple-600 rounded-full"></div>
+                  <p className="text-sm font-light italic ml-2">
+                    Number of Projects
+                  </p>
+                </span>
               </div>
               <LineChart />
             </div>
           </div>
+          <div>Hello</div>
         </div>
       </div>
     </div>

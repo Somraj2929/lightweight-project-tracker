@@ -44,7 +44,7 @@ export default function BarChart() {
               // barPercentage: 0.9,
               barThickness: 60,
               label: "Projects",
-              data: [34, 64, 23],
+              data: [34, 94, 23],
               backgroundColor: ["blue", "yellow", "green"],
               borderColor: ["blue", "yellow", "green"],
               borderWidth: 1,
