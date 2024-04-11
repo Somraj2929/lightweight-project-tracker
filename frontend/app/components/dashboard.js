@@ -4,13 +4,13 @@ import { Avatar } from "@nextui-org/react";
 import React from "react";
 import BarChart from "./barchart";
 import LineChart from "./linechart";
-import { FaCircle } from "react-icons/fa";
+import MyProjects from "./myprojects";
 
 const DashBoard = () => {
   return (
     <div className="flex">
       {/* Side Panel */}
-      <div className="w-[25%] h-screen bg-white sticky overflow-hidden">
+      <div className="w-[25%] h-screen bg-white sticky">
         <div className="p-6 border-b-2">
           <Image src="/images/logo.svg" alt="logo" width={335} height={52} />
         </div>
@@ -93,7 +93,7 @@ const DashBoard = () => {
               </div>
             </div>
           </div>
-          <div className="bg-blue-200 flex mt-4 justify-between gap-6">
+          <div className="flex mt-4 justify-between gap-6">
             <div className="w-full h-auto bg-white rounded-[14px] px-4 py-2">
               <h3 className="text-lg font-semibold">Summary</h3>
               <BarChart />
@@ -111,7 +111,9 @@ const DashBoard = () => {
               <LineChart />
             </div>
           </div>
-          <div>Hello</div>
+          <div className="pt-4">
+            <MyProjects />
+          </div>
         </div>
       </div>
     </div>
