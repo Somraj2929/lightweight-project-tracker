@@ -26,3 +26,43 @@ body {
     text-wrap: balance;
   }
 }
+
+.custom-heading {
+  text-transform: uppercase;
+  @supports (background-clip: text) or (-webkit-background-clip: text) {
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    background-image: url("/images/bgmask.jpg");
+    background-size: cover;
+    background-position: center;
+  }
+}
+
+.bg-custom {
+  background: #acb6e5; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #86fde8,
+    #acb6e5
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #86fde8,
+    #acb6e5
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.bg-sidepanel {
+  background: #83a4d4; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #b6fbff,
+    #83a4d4
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #b6fbff,
+    #83a4d4
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}

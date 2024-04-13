@@ -21,12 +21,14 @@ export default function LineChart() {
             {
               label: "Projects",
               data: [34, 64, 23, 45, 67, 24, 64],
-              backgroundColor: ["rgb(255, 99, 132, 0.2)"],
-              borderColor: ["rgb(255, 99, 132)"],
+              backgroundColor: ["rgba(147, 51, 234, 1)"],
+              borderColor: ["rgba(147, 51, 234, 1)"],
               borderWidth: 2,
               tension: 0.3,
             },
           ],
+          borderColor: "rgba(255, 99, 132, 1)", // Red line
+          backgroundColor: "rgba(255, 99, 132, 0.5)", // Semi-transparent red fill
         },
         options: {
           plugins: {

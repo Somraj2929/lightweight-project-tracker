@@ -9,55 +9,11 @@ import MyProjects from "./myprojects";
 const DashBoard = () => {
   return (
     <div className="flex">
-      {/* Side Panel */}
-      <div className="w-[25%] h-screen bg-white sticky">
-        <div className="p-6 border-b-2">
-          <Image src="/images/logo.svg" alt="logo" width={335} height={52} />
-        </div>
-        <div className="flex flex-col py-4 px-10 gap-6 item-center justify-center">
-          <button className="px-8 py-2 rounded-xl bg-blue-700 flex items-center gap-4">
-            <span>
-              <Image
-                src="/images/dashboardactive.svg"
-                alt="home"
-                width={25}
-                height={25}
-              />
-            </span>
-            <span className="text-white text-2xl font-medium">Dashboard</span>
-          </button>
-          <button className="px-8 py-2 rounded-xl bg-pink-700 flex items-center gap-4">
-            <span>
-              <Image
-                src="/images/projectactive.svg"
-                alt="projects"
-                width={25}
-                height={25}
-              />
-            </span>
-            <span className="text-white text-2xl font-medium">
-              All Projects
-            </span>
-          </button>
-          <button className="px-8 py-2 rounded-xl bg-red-700 flex items-center gap-4">
-            <span>
-              <Image
-                src="/images/chatactive.svg"
-                alt="Chat"
-                width={25}
-                height={25}
-              />
-            </span>
-            <span className="text-white text-2xl font-medium">Discussion</span>
-          </button>
-        </div>
-      </div>
-
       {/* Main Dashboard */}
-      <div className="bg-pink-200 w-[75%]">
+      <div className="bg-custom w-[75%] left-[25%] absolute">
         <div className="px-6 py-4">
           <div className="flex justify-between items-center">
-            <h1 className="text-[35px] font-semibold">Dashboard</h1>
+            <h1 className="text-[35px] font-bold custom-heading">Dashboard</h1>
             <div className="flex p-2 rounded-lg gap-2 justify-center items-center bg-slate-400">
               <h3 className="text-lg font-semibold">Somraj Bishnoi</h3>
               <Avatar
