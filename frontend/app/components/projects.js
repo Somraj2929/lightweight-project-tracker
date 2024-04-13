@@ -21,7 +21,7 @@ const AllProjects = () => {
               />
             </div>
           </div>
-          <div className="mt-7 bg-blue-300">
+          <div className="mt-7">
             <AllProjectsData />
           </div>
         </div>

@@ -119,7 +119,7 @@ export default function MyProjects() {
               className="uppercase font-bold"
               color={statusColorMap[project.status]}
               size="sm"
-              variant="shadow"
+              variant="flat"
             >
               {cellValue}
             </Chip>

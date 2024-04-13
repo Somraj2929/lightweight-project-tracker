@@ -21,18 +21,55 @@ import { PlusIcon } from "./tableicons/PlusIcon";
 import { VerticalDotsIcon } from "./tableicons/VerticalDotsIcon";
 import { SearchIcon } from "./tableicons/SearchIcon";
 import { ChevronDownIcon } from "./tableicons/ChevronDownIcon";
-import { columns, users, statusOptions } from "../../public/alldata";
 import { capitalize } from "./utils";
+import {
+  columns as allColumns,
+  projects as allProjects,
+  statusOptions,
+} from "../../public/allprojectdata";
 
 const statusColorMap = {
-  active: "success",
-  paused: "danger",
-  vacation: "warning",
+  open: "primary",
+  inprogress: "warning",
+  closed: "success",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "role", "status", "actions"];
+const INITIAL_VISIBLE_COLUMNS = [
+  "id",
+  "name",
+  "status",
+  "createdAt",
+  "assignedFrom",
+  "actions",
+];
 
-export default function AllProjectsData() {
+export default function SampleProjects() {
+  function formatDate(inputDate) {
+    const date = new Date(inputDate);
+
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    const monthAbbreviation = monthNames[date.getMonth()];
+
+    const day = date.getDate();
+    const year = date.getFullYear();
+
+    const formattedDate = `${monthAbbreviation} ${day}, ${year}`;
+
+    return formattedDate;
+  }
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
   const [visibleColumns, setVisibleColumns] = React.useState(
@@ -41,7 +78,7 @@ export default function AllProjectsData() {
   const [statusFilter, setStatusFilter] = React.useState("all");
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [sortDescriptor, setSortDescriptor] = React.useState({
-    column: "age",
+    column: "id",
     direction: "ascending",
   });
   const [page, setPage] = React.useState(1);
@@ -49,32 +86,32 @@ export default function AllProjectsData() {
   const hasSearchFilter = Boolean(filterValue);
 
   const headerColumns = React.useMemo(() => {
-    if (visibleColumns === "all") return columns;
+    if (visibleColumns === "all") return allColumns;
 
-    return columns.filter((column) =>
+    return allColumns.filter((column) =>
       Array.from(visibleColumns).includes(column.uid)
     );
   }, [visibleColumns]);
 
   const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...users];
+    let filteredProjects = [...allProjects];
 
     if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((user) =>
-        user.name.toLowerCase().includes(filterValue.toLowerCase())
+      filteredProjects = filteredProjects.filter((project) =>
+        project.name.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
     if (
       statusFilter !== "all" &&
       Array.from(statusFilter).length !== statusOptions.length
     ) {
-      filteredUsers = filteredUsers.filter((user) =>
-        Array.from(statusFilter).includes(user.status)
+      filteredProjects = filteredProjects.filter((project) =>
+        Array.from(statusFilter).includes(project.status)
       );
     }
 
-    return filteredUsers;
-  }, [users, filterValue, statusFilter]);
+    return filteredProjects;
+  }, [filterValue, statusFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -95,43 +132,58 @@ export default function AllProjectsData() {
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = React.useCallback((user, columnKey) => {
-    const cellValue = user[columnKey];
+  const renderCell = React.useCallback((project, columnKey) => {
+    const cellValue = project[columnKey];
 
     switch (columnKey) {
+      case "id":
+        return <div className="font-semibold">{cellValue}</div>;
+
       case "name":
-        return (
-          <User
-            avatarProps={{ radius: "lg", src: user.avatar }}
-            description={user.email}
-            name={cellValue}
-          >
-            {user.email}
-          </User>
-        );
-      case "role":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{cellValue}</p>
-            <p className="text-bold text-tiny capitalize text-default-400">
-              {user.team}
-            </p>
-          </div>
-        );
+        return <div className="text-slate-800 font-semibold ">{cellValue}</div>;
       case "status":
         return (
           <Chip
-            className="capitalize"
-            color={statusColorMap[user.status]}
+            className="uppercase font-bold"
+            color={statusColorMap[project.status]}
             size="sm"
             variant="flat"
           >
             {cellValue}
           </Chip>
         );
+
+      case "createdAt":
+        return <div className="font-semibold">{formatDate(cellValue)}</div>;
+
+      case "updatedAt":
+        return <div className="font-semibold">{formatDate(cellValue)}</div>;
+
+      case "assignedFrom":
+        return (
+          <User
+            avatarProps={{ radius: "full", src: project.fromAvatar }}
+            name={cellValue}
+          >
+            {project.assignedFrom}
+          </User>
+        );
+
+      case "assignedTo":
+        return (
+          <User
+            avatarProps={{ radius: "full", src: project.toAvatar }}
+            name={cellValue}
+          >
+            {project.assignedTo}
+          </User>
+        );
+
+      case "team":
+        return <div className="font-semibold">{cellValue}</div>;
       case "actions":
         return (
-          <div className="relative flex justify-end items-center gap-2">
+          <div className="relative flex justify-center items-center gap-2">
             <Dropdown>
               <DropdownTrigger>
                 <Button isIconOnly size="sm" variant="light">
@@ -141,7 +193,7 @@ export default function AllProjectsData() {
               <DropdownMenu>
                 <DropdownItem>View</DropdownItem>
                 <DropdownItem>Edit</DropdownItem>
-                <DropdownItem>Delete</DropdownItem>
+                <DropdownItem className="hidden">Delete</DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </div>
@@ -201,6 +253,7 @@ export default function AllProjectsData() {
                 <Button
                   endContent={<ChevronDownIcon className="text-small" />}
                   variant="flat"
+                  className="font-medium bg-blue-100"
                 >
                   Status
                 </Button>
@@ -225,6 +278,7 @@ export default function AllProjectsData() {
                 <Button
                   endContent={<ChevronDownIcon className="text-small" />}
                   variant="flat"
+                  className="font-medium bg-blue-100"
                 >
                   Columns
                 </Button>
@@ -237,7 +291,7 @@ export default function AllProjectsData() {
                 selectionMode="multiple"
                 onSelectionChange={setVisibleColumns}
               >
-                {columns.map((column) => (
+                {allColumns.map((column) => (
                   <DropdownItem key={column.uid} className="capitalize">
                     {capitalize(column.name)}
                   </DropdownItem>
@@ -251,7 +305,7 @@ export default function AllProjectsData() {
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            Total {users.length} users
+            Total {allProjects.length} projects
           </span>
           <label className="flex items-center text-default-400 text-small">
             Rows per page:
@@ -262,6 +316,7 @@ export default function AllProjectsData() {
               <option value="5">5</option>
               <option value="10">10</option>
               <option value="15">15</option>
+              <option value="20">20</option>
             </select>
           </label>
         </div>
@@ -272,41 +327,38 @@ export default function AllProjectsData() {
     statusFilter,
     visibleColumns,
     onRowsPerPageChange,
-    users.length,
+    allProjects.length,
     onSearchChange,
     hasSearchFilter,
   ]);
 
   const bottomContent = React.useMemo(() => {
     return (
-      <div className="py-2 px-2 flex justify-between items-center">
-        <span className="w-[30%] text-small text-default-400">
-          {selectedKeys === "all"
-            ? "All items selected"
-            : `${selectedKeys.size} of ${filteredItems.length} selected`}
-        </span>
-        <Pagination
-          isCompact
-          showControls
-          showShadow
-          color="primary"
-          page={page}
-          total={pages}
-          onChange={setPage}
-        />
-        <div className="hidden sm:flex w-[30%] justify-end gap-2">
+      <div className="py-2 px-2 flex justify-center items-center">
+        <div className="hidden sm:flex w-full justify-between">
           <Button
             isDisabled={pages === 1}
             size="sm"
-            variant="flat"
+            variant="solid"
+            color="primary"
             onPress={onPreviousPage}
           >
             Previous
           </Button>
+          <Pagination
+            isCompact
+            showControls
+            showShadow
+            color="primary"
+            page={page}
+            total={pages}
+            onChange={setPage}
+          />
           <Button
             isDisabled={pages === 1}
             size="sm"
-            variant="flat"
+            variant="solid"
+            color="primary"
             onPress={onNextPage}
           >
             Next
@@ -318,15 +370,16 @@ export default function AllProjectsData() {
 
   return (
     <Table
-      aria-label="Example table with custom cells, pagination and sorting"
+      aria-label="All projects table"
       isHeaderSticky
       bottomContent={bottomContent}
       bottomContentPlacement="outside"
       classNames={{
-        wrapper: "max-h-[382px]",
+        wrapper: "max-h-[auto]", //382px 5 rows
       }}
       selectedKeys={selectedKeys}
-      selectionMode="multiple"
+      selectionMode="single"
+      selectionBehavior="toggle"
       sortDescriptor={sortDescriptor}
       topContent={topContent}
       topContentPlacement="outside"
@@ -344,7 +397,7 @@ export default function AllProjectsData() {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent={"No users found"} items={sortedItems}>
+      <TableBody emptyContent={"No project found"} items={sortedItems}>
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (
