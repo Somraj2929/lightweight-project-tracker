@@ -16,9 +16,16 @@ import {
   Chip,
   User,
   Pagination,
+  Tooltip,
 } from "@nextui-org/react";
 import { PlusIcon } from "./tableicons/PlusIcon";
-import { VerticalDotsIcon } from "./tableicons/VerticalDotsIcon";
+// import { FaEye } from "react-icons/fa";
+// import { FaEdit } from "react-icons/fa";
+// import { FaTrash } from "react-icons/fa";
+// import { VerticalDotsIcon } from "./tableicons/VerticalDotsIcon";
+import { EyeIcon } from "./tableicons/EyeIcon";
+import { EditIcon } from "./tableicons/EditIcon";
+import { DeleteIcon } from "./tableicons/DeleteIcon";
 import { SearchIcon } from "./tableicons/SearchIcon";
 import { ChevronDownIcon } from "./tableicons/ChevronDownIcon";
 import { capitalize } from "./utils";
@@ -27,6 +34,7 @@ import {
   projects as allProjects,
   statusOptions,
 } from "../../public/allprojectdata";
+import Link from "next/link";
 
 const statusColorMap = {
   open: "primary",
@@ -183,19 +191,26 @@ export default function SampleProjects() {
         return <div className="font-semibold">{cellValue}</div>;
       case "actions":
         return (
-          <div className="relative flex justify-center items-center gap-2">
-            <Dropdown>
-              <DropdownTrigger>
-                <Button isIconOnly size="sm" variant="light">
-                  <VerticalDotsIcon className="text-default-300" />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu>
-                <DropdownItem>View</DropdownItem>
-                <DropdownItem>Edit</DropdownItem>
-                <DropdownItem className="hidden">Delete</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
+          <div className="relative flex items-center gap-2">
+            <Link href={`/projects/view/${project.id}`}>
+              <Tooltip color="primary" content="View Project">
+                <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                  <EyeIcon />
+                </span>
+              </Tooltip>
+            </Link>
+            <Link href={`/projects/edit/${project.id}`}>
+              <Tooltip color="primary" content="Edit Project">
+                <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                  <EditIcon />
+                </span>
+              </Tooltip>
+            </Link>
+            <Tooltip color="danger" content="Delete Project">
+              <span className="text-lg text-danger cursor-pointer active:opacity-50">
+                <DeleteIcon />
+              </span>
+            </Tooltip>
           </div>
         );
       default:
