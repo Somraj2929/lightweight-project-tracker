@@ -1,6 +1,5 @@
 import React from "react";
 import { Avatar } from "@nextui-org/react";
-import { projects } from "@/public/allprojectdata";
 
 const ViewProject = ({ project }) => {
   if (!project) {
