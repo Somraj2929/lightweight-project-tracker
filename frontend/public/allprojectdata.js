@@ -20,7 +20,7 @@ const statusOptions = [
 const projects = [
   {
     id: 1,
-    name: "Build a website using NextJS",
+    name: "Build website using NextJS",
     team: "Mamaearth",
     status: "open",
     createdAt: "2021-09-03",
