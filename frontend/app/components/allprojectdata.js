@@ -313,9 +313,11 @@ export default function SampleProjects() {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Button color="primary" endContent={<PlusIcon />}>
-              Add New
-            </Button>
+            <Link href="/projects/add">
+              <Button color="primary" endContent={<PlusIcon />}>
+                Add New
+              </Button>
+            </Link>
           </div>
         </div>
         <div className="flex justify-between items-center">

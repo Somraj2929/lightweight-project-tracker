@@ -1,7 +1,41 @@
 import React from "react";
-import { Avatar } from "@nextui-org/react";
+import Image from "next/image";
+import { Avatar, Chip, User } from "@nextui-org/react";
+
+const statusColorMap = {
+  open: "primary",
+  inprogress: "warning",
+  closed: "success",
+};
 
 const ViewProject = ({ project }) => {
+  function formatDate(inputDate) {
+    const date = new Date(inputDate);
+
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    const monthAbbreviation = monthNames[date.getMonth()];
+
+    const day = date.getDate();
+    const year = date.getFullYear();
+
+    const formattedDate = `${monthAbbreviation} ${day}, ${year}`;
+
+    return formattedDate;
+  }
+
   if (!project) {
     return (
       <div className="flex">
@@ -21,7 +55,9 @@ const ViewProject = ({ project }) => {
                 />
               </div>
             </div>
-            <div className="bg-blue-200 mt-7 pt-2">No project found --</div>
+            <div className=" mt-7 pt-2 text-xl font-bold h-screen">
+              No Project Found
+            </div>
           </div>
         </div>
       </div>
@@ -47,39 +83,113 @@ const ViewProject = ({ project }) => {
               />
             </div>
           </div>
-          <div className="bg-blue-200 mt-7 pt-2">
-            <div className="p-8 max-w-3xl mx-auto">
+          <div className="bg-slate-100 rounded-lg mt-7 pt-2">
+            <div className="p-8 max-w-3xl mx-auto text-lg">
+              <p className="text-gray-700 mb-2 italic text-sm">
+                Project ID: {project.id}
+              </p>
               <h1 className="text-4xl font-bold mb-4">{project.name}</h1>
-              <p className="text-gray-600 mb-4">ID: {project.id}</p>
-              <p className="text-gray-600 mb-4">
-                Description: {project.description}
-              </p>
-              <p className="text-gray-600 mb-4">Team: {project.team}</p>
-              <p className="text-gray-600 mb-4">Status: {project.status}</p>
-              <p className="text-gray-600 mb-4">
-                Created at: {project.createdAt}
-              </p>
-              <p className="text-gray-600 mb-4">
-                Updated at: {project.updatedAt}
-              </p>
-              <p className="text-gray-600 mb-4">
-                Assigned from: {project.assignedFrom}
-              </p>
-              <p className="text-gray-600 mb-4">
-                Assigned to: {project.assignedTo}
-              </p>
+              <p className="">Description:</p>
+              <div className="text-slate-900 border-1 bg-red-100 font-medium  p-2 rounded border-black mb-4">
+                {project.description}
+              </div>
+              <div className=" mb-4 flex">
+                Team:
+                <p className="capitalize font-semibold ml-2">{project.team}</p>
+              </div>
+              <div className=" mb-4">
+                Status:{" "}
+                <Chip
+                  className="uppercase font-bold p-4 ml-2"
+                  color={statusColorMap[project.status]}
+                  size="sm"
+                  fontWeight="bold"
+                  variant="shadow"
+                >
+                  {project.status}
+                </Chip>
+              </div>
+              <div className="flex mb-4">
+                Created at:
+                <p className="font-semibold ml-2">
+                  {formatDate(project.createdAt)}
+                </p>
+              </div>
+              <div className="flex mb-4">
+                Updated at:
+                <p className="font-semibold ml-2">
+                  {formatDate(project.updatedAt)}
+                </p>
+              </div>
+              <div className="flex items-center mb-4">
+                Assigned from:
+                <User
+                  className="ml-2 bg-green-200 p-1 font-semibold"
+                  avatarProps={{
+                    radius: "sm",
+                    src: project.fromAvatar,
+                    size: "sm",
+                  }}
+                  name={project.assignedFrom}
+                >
+                  {project.assignedFrom}
+                </User>
+              </div>
+              <div className="flex items-center mb-4">
+                Assigned to:
+                <User
+                  className="ml-2 bg-green-200 p-1 font-semibold"
+                  avatarProps={{
+                    radius: "sm",
+                    src: project.fromAvatar,
+                    size: "sm",
+                  }}
+                  name={project.assignedFrom}
+                >
+                  {project.assignedFrom}
+                </User>
+              </div>
 
               <h2 className="text-2xl font-bold mb-4">Comments</h2>
-              {/* <ul className="list-disc list-inside">
-        {comments.map((comment) => (
-          <li key={comment.id} className="mb-2">
-            <p className="text-gray-600">{comment.body}</p>
-            <p className="text-gray-500 text-sm">
-              {comment.author.username} - {comment.createdAt}
-            </p>
-          </li>
-        ))}
-      </ul> */}
+              <div class="border-1 border-black p-3 mx-auto rounded-lg">
+                <div class="space-y-4">
+                  <div class="flex items-center justify-start">
+                    <img
+                      src={project.toAvatar}
+                      alt="User 1 Avatar"
+                      class="w-8 h-8 rounded-full mr-2"
+                    />
+                    <div class="bg-blue-100 rounded-lg p-2">
+                      <p class="text-gray-800">Hi there!</p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center  justify-start">
+                    <img
+                      src={project.toAvatar}
+                      alt="User 1 Avatar"
+                      class="w-8 h-8 rounded-full mr-2"
+                    />
+                    <div class="bg-blue-100 rounded-lg p-2">
+                      <p class="text-gray-800">Hi there!</p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center  justify-start">
+                    <img
+                      src={project.toAvatar}
+                      alt="User 1 Avatar"
+                      class="w-8 h-8 rounded-full mr-2"
+                    />
+                    <div class="bg-blue-100 rounded-lg p-2">
+                      <p class="text-gray-800">
+                        I'm looking for some information on regarding the
+                        project update. Can you
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

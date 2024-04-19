@@ -29,6 +29,8 @@ const projects = [
     assignedTo: "Tony",
     toAvatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
     fromAvatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
+    description:
+      "A project to build a website using NextJS for Mamaearth team. Add a new feature to the website.",
   },
   {
     id: 2,
@@ -41,6 +43,7 @@ const projects = [
     assignedTo: "Zoey",
     toAvatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
     fromAvatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
+    description: "A project to build a mobile app for the Development team.",
   },
   {
     id: 3,
@@ -53,6 +56,7 @@ const projects = [
     assignedTo: "Jane",
     toAvatar: "https://i.pravatar.cc/150?u=a04258114e29026702d",
     fromAvatar: "https://i.pravatar.cc/150?u=a04258114e29026702d",
+    description: "A project to build a CRM system for the Development team.",
   },
   {
     id: 4,
@@ -65,6 +69,8 @@ const projects = [
     assignedTo: "William",
     toAvatar: "https://i.pravatar.cc/150?u=a048581f4e29026701d",
     fromAvatar: "https://i.pravatar.cc/150?u=a048581f4e29026701d",
+    description:
+      "A project to build a marketing campaign for the Marketing team.",
   },
   {
     id: 5,
@@ -77,6 +83,7 @@ const projects = [
     assignedTo: "Kristen",
     toAvatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
     fromAvatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
+    description: "A project to build a sales strategy for the Sales team.",
   },
   {
     id: 6,
@@ -89,6 +96,8 @@ const projects = [
     assignedTo: "Tony",
     toAvatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
     fromAvatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
+    description:
+      "A project to build a website using NextJS for the Management team.",
   },
   {
     id: 7,
@@ -101,6 +110,7 @@ const projects = [
     assignedTo: "Zoey",
     toAvatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
     fromAvatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
+    description: "A project to build a mobile app for the Design team.",
   },
   {
     id: 8,
@@ -113,6 +123,7 @@ const projects = [
     assignedTo: "Jane",
     toAvatar: "https://i.pravatar.cc/150?u=a04258114e29026702d",
     fromAvatar: "https://i.pravatar.cc/150?u=a04258114e29026702d",
+    description: "A project to build a CRM system for the HR team.",
   },
   {
     id: 9,
@@ -125,6 +136,8 @@ const projects = [
     assignedTo: "William",
     toAvatar: "https://i.pravatar.cc/150?u=a048581f4e29026701d",
     fromAvatar: "https://i.pravatar.cc/150?u=a048581f4e29026701d",
+    description:
+      "A project to build a marketing campaign for the Finance team.",
   },
   {
     id: 10,
@@ -137,6 +150,7 @@ const projects = [
     assignedTo: "Kristen",
     toAvatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
     fromAvatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
+    description: "A project to build a sales strategy for the Operations team.",
   },
 ];
 
