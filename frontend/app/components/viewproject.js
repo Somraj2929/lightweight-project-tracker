@@ -67,7 +67,7 @@ const ViewProject = ({ project }) => {
   return (
     <div className="flex">
       {/* Show Page */}
-      <div className=" w-[75%] left-[25%] absolute">
+      <div className="bg-custom w-[75%] left-[25%] absolute">
         <div className="px-6 py-4">
           <div className="flex justify-between items-center">
             <h1 className="text-[35px] font-bold custom-heading">

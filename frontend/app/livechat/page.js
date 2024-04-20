@@ -6,8 +6,7 @@ const LiveChat = () => {
   return (
     <>
       <SidePanel />
-      {/* <Discussion /> */}
-      <AddProject />
+      <Discussion />
     </>
   );
 };
