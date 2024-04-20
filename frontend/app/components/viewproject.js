@@ -67,7 +67,7 @@ const ViewProject = ({ project }) => {
   return (
     <div className="flex">
       {/* Show Page */}
-      <div className="bg-custom w-[75%] left-[25%] absolute">
+      <div className=" w-[75%] left-[25%] absolute">
         <div className="px-6 py-4">
           <div className="flex justify-between items-center">
             <h1 className="text-[35px] font-bold custom-heading">
@@ -83,14 +83,14 @@ const ViewProject = ({ project }) => {
               />
             </div>
           </div>
-          <div className="bg-slate-100 rounded-lg mt-7 pt-2">
-            <div className="p-8 max-w-3xl mx-auto text-lg">
+          <div className="bg-pink-100 rounded-lg mt-7 pt-2">
+            <div className="p-6 max-w-3xl mx-auto text-lg">
               <p className="text-gray-700 mb-2 italic text-sm">
                 Project ID: {project.id}
               </p>
               <h1 className="text-4xl font-bold mb-4">{project.name}</h1>
               <p className="">Description:</p>
-              <div className="text-slate-900 border-1 bg-red-100 font-medium  p-2 rounded border-black mb-4">
+              <div className="text-slate-900 border-1 bg-[#f4f4f5] font-medium  p-2 rounded border-black mb-4">
                 {project.description}
               </div>
               <div className=" mb-4 flex">
@@ -151,7 +151,7 @@ const ViewProject = ({ project }) => {
               </div>
 
               <h2 className="text-2xl font-bold mb-4">Comments</h2>
-              <div class="border-1 border-black p-3 mx-auto rounded-lg">
+              <div class="border-1 border-black p-3 mx-auto rounded-lg bg-[#f4f4f5]">
                 <div class="space-y-4">
                   <div class="flex items-center justify-start">
                     <img
@@ -184,7 +184,7 @@ const ViewProject = ({ project }) => {
                     <div class="bg-blue-100 rounded-lg p-2">
                       <p class="text-gray-800">
                         I'm looking for some information on regarding the
-                        project update. Can you
+                        project update. Can you provide the same
                       </p>
                     </div>
                   </div>

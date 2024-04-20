@@ -1,5 +1,5 @@
-"use client";
-import React, { useState } from "react";
+import React from "react";
+import Link from "next/link";
 import {
   Avatar,
   Input,
@@ -9,9 +9,8 @@ import {
   Textarea,
 } from "@nextui-org/react";
 import { users } from "@/public/users";
-import Link from "next/link";
 
-const AddProject = () => {
+const EditProject = ({ project }) => {
   return (
     <div className="flex">
       {/* Show Page */}
@@ -19,7 +18,7 @@ const AddProject = () => {
         <div className="px-6 py-4">
           <div className="flex justify-between items-center">
             <h1 className="text-[35px] font-bold custom-heading">
-              Add Project
+              Edit Project
             </h1>
             <div className="flex p-2 rounded-lg gap-2 justify-center items-center bg-slate-400">
               <h3 className="text-lg font-semibold">Somraj Bishnoi</h3>
@@ -43,6 +42,7 @@ const AddProject = () => {
                 variant="flat"
                 label="Project Name"
                 name="project_name"
+                defaultValue={project.name}
               />
               <div className="flex w-full justify-between">
                 <Select
@@ -51,6 +51,8 @@ const AddProject = () => {
                   placeholder="Select a Team"
                   className="max-w-sm"
                   name="team"
+                  //   defaultValue={[project.team]}
+                  defaultSelectedKeys={[project.team]}
                 >
                   <SelectSection title="All Teams">
                     <SelectItem key="mamaearth">Mamaearth</SelectItem>
@@ -65,9 +67,9 @@ const AddProject = () => {
                   label="Select Status"
                   placeholder="Select project status"
                   className="max-w-sm"
-                  selectedKeys={["open"]}
                   variant="flat"
                   name="status"
+                  defaultSelectedKeys={[project.status]}
                 >
                   <SelectSection>
                     <SelectItem key="open">Open</SelectItem>
@@ -82,6 +84,7 @@ const AddProject = () => {
                 variant="flat"
                 placeholder="Enter your description"
                 name="description"
+                defaultValue={project.description}
               />
               <div className="flex w-full justify-between">
                 <Select
@@ -141,6 +144,7 @@ const AddProject = () => {
                   name="assigned_to"
                   className="max-w-sm"
                   variant="flat"
+                  defaultValue={project.assignedTo}
                   classNames={{
                     label: "group-data-[filled=true]:-translate-y-5",
                     trigger: "min-h-16",
@@ -211,6 +215,23 @@ const AddProject = () => {
                 label="Add Additional Comments"
                 name="additional_comments"
               />
+              <div className="w-full ">
+                <h2 className="text-2xl font-bold mb-4">Comments</h2>
+                <div class="p-4 mx-auto rounded-lg bg-[#f4f4f5]">
+                  <div class="space-y-4">
+                    <div class="flex items-center justify-start">
+                      <img
+                        src={project.toAvatar}
+                        alt="User 1 Avatar"
+                        class="w-8 h-8 rounded-full mr-2"
+                      />
+                      <div class="bg-blue-100 rounded-lg p-1">
+                        <p class="text-gray-800">Hi there!</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div className="flex justify-evenly w-full gap-10">
                 <Link href="/projects">
                   <button className="bg-danger text-white px-4 py-2 rounded-lg">
@@ -231,5 +252,4 @@ const AddProject = () => {
     </div>
   );
 };
-
-export default AddProject;
+export default EditProject;

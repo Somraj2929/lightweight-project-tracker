@@ -21,7 +21,7 @@ const projects = [
   {
     id: 1,
     name: "Build website using NextJS",
-    team: "Mamaearth",
+    team: "mamaearth",
     status: "open",
     createdAt: "2021-09-03",
     updatedAt: "2021-09-03",

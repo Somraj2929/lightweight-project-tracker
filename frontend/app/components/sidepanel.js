@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const SidePanel = () => {
   return (
-    <div className="w-[25%] h-screen bg-white fixed">
+    <div className="w-[25%] h-screen bg-white fixed border-r-2">
       <div className="p-6 border-b-2">
         <Image src="/images/logo.svg" alt="logo" width={335} height={52} />
       </div>
