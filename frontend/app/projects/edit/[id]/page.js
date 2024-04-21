@@ -1,6 +1,6 @@
 "use client";
 import SidePanel from "@/app/components/sidepanel";
-import ViewProject from "@/app/components/viewproject";
+
 import { useParams } from "next/navigation";
 import { projects } from "@/public/allprojectdata";
 import EditProject from "@/app/components/editproject";
@@ -15,7 +15,6 @@ const View = () => {
   return (
     <>
       <SidePanel />
-      {/* <ViewProject project={viewproject} /> */}
       <EditProject project={editproject} />
     </>
   );
