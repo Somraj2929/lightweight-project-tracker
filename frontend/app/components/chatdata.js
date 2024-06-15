@@ -1,25 +1,26 @@
+"use client";
 import React from "react";
 import { Avatar } from "@nextui-org/react";
+import { getUserDetailsById } from "./helpers";
 
-const ChatData = () => {
-  const messages = [
-    { id: 1, text: "Hello!", timestamp: "12:00 PM" },
-    { id: 2, text: "Hi there!", timestamp: "12:05 PM" },
-    { id: 3, text: "How are you?", timestamp: "12:10 PM" },
-    { id: 4, text: "I'm good, thanks!", timestamp: "12:15 PM" },
-    { id: 5, text: "What about you?", timestamp: "12:20 PM" },
-    { id: 6, text: "I'm doing great!", timestamp: "12:25 PM" },
-    { id: 7, text: "That's awesome!", timestamp: "12:30 PM" },
-    { id: 8, text: "Yes, it is!", timestamp: "12:35 PM" },
-    { id: 9, text: "I'm glad to hear that!", timestamp: "12:40 PM" },
-    { id: 10, text: "Thanks!", timestamp: "12:45 PM" },
-    // Add more messages as needed
-  ];
+const ChatData = ({ messages }) => {
+  const formatTime = (timestamp) => {
+    const formattedTime = new Date(timestamp).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+    return formattedTime.toUpperCase();
+  };
+
+  const currentUserId = 3;
+
   return (
     <div className="bg-custom w-[75%] left-[25%] absolute h-screen">
       <div className="px-6 pt-4 ">
         <div className="flex justify-between items-center">
-          <h1 className="text-[35px] font-bold custom-heading">Add Project</h1>
+          <h1 className="text-[35px] font-bold custom-heading">Live Chat</h1>
+          <h3 className="font-semibold tracking-wider">XXXX-1234-ZZZZ</h3>
           <div className="flex p-2 rounded-lg gap-2 justify-center items-center bg-slate-400">
             <h3 className="text-lg font-semibold">Somraj Bishnoi</h3>
             <Avatar
@@ -33,27 +34,68 @@ const ChatData = () => {
         <div className="mt-7 sticky bg-pink-200 px-4 py-2 rounded-xl">
           <div className="flex flex-col h-[80vh]">
             <div className="overflow-y-auto" style={{ scrollbarWidth: "none" }}>
-              {messages.map((message) => (
-                <div key={message.id} className="flex flex-col mb-2">
-                  <div className="bg-gray-200 rounded p-2 max-w-[fit-content]">
-                    {message.text}
+              {messages.map((message) => {
+                const userDetails = getUserDetailsById(message.userId);
+                const isCurrentUser = message.userId === currentUserId;
+                return (
+                  <div
+                    key={message.id}
+                    className={`flex flex-col mb-2 ${
+                      isCurrentUser ? "items-end" : "items-start"
+                    }`}
+                  >
+                    <div
+                      className={`flex ${
+                        isCurrentUser
+                          ? "flex-row-reverse justify-end"
+                          : "justify-start"
+                      } gap-2.5`}
+                    >
+                      <img
+                        className="w-8 h-8 rounded-full"
+                        src={userDetails.avatar}
+                        alt={`${userDetails.name} avatar`}
+                      />
+                      <div
+                        className={`flex flex-col w-full max-w-[320px] leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-e-xl ${
+                          isCurrentUser
+                            ? "rounded-xl rounded-tr-none"
+                            : "rounded-es-xl"
+                        } dark:bg-gray-700`}
+                      >
+                        <div
+                          className={`flex items-center space-x-2 ${
+                            isCurrentUser ? "rtl:space-x-reverse" : ""
+                          }`}
+                        >
+                          <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                            {userDetails.name}
+                          </span>
+                          <span className="text-sm font-normal text-gray-500 dark:text-gray-400 ">
+                            {formatTime(message.timestamp)}
+                          </span>
+                        </div>
+                        <p className="text-sm font-normal py-2.5 text-gray-900 dark:text-white">
+                          {message.text}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <span className="text-gray-600 text-xs ml-1">
-                    {message.timestamp}
-                  </span>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
-            <div className="pt-4 flex items-center justify-between">
-              <input
-                type="text"
-                placeholder="Type your message..."
-                className="w-[90%] border rounded p-2"
-              />
-              <button className=" bg-blue-500 text-white py-2 px-4 rounded">
-                Send
-              </button>
+            <div className="fixed w-[70%] top-[87%] border-t border-gray-200">
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  placeholder="Type your message..."
+                  className="flex-1 border border-gray-300 rounded-lg p-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <button className="bg-blue-500 text-white font-semibold py-3 px-6 rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  Send
+                </button>
+              </div>
             </div>
           </div>
         </div>

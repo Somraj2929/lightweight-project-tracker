@@ -9,7 +9,7 @@ const SidePanel = () => {
       </div>
       <div className="flex flex-col py-4 px-10 gap-6 item-center justify-center">
         <Link href="/">
-          <button className="px-8 py-2 rounded-xl bg-blue-700 flex items-center gap-4">
+          <button className=" py-2 rounded-xl bg-blue-700 flex items-center justify-center gap-4 w-[100%]">
             <span>
               <Image
                 src="/images/dashboardactive.svg"
@@ -22,7 +22,7 @@ const SidePanel = () => {
           </button>
         </Link>
         <Link href="/projects">
-          <button className="px-8 py-2 rounded-xl bg-pink-700 flex items-center gap-4">
+          <button className=" py-2 rounded-xl bg-pink-700 flex items-center justify-center gap-4 w-[100%]">
             <span>
               <Image
                 src="/images/projectactive.svg"
@@ -31,13 +31,11 @@ const SidePanel = () => {
                 height={25}
               />
             </span>
-            <span className="text-white text-2xl font-medium">
-              All Projects
-            </span>
+            <span className="text-white text-2xl font-medium">Projects</span>
           </button>
         </Link>
         <Link href="/livechat">
-          <button className="px-8 py-2 rounded-xl bg-red-700 flex items-center gap-4">
+          <button className=" py-2 rounded-xl bg-red-700 flex items-center justify-center gap-4 w-[100%]">
             <span>
               <Image
                 src="/images/chatactive.svg"

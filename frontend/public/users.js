@@ -1,5 +1,5 @@
 import React from "react";
-export const users = [
+const users = [
   {
     id: 1,
     name: "Tony Reichert",
@@ -101,3 +101,5 @@ export const users = [
     email: "emma.adams@example.com",
   },
 ];
+
+export default users;

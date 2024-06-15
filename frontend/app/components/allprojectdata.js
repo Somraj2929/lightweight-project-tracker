@@ -84,7 +84,7 @@ export default function SampleProjects() {
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
   const [statusFilter, setStatusFilter] = React.useState("all");
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [sortDescriptor, setSortDescriptor] = React.useState({
     column: "id",
     direction: "ascending",
@@ -330,10 +330,10 @@ export default function SampleProjects() {
               className="bg-transparent outline-none text-default-400 text-small"
               onChange={onRowsPerPageChange}
             >
-              <option value="5">5</option>
               <option value="10">10</option>
-              <option value="15">15</option>
               <option value="20">20</option>
+              <option value="30">30</option>
+              <option value="40">40</option>
             </select>
           </label>
         </div>

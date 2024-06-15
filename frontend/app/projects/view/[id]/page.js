@@ -23,6 +23,7 @@ const View = () => {
   const params = useParams();
 
   const { id } = params;
+
   if (!id) {
     return <div>Loading...</div>;
   }

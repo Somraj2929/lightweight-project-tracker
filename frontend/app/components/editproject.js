@@ -8,7 +8,7 @@ import {
   SelectSection,
   Textarea,
 } from "@nextui-org/react";
-import { users } from "@/public/users";
+import users from "@/public/users";
 
 const EditProject = ({ project }) => {
   return (
