@@ -4,6 +4,8 @@ import { Input, Select, SelectItem } from "@nextui-org/react";
 import { EyeFilledIcon } from "./extraIcons/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "./extraIcons/EyeSlashFilledIcon";
 import { teams, roles } from "@/public/signupdetails";
+import Image from "next/image";
+import Link from "next/link";
 
 const UserSignup = () => {
   const [name, setName] = useState("");
@@ -62,11 +64,21 @@ const UserSignup = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="md:w-[30vw]  w-full bg-white rounded-lg shadow-lg p-8">
+    <div className="flex justify-center items-center h-screen bg-signup">
+      <div className="md:w-[30vw]  w-full bg-white rounded-lg shadow-lg p-8 ">
+        <Image
+          src="/images/logo.svg"
+          alt="logo"
+          width={400}
+          height={100}
+          className="flex justify-center items-center mx-auto mb-2"
+        />
+
         <h2 className="text-2xl font-bold text-center mb-6">Sign Up</h2>
+
         <Input
           isRequired
+          variant="underlined"
           type="text"
           label="Name"
           placeholder="Enter Your Name"
@@ -78,6 +90,7 @@ const UserSignup = () => {
         {errors.name && <p className="text-red-500 text-xs">{errors.name}</p>}
         <Input
           isRequired
+          variant="underlined"
           type="email"
           name="email"
           label="Email"
@@ -90,6 +103,7 @@ const UserSignup = () => {
         <div className="flex justify-between gap-4 mb-4">
           <Select
             value={team}
+            variant="underlined"
             name="team"
             label="Select Team"
             placeholder="Select a Team"
@@ -105,6 +119,7 @@ const UserSignup = () => {
           {errors.team && <p className="text-red-500 text-xs">{errors.team}</p>}
           <Select
             value={role}
+            variant="underlined"
             name="role"
             label="Select Role"
             placeholder="Select a Role"
@@ -121,6 +136,7 @@ const UserSignup = () => {
         </div>
         <Input
           isRequired
+          variant="underlined"
           name="password"
           label="Password"
           placeholder="Enter Password"
@@ -147,6 +163,7 @@ const UserSignup = () => {
         )}
         <Input
           isRequired
+          variant="underlined"
           name="confirmPassword"
           label="Confirm Password"
           placeholder="Confirm Your Password"
@@ -177,6 +194,12 @@ const UserSignup = () => {
         >
           Sign Up
         </button>
+        <p className="text-center mt-6">
+          Already have an account? &nbsp;
+          <Link href="/users/login" className="text-blue-500 hover:underline">
+            Login
+          </Link>
+        </p>
       </div>
     </div>
   );
