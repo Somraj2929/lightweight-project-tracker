@@ -10,25 +10,34 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isVisible, setIsVisible] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const toggleVisibility = () => setIsVisible(!isVisible);
-
-  let tempErrors = {};
 
   const handleLogin = (e) => {
     e.preventDefault(); // Prevent default form submission behavior
 
-    // Implement login logic here
-    // This could involve sending a POST request to your server-side API
-    // with email and password for validation
-    console.log({
-      Email: email,
-      Password: password,
-    });
+    let tempErrors = {};
+    if (!email) tempErrors.email = "Email is required";
+    console.log();
+    if (!password) tempErrors.password = "Password is required";
 
-    // Clear form data after login attempt (optional)
-    setEmail("");
-    setPassword("");
+    if (Object.keys(tempErrors).length > 0) {
+      setErrors(tempErrors);
+    } else {
+      console.log({
+        Email: email,
+        Password: password,
+      });
+
+      // Implement login logic here
+      // This could involve sending a POST request to your server-side API
+      // with email and password for validation
+
+      // Clear form data after successful login
+      setEmail("");
+      setPassword("");
+    }
   };
 
   return (
@@ -42,7 +51,8 @@ const LoginPage = () => {
           className="flex justify-center items-center mx-auto m-4"
         />
         <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
-        <form onSubmit={handleLogin}>
+
+        <div className="mb-4">
           <Input
             isRequired
             variant="underlined"
@@ -53,8 +63,13 @@ const LoginPage = () => {
             placeholder="Enter Your Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="mb-10 font-semibold input-font"
+            className="font-semibold input-font"
           />
+          {errors.email && (
+            <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+          )}
+        </div>
+        <div className="mb-4">
           <Input
             isRequired
             variant="underlined"
@@ -78,24 +93,25 @@ const LoginPage = () => {
               </button>
             }
             type={isVisible ? "text" : "password"}
-            className="mb-10 font-semibold input-font"
+            className="font-semibold input-font"
           />
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white rounded-lg px-4 py-2"
-          >
-            Login
-          </button>
-          <p className="text-center mt-6">
-            Don't have an account? &nbsp;
-            <Link
-              href="/users/signup"
-              className="text-blue-500 hover:underline"
-            >
-              Sign Up
-            </Link>
-          </p>
-        </form>
+          {errors.password && (
+            <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+          )}
+        </div>
+        <button
+          type="submit"
+          onClick={handleLogin}
+          className="w-full bg-blue-500 text-white rounded-lg px-4 py-2"
+        >
+          Login
+        </button>
+        <p className="text-center mt-6">
+          Don't have an account? &nbsp;
+          <Link href="/users/signup" className="text-blue-500 hover:underline">
+            Sign Up
+          </Link>
+        </p>
       </div>
     </div>
   );
