@@ -1,0 +1,272 @@
+[
+  {
+    "id": 1,
+    "name": "Build website using NextJS",
+    "team": "mamaearth",
+    "status": "open",
+    "createdAt": "2021-09-03T00:00:00Z",
+    "updatedAt": "2021-09-03T00:00:00Z",
+    "fromUserId": 1,
+    "toUserId": 2,
+    "description": "A project to build a website using NextJS for Mamaearth team. Add a new feature to the website.",
+    "comments": [
+      {
+        "id": 1,
+        "comment": "This is a comment",
+        "createdAt": "2021-09-03T00:00:00Z",
+        "updatedAt": "2021-09-03T00:00:00Z",
+        "userId": 1
+      },
+      {
+        "id": 2,
+        "comment": "This is another comment",
+        "createdAt": "2021-09-03T00:00:00Z",
+        "updatedAt": "2021-09-03T00:00:00Z",
+        "userId": 2
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Build a mobile app",
+    "team": "Development",
+    "status": "inprogress",
+    "createdAt": "2021-09-03T00:00:00Z",
+    "updatedAt": "2021-09-03T00:00:00Z",
+    "fromUserId": 2,
+    "toUserId": 3,
+    "description": "A project to build a mobile app for the Development team.",
+    "comments": [
+      {
+        "id": 1,
+        "comment": "This is a comment",
+        "createdAt": "2021-09-03T00:00:00Z",
+        "updatedAt": "2021-09-03T00:00:00Z",
+        "userId": 1
+      },
+      {
+        "id": 2,
+        "comment": "This is another comment",
+        "createdAt": "2021-09-03T00:00:00Z",
+        "updatedAt": "2021-09-03T00:00:00Z",
+        "userId": 2
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Build a CRM system",
+    "team": "Development",
+    "status": "open",
+    "createdAt": "2021-09-03T00:00:00Z",
+    "updatedAt": "2021-09-03T00:00:00Z",
+    "fromUserId": 3,
+    "toUserId": 4,
+    "description": "A project to build a CRM system for the Development team.",
+    "comments": [
+      {
+        "id": 1,
+        "comment": "This is a comment",
+        "createdAt": "2021-09-03T00:00:00Z",
+        "updatedAt": "2021-09-03T00:00:00Z",
+        "userId": 1
+      },
+      {
+        "id": 2,
+        "comment": "This is another comment",
+        "createdAt": "2021-09-03T00:00:00Z",
+        "updatedAt": "2021-09-03T00:00:00Z",
+        "userId": 2
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Build a marketing campaign",
+    "team": "Marketing",
+    "status": "closed",
+    "createdAt": "2021-09-03T00:00:00Z",
+    "updatedAt": "2021-09-03T00:00:00Z",
+    "fromUserId": 4,
+    "toUserId": 5,
+    "description": "A project to build a marketing campaign for the Marketing team.",
+    "comments": [
+      {
+        "id": 1,
+        "comment": "This is a comment",
+        "createdAt": "2021-09-03T00:00:00Z",
+        "updatedAt": "2021-09-03T00:00:00Z",
+        "userId": 1
+      },
+      {
+        "id": 2,
+        "comment": "This is another comment",
+        "createdAt": "2021-09-03T00:00:00Z",
+        "updatedAt": "2021-09-03T00:00:00Z",
+        "userId": 2
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Build a sales strategy",
+    "team": "Sales",
+    "status": "open",
+    "createdAt": "2021-09-03T00:00:00Z",
+    "updatedAt": "2021-09-03T00:00:00Z",
+    "fromUserId": 5,
+    "toUserId": 6,
+    "description": "A project to build a sales strategy for the Sales team.",
+    "comments": [
+      {
+        "id": 1,
+        "comment": "This is a comment",
+        "createdAt": "2021-09-03T00:00:00Z",
+        "updatedAt": "2021-09-03T00:00:00Z",
+        "userId": 1
+      },
+      {
+        "id": 2,
+        "comment": "This is another comment",
+        "createdAt": "2021-09-03T00:00:00Z",
+        "updatedAt": "2021-09-03T00:00:00Z",
+        "userId": 2
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Build a website using NextJS",
+    "team": "Management",
+    "status": "open",
+    "createdAt": "2021-09-03T00:00:00Z",
+    "updatedAt": "2021-09-03T00:00:00Z",
+    "fromUserId": 6,
+    "toUserId": 7,
+    "description": "A project to build a website using NextJS for the Management team.",
+    "comments": [
+      {
+        "id": 1,
+        "comment": "This is a comment",
+        "createdAt": "2021-09-03T00:00:00Z",
+        "updatedAt": "2021-09-03T00:00:00Z",
+        "userId": 1
+      },
+      {
+        "id": 2,
+        "comment": "This is another comment",
+        "createdAt": "2021-09-03T00:00:00Z",
+        "updatedAt": "2021-09-03T00:00:00Z",
+        "userId": 2
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Build a mobile app",
+    "team": "Design",
+    "status": "inprogress",
+    "createdAt": "2021-09-03T00:00:00Z",
+    "updatedAt": "2021-09-03T00:00:00Z",
+    "fromUserId": 7,
+    "toUserId": 8,
+    "description": "A project to build a mobile app for the Design team.",
+    "comments": [
+      {
+        "id": 1,
+        "comment": "This is a comment",
+        "createdAt": "2021-09-03T00:00:00Z",
+        "updatedAt": "2021-09-03T00:00:00Z",
+        "userId": 1
+      },
+      {
+        "id": 2,
+        "comment": "This is another comment",
+        "createdAt": "2021-09-03T00:00:00Z",
+        "updatedAt": "2021-09-03T00:00:00Z",
+        "userId": 2
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Build a CRM system",
+    "team": "HR",
+    "status": "open",
+    "createdAt": "2021-09-03T00:00:00Z",
+    "updatedAt": "2021-09-03T00:00:00Z",
+    "fromUserId": 8,
+    "toUserId": 9,
+    "description": "A project to build a CRM system for the HR team.",
+    "comments": [
+      {
+        "id": 1,
+        "comment": "This is a comment",
+        "createdAt": "2021-09-03T00:00:00Z",
+        "updatedAt": "2021-09-03T00:00:00Z",
+        "userId": 1
+      },
+      {
+        "id": 2,
+        "comment": "This is another comment",
+        "createdAt": "2021-09-03T00:00:00Z",
+        "updatedAt": "2021-09-03T00:00:00Z",
+        "userId": 2
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "name": "Build a marketing campaign",
+    "team": "Finance",
+    "status": "closed",
+    "createdAt": "2021-09-03T00:00:00Z",
+    "updatedAt": "2021-09-03T00:00:00Z",
+    "fromUserId": 9,
+    "toUserId": 10,
+    "description": "A project to build a marketing campaign for the Finance team.",
+    "comments": [
+      {
+        "id": 1,
+        "comment": "This is a comment",
+        "createdAt": "2021-09-03T00:00:00Z",
+        "updatedAt": "2021-09-03T00:00:00Z",
+        "userId": 1
+      },
+      {
+        "id": 2,
+        "comment": "This is another comment",
+        "createdAt": "2021-09-03T00:00:00Z",
+        "updatedAt": "2021-09-03T00:00:00Z",
+        "userId": 2
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "name": "Build a sales strategy",
+    "team": "Operations",
+    "status": "open",
+    "createdAt": "2021-09-03T00:00:00Z",
+    "updatedAt": "2021-09-03T00:00:00Z",
+    "fromUserId": 10,
+    "toUserId": 11,
+    "description": "A project to build a sales strategy for the Operations team.",
+    "comments": [
+      {
+        "id": 1,
+        "comment": "This is a comment",
+        "createdAt": "2021-09-03T00:00:00Z",
+        "updatedAt": "2021-09-03T00:00:00Z",
+        "userId": 1
+      },
+      {
+        "id": 2,
+        "comment": "This is another comment",
+        "createdAt": "2021-09-03T00:00:00Z",
+        "updatedAt": "2021-09-03T00:00:00Z",
+        "userId": 2
+      }
+    ]
+  }
+]
