@@ -1,42 +1,44 @@
 package main
 
 import (
-	test "github.com/Somraj2929/lightweight-project-tracker/api/handlers"
-	projects "github.com/Somraj2929/lightweight-project-tracker/api/projects"
-	database "github.com/Somraj2929/lightweight-project-tracker/database"
 	"log"
-	
-	"os"
+	"time"
+	// "github.com/Somraj2929/lightweight-project-tracker/config"
+	"github.com/Somraj2929/lightweight-project-tracker/db"
+	"github.com/Somraj2929/lightweight-project-tracker/routes"
+	"github.com/Somraj2929/lightweight-project-tracker/utils"
+
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	loadenv := database.LoadEnv()
-	if loadenv != nil {
-		log.Fatalf("Error loading .env file: %v", loadenv)
-	}
+    // Load environment variables
+    err := godotenv.Load()
+    if err != nil {
+        log.Fatal("Error loading .env file")
+    }
 
-	err := database.ConnectToMongo()
-	if err != nil {
-		log.Fatalf("Error connecting database: %v", err)
-	}
+	seedValue := time.Now().UnixNano() // Example: use current time as seed
+    utils.Seed(seedValue)
 
-	// Create a new Gin router
-	router := gin.Default()
+    // Connect to MongoDB
+    db.ConnectMongoDB()
 
+    // Connect to Redis
+    //db.ConnectRedis(config.GetEnv("REDIS_ADDR"), config.GetEnv("REDIS_PASSWORD"), 0)
+	//db.ConnectRedis("localhost:6379", "", 0)
 
+    // Setup Gin
+    router := gin.Default()
 
-	router.GET("/test", test.TestHandler)
+    // Setup routes
+    routes.AuthRoutes(router)
+    routes.UserRoutes(router)
+    routes.ProjectRoutes(router)
+    routes.ChatRoutes(router)
+    routes.StatusAndColumnsRoutes(router)
 
-	router.GET("/projects", projects.ProjectsHandler)
-
-
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8082"
-	}
-
-	if err := router.Run(port); err != nil {
-		panic(err)
-	}
+    // Start server
+    router.Run(":8081")
 }

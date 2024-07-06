@@ -7,7 +7,7 @@ import AllProjectsData from "./allprojectdata";
 const AllProjects = () => {
   return (
     <div className="flex">
-      <div className="bg-pink-200 w-[75%] left-[25%] absolute">
+      <div className="bg-pink-200 min-h-screen w-[75%] left-[25%] absolute">
         <div className="px-6 py-4">
           <div className="flex justify-between items-center">
             <h1 className="text-[35px] font-bold custom-heading">Projects</h1>
