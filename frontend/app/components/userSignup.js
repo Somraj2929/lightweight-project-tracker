@@ -1,3 +1,4 @@
+// pages/signup.js
 "use client";
 import React, { useState } from "react";
 import { Input, Select, SelectItem } from "@nextui-org/react";
@@ -6,6 +7,7 @@ import { EyeSlashFilledIcon } from "./extraIcons/EyeSlashFilledIcon";
 import { teams, roles } from "@/public/signupdetails";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const UserSignup = () => {
   const [name, setName] = useState("");
@@ -17,6 +19,7 @@ const UserSignup = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isConfirmVisible, setIsConfirmVisible] = useState(false);
   const [errors, setErrors] = useState({});
+  const router = useRouter();
 
   const toggleVisibility = () => setIsVisible(!isVisible);
   const confirmtoggleVisibility = () => setIsConfirmVisible(!isConfirmVisible);
@@ -31,7 +34,9 @@ const UserSignup = () => {
     return re.test(password);
   };
 
-  const handleSignup = () => {
+  const handleSignup = async (e) => {
+    e.preventDefault();
+
     let tempErrors = {};
 
     if (!name) tempErrors.name = "Name is required";
@@ -49,15 +54,27 @@ const UserSignup = () => {
       tempErrors.confirmPassword = "Passwords doesn't match";
 
     if (Object.keys(tempErrors).length === 0) {
-      console.log({
-        Name: name,
-        Email: email,
-        Team: team,
-        Role: role,
-        Password: password,
-        confirmPassword: confirmPassword,
-      });
-      // Proceed with the signup process
+      try {
+        const response = await fetch("/api/auth/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name, email, team, role, password }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          const { token } = data;
+          localStorage.setItem("token", token);
+          router.push("/");
+        } else {
+          setErrors({ form: "Signup failed" });
+        }
+      } catch (error) {
+        setErrors({ form: "An error occurred" });
+      }
     } else {
       setErrors(tempErrors);
     }
@@ -65,130 +82,150 @@ const UserSignup = () => {
 
   return (
     <div className="flex justify-center items-center h-screen bg-signup">
-      <div className="md:w-[30vw]  w-full bg-white rounded-lg shadow-lg p-8 ">
+      <div className="md:w-[26vw] w-full bg-white rounded-lg shadow-lg p-8">
         <Image
           src="/images/logo.svg"
           alt="logo"
           width={400}
           height={100}
-          className="flex justify-center items-center mx-auto mb-2"
+          className="flex justify-center items-center mx-auto m-4"
         />
-
         <h2 className="text-2xl font-bold text-center mb-6">Sign Up</h2>
-
-        <Input
-          isRequired
-          variant="underlined"
-          type="text"
-          label="Name"
-          placeholder="Enter Your Name"
-          name="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="mb-4"
-        />
-        {errors.name && <p className="text-red-500 text-xs">{errors.name}</p>}
-        <Input
-          isRequired
-          variant="underlined"
-          type="email"
-          name="email"
-          label="Email"
-          placeholder="Enter Your Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="mb-4"
-        />
-        {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
-        <div className="flex justify-between gap-4 mb-4">
-          <Select
-            value={team}
+        <div className="mb-4">
+          <Input
+            isRequired
             variant="underlined"
-            name="team"
+            name="name"
+            label="Name"
+            placeholder="Enter Your Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="font-semibold input-font"
+          />
+          {errors.name && (
+            <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+          )}
+        </div>
+        <div className="mb-4">
+          <Input
+            isRequired
+            variant="underlined"
+            type="email"
+            autoComplete="true"
+            name="email"
+            label="Email"
+            placeholder="Enter Your Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="font-semibold input-font"
+          />
+          {errors.email && (
+            <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+          )}
+        </div>
+        <div className="mb-4">
+          <Select
+            isRequired
             label="Select Team"
-            placeholder="Select a Team"
-            onChange={setTeam}
-            className="mb-4 w-full"
+            placeholder="Select Your Team"
+            value={team}
+            onChange={(e) => setTeam(e)}
           >
             {teams.map((team) => (
-              <SelectItem key={team.key} value={team.key}>
-                {team.label}
+              <SelectItem key={team.id} value={team.value}>
+                {team.name}
               </SelectItem>
             ))}
           </Select>
-          {errors.team && <p className="text-red-500 text-xs">{errors.team}</p>}
+          {errors.team && (
+            <p className="text-red-500 text-xs mt-1">{errors.team}</p>
+          )}
+        </div>
+        <div className="mb-4">
           <Select
-            value={role}
-            variant="underlined"
-            name="role"
+            isRequired
             label="Select Role"
-            placeholder="Select a Role"
-            onChange={setRole}
-            className="mb-4 w-full"
+            placeholder="Select Your Role"
+            value={role}
+            onChange={(e) => setRole(e)}
           >
             {roles.map((role) => (
-              <SelectItem key={role.key} value={role.key}>
-                {role.label}
+              <SelectItem key={role.id} value={role.value}>
+                {role.name}
               </SelectItem>
             ))}
           </Select>
-          {errors.role && <p className="text-red-500 text-xs">{errors.role}</p>}
+          {errors.role && (
+            <p className="text-red-500 text-xs mt-1">{errors.role}</p>
+          )}
         </div>
-        <Input
-          isRequired
-          variant="underlined"
-          name="password"
-          label="Password"
-          placeholder="Enter Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          endContent={
-            <button
-              className="focus:outline-none"
-              type="button"
-              onClick={toggleVisibility}
-            >
-              {isVisible ? (
-                <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-              ) : (
-                <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-              )}
-            </button>
-          }
-          type={isVisible ? "text" : "password"}
-          className="mb-4"
-        />
-        {errors.password && (
-          <p className="text-red-500 text-xs">{errors.password}</p>
-        )}
-        <Input
-          isRequired
-          variant="underlined"
-          name="confirmPassword"
-          label="Confirm Password"
-          placeholder="Confirm Your Password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          endContent={
-            <button
-              className="focus:outline-none"
-              type="button"
-              onClick={confirmtoggleVisibility}
-            >
-              {isConfirmVisible ? (
-                <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-              ) : (
-                <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-              )}
-            </button>
-          }
-          type={isConfirmVisible ? "text" : "password"}
-          className="mb-4"
-        />
-        {errors.confirmPassword && (
-          <p className="text-red-500 text-xs">{errors.confirmPassword}</p>
+        <div className="mb-4">
+          <Input
+            isRequired
+            variant="underlined"
+            name="password"
+            autoComplete="true"
+            label="Password"
+            placeholder="Enter Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            endContent={
+              <button
+                className="focus:outline-none"
+                type="button"
+                onClick={toggleVisibility}
+              >
+                {isVisible ? (
+                  <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                ) : (
+                  <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                )}
+              </button>
+            }
+            type={isVisible ? "text" : "password"}
+            className="font-semibold input-font"
+          />
+          {errors.password && (
+            <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+          )}
+        </div>
+        <div className="mb-4">
+          <Input
+            isRequired
+            variant="underlined"
+            name="confirmPassword"
+            autoComplete="true"
+            label="Confirm Password"
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            endContent={
+              <button
+                className="focus:outline-none"
+                type="button"
+                onClick={confirmtoggleVisibility}
+              >
+                {isConfirmVisible ? (
+                  <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                ) : (
+                  <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                )}
+              </button>
+            }
+            type={isConfirmVisible ? "text" : "password"}
+            className="font-semibold input-font"
+          />
+          {errors.confirmPassword && (
+            <p className="text-red-500 text-xs mt-1">
+              {errors.confirmPassword}
+            </p>
+          )}
+        </div>
+        {errors.form && (
+          <p className="text-red-500 text-xs mt-1">{errors.form}</p>
         )}
         <button
+          type="submit"
           onClick={handleSignup}
           className="w-full bg-blue-500 text-white rounded-lg px-4 py-2"
         >

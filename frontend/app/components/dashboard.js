@@ -5,23 +5,25 @@ import React from "react";
 import BarChart from "./barchart";
 import LineChart from "./linechart";
 import MyProjects from "./myprojects";
+import SidePanel from "./sidepanel";
 
-const DashBoard = () => {
+const DashBoard = ({ user }) => {
+  if (!user) {
+    return <p>Loading...</p>; // or any loading indicator
+  }
+
   return (
-    <div className="flex">
+    <div>
+      <SidePanel />
+
       {/* Main Dashboard */}
       <div className="bg-custom w-[75%] left-[25%] absolute">
         <div className="px-6 py-4">
           <div className="flex justify-between items-center">
             <h1 className="text-[35px] font-bold custom-heading">Dashboard</h1>
             <div className="flex p-2 rounded-lg gap-2 justify-center items-center bg-slate-400">
-              <h3 className="text-lg font-semibold">Somraj Bishnoi</h3>
-              <Avatar
-                isBordered
-                radius="sm"
-                src="https://i.pravatar.cc/150?u=a04258a2462d826712d"
-                size="sm"
-              />
+              <h3 className="text-lg font-semibold">{user.name}</h3>
+              <Avatar isBordered radius="sm" src={user.avatar} size="sm" />
             </div>
           </div>
           <div className="mt-7 flex justify-between text-black gap-4">

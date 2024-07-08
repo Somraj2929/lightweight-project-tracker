@@ -1,12 +1,17 @@
 package utils
 
 import (
-    "time"
+	
+	"time"
+    "log"
 
-    "github.com/dgrijalva/jwt-go"
+	"github.com/dgrijalva/jwt-go"
+    
 )
 
-var jwtKey = []byte("your_secret_key")
+
+
+var jwtKey = []byte("somraj@2929")
 
 type Claims struct {
     UserID string `json:"userID"`
@@ -15,6 +20,7 @@ type Claims struct {
 }
 
 func GenerateJWT(userID, role string) (string, error) {
+    log.Println("Generating JWT", jwtKey)
     expirationTime := time.Now().Add(24 * time.Hour)
     claims := &Claims{
         UserID: userID,

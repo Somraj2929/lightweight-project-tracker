@@ -2,38 +2,46 @@
 import SidePanel from "@/app/components/sidepanel";
 import ViewProject from "@/app/components/viewproject";
 import { useParams } from "next/navigation";
-import { projects } from "@/public/allprojectdata";
-
-// const displayProjectData = (projectId) => {
-//   const project = projects.find((p) => p.id === projectId);
-
-//   if (!project) {
-//     console.log("Project not found");
-//     return;
-//   }
-
-//   console.log(project);
-
-//   // Rest of your code here
-// };
-
-// displayProjectData(2);
+import { useState, useEffect, useCallback } from "react";
+import { fetchProjectById } from "@/app/helper/apiHelpers";
+import useAuth from "@/app/hooks/useAuth";
 
 const View = () => {
-  const params = useParams();
+  const { loading, user } = useAuth();
+  const { id } = useParams();
 
-  const { id } = params;
+  const [viewProject, setViewProject] = useState(null);
+  const [projectLoading, setProjectLoading] = useState(true);
 
-  if (!id) {
-    return <div>Loading...</div>;
+  const memoizedFetchProject = useCallback(async () => {
+    if (!loading && user) {
+      try {
+        const projectData = await fetchProjectById(id); // Fetch project by ID
+        setViewProject(projectData);
+        setProjectLoading(false);
+      } catch (error) {
+        console.error("Error fetching project:", error);
+        setProjectLoading(false);
+      }
+    }
+  }, [loading, user, id]);
+
+  useEffect(() => {
+    memoizedFetchProject(); // Trigger the memoized function to fetch project data
+  }, [memoizedFetchProject]);
+
+  if (loading || projectLoading) {
+    return <p>Loading...</p>;
   }
 
-  const viewproject = projects.find((p) => p.id === parseInt(id));
+  if (!viewProject) {
+    return <p>Project not found</p>;
+  }
 
   return (
     <>
-      <SidePanel />
-      <ViewProject project={viewproject} />
+      
+      <ViewProject project={viewProject} user={user} />
     </>
   );
 };

@@ -25,7 +25,8 @@ import { DeleteIcon } from "./tableicons/DeleteIcon";
 import { SearchIcon } from "./tableicons/SearchIcon";
 import { ChevronDownIcon } from "./tableicons/ChevronDownIcon";
 import { capitalize } from "./utils";
-import { columns, statusOptions } from "../../public/allprojectdata";
+import users from "@/public/users";
+
 import { fetchColumns, fetchProjects } from "../helper/apiHelpers";
 import Link from "next/link";
 
@@ -71,10 +72,10 @@ export default function SampleProjects() {
     fetchData();
   }, []);
 
-  // useEffect(() => {
-  //   console.log("Columns state after setColumns", columns);
-  //   console.log("statusOptions", statusOptions);
-  // }, [columns, statusOptions]);
+  const getUserDetailsById = (userId) => {
+    console.log(`Getting user details for ID: ${userId}`);
+    return users.find((user) => user.id === userId);
+  };
 
   const [filterValue, setFilterValue] = useState("");
   const [selectedKeys, setSelectedKeys] = useState(new Set([]));
@@ -190,24 +191,26 @@ export default function SampleProjects() {
       case "updatedAt":
         return <div className="font-semibold">{formatDate(cellValue)}</div>;
 
-      case "assignedFrom":
+      case "fromUserId":
+        const assignedFromUser = getUserDetailsById(project.fromUserId);
+        console.log(assignedFromUser);
         return (
           <User
-            avatarProps={{ radius: "full", src: project.fromAvatar }}
-            name={cellValue}
-          >
-            {project.assignedFrom}
-          </User>
+            avatarProps={{ radius: "full", src: assignedFromUser.avatar }}
+            name={assignedFromUser.name}
+            description={assignedFromUser.email}
+          ></User>
         );
 
-      case "assignedTo":
+      case "toUserId":
+        const assignedToUser = getUserDetailsById(project.toUserId);
+        console.log(assignedToUser);
         return (
           <User
-            avatarProps={{ radius: "full", src: project.toAvatar }}
-            name={cellValue}
-          >
-            {project.assignedTo}
-          </User>
+            avatarProps={{ radius: "full", src: assignedToUser.avatar }}
+            name={assignedToUser.name}
+            description={assignedToUser.email}
+          ></User>
         );
 
       case "team":

@@ -12,6 +12,26 @@ import (
 	//"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+type ProjectResponse struct {
+    ID          int                `json:"id"`
+    Name        string             `json:"name"`
+    Team        string             `json:"team"`
+    Status      string             `json:"status"`
+    CreatedAt   string             `json:"createdAt"`
+    UpdatedAt   string             `json:"updatedAt"`
+    FromUserID  int                `json:"fromUserId"`
+    ToUserID    int                `json:"toUserId"`
+    Description string             `json:"description"`
+    Comments    []CommentResponse  `json:"comments"`
+    CommentCounter int        	   `json:"commentCounter"`
+}
+
+type CommentResponse struct {
+    ID        int    `json:"id"`
+    Comment   string `json:"comment"`
+    CreatedAt string `json:"createdAt"`
+    UserID    int    `json:"userId"`
+}
 
 
 func CreateProject(c *gin.Context) {
@@ -61,15 +81,31 @@ func GetProjectDetails(c *gin.Context) {
         return
     }
 
+
     var project models.Project
+    
+
     collection := db.MongoClient.Database("project_tracker").Collection("projects")
     err = collection.FindOne(c, bson.M{"id": id}).Decode(&project)
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
     }
+    projectResponse := ProjectResponse{
+        ID:            project.ID,
+        Name:          project.Name,
+        Team:          project.Team,
+        Status:        project.Status,
+        CreatedAt:     project.CreatedAt.Format("2006-01-02 15:04:05"), // Example format
+        UpdatedAt:     project.UpdatedAt.Format("2006-01-02 15:04:05"), // Example format
+        FromUserID:    project.FromUserID,
+        ToUserID:      project.ToUserID,
+        Description:   project.Description,
+        Comments:      convertCommentsToResponse(project.Comments),
+        CommentCounter: project.CommentCounter,
+    }
 
-    c.JSON(http.StatusOK, project)
+    c.JSON(http.StatusOK, projectResponse)
 }
 
 
@@ -170,6 +206,7 @@ func DeleteProject(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Project deleted successfully"})
 }
 
+
 func GetAllProjects(c *gin.Context) {
     var projects []models.Project
 
@@ -195,6 +232,37 @@ func GetAllProjects(c *gin.Context) {
         return
     }
 
-    c.JSON(http.StatusOK, projects)
+    var projectsResponse []ProjectResponse
+    for _, project := range projects {
+        projectResponse := ProjectResponse{
+            ID:            project.ID,
+            Name:          project.Name,
+            Team:          project.Team,
+            Status:        project.Status,
+            CreatedAt:     project.CreatedAt.Format("2006-01-02 15:04:05"), // Example format
+            UpdatedAt:     project.UpdatedAt.Format("2006-01-02 15:04:05"), // Example format
+            FromUserID:    project.FromUserID,
+            ToUserID:      project.ToUserID,
+            Description:   project.Description,
+            Comments:      convertCommentsToResponse(project.Comments),
+            CommentCounter: project.CommentCounter,
+        }
+        projectsResponse = append(projectsResponse, projectResponse)
+    }
+
+    c.JSON(http.StatusOK, projectsResponse)
 }
 
+func convertCommentsToResponse(comments []models.Comment) []CommentResponse {
+    var commentsResponse []CommentResponse
+    for _, comment := range comments {
+        commentResponse := CommentResponse{
+            ID:        comment.ID,
+            Comment:   comment.Comment,
+            CreatedAt: comment.CreatedAt.Format("2006-01-02 15:04:05"), // Example format
+            UserID:    comment.UserID,
+        }
+        commentsResponse = append(commentsResponse, commentResponse)
+    }
+    return commentsResponse
+}

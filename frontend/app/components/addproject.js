@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import {
   Avatar,
   Input,
@@ -10,11 +10,12 @@ import {
 } from "@nextui-org/react";
 import users from "@/public/users";
 import Link from "next/link";
+import SidePanel from "./sidepanel";
 
-const AddProject = () => {
+const AddProject = ({ user }) => {
   return (
-    <div className="flex">
-      {/* Show Page */}
+    <div>
+      <SidePanel />
       <div className="bg-custom h-screen w-[75%] left-[25%] absolute">
         <div className="px-6 py-4">
           <div className="flex justify-between items-center">
@@ -22,13 +23,8 @@ const AddProject = () => {
               Add Project
             </h1>
             <div className="flex p-2 rounded-lg gap-2 justify-center items-center bg-slate-400">
-              <h3 className="text-lg font-semibold">Somraj Bishnoi</h3>
-              <Avatar
-                isBordered
-                radius="sm"
-                src="https://i.pravatar.cc/150?u=a04258a2462d826712d"
-                size="sm"
-              />
+              <h3 className="text-lg font-semibold">{user.name}</h3>
+              <Avatar isBordered radius="sm" src={user.avatar} size="sm" />
             </div>
           </div>
           <div className=" mt-7 pt-2 text-xl font-bold p-4  rounded-xl">

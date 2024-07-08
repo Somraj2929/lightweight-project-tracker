@@ -8,7 +8,7 @@ import (
 
 func RoleMiddleware(requiredRole string) gin.HandlerFunc {
     return func(c *gin.Context) {
-        role := c.GetString("role")
+        role := c.GetString("admin")
         if role != requiredRole {
             c.JSON(http.StatusForbidden, gin.H{"error": "Forbidden"})
             c.Abort()

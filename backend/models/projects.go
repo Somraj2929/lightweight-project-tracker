@@ -21,6 +21,10 @@ type Project struct {
 	CommentCounter int        	   `bson:"commentCounter"`
 }
 
+
+
+
+
 type Comment struct {
     ID        int 				 `bson:"id"`
     Comment   string             `bson:"comment"`
