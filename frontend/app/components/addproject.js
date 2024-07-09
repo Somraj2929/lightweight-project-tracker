@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   Avatar,
   Input,
@@ -10,9 +10,64 @@ import {
 } from "@nextui-org/react";
 import users from "@/public/users";
 import Link from "next/link";
+import router from "next/navigation";
 import SidePanel from "./sidepanel";
+import { useRouter } from "next/navigation";
 
 const AddProject = ({ user }) => {
+  const router = useRouter();
+  const [additionalComments, setAdditionalComments] = useState("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const token = localStorage.getItem("token"); // Get the token from localStorage
+
+    const formData = {
+      name: e.target.project_name.value,
+      team: e.target.team.value,
+      status: e.target.status.value,
+      fromUserId: parseInt(e.target.assigned_from.value),
+      toUserId: parseInt(e.target.assigned_to.value),
+      description: e.target.description.value,
+      comments: additionalComments
+        ? [
+            {
+              comment: additionalComments,
+              userId: user.id,
+            },
+          ]
+        : [],
+    };
+
+    try {
+      const response = await fetch(`http://localhost:8081/projects/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create project.");
+      }
+
+      alert("Project created successfully!");
+      router.push("/projects");
+
+      console.log("Project saved successfully!");
+    } catch (error) {
+      console.error("Error saving project:", error);
+    }
+  };
+
+  const statusColorMap = {
+    open: "primary",
+    inprogress: "warning",
+    closed: "success",
+  };
+
   return (
     <div>
       <SidePanel />
@@ -27,10 +82,9 @@ const AddProject = ({ user }) => {
               <Avatar isBordered radius="sm" src={user.avatar} size="sm" />
             </div>
           </div>
-          <div className=" mt-7 pt-2 text-xl font-bold p-4  rounded-xl">
+          <div className="mt-7 pt-2 text-xl font-bold p-4 rounded-xl">
             <form
-              action="https://send.pageclip.co/xdvSeQsikzoNQNna7lOQ0FUofEN9RgBp"
-              method="post"
+              onSubmit={handleSubmit}
               className="flex w-full flex-wrap mb-6 gap-4 px-6"
             >
               <Input
@@ -61,7 +115,6 @@ const AddProject = ({ user }) => {
                   label="Select Status"
                   placeholder="Select project status"
                   className="max-w-sm"
-                  selectedKeys={["open"]}
                   variant="flat"
                   name="status"
                 >
@@ -82,7 +135,7 @@ const AddProject = ({ user }) => {
               <div className="flex w-full justify-between">
                 <Select
                   items={users}
-                  selectedKeys={["1"]}
+                  isRequired
                   name="assigned_from"
                   label="Assigned From"
                   className="max-w-sm"
@@ -90,7 +143,6 @@ const AddProject = ({ user }) => {
                   classNames={{
                     label: "group-data-[filled=true]:-translate-y-5",
                     trigger: "min-h-16",
-                    // listboxWrapper: "max-h-[400px]",
                   }}
                   renderValue={(items) => {
                     return items.map((item) => (
@@ -111,19 +163,19 @@ const AddProject = ({ user }) => {
                     ));
                   }}
                 >
-                  {(user) => (
-                    <SelectItem key={user.id} textValue={user.name}>
+                  {(users) => (
+                    <SelectItem key={users.id} textValue={users.name}>
                       <div className="flex gap-2 items-center">
                         <Avatar
-                          alt={user.name}
+                          alt={users.name}
                           className="flex-shrink-0"
                           size="sm"
-                          src={user.avatar}
+                          src={users.avatar}
                         />
                         <div className="flex flex-col">
-                          <span className="text-small">{user.name}</span>
+                          <span className="text-small">{users.name}</span>
                           <span className="text-tiny text-default-400">
-                            {user.email}
+                            {users.email}
                           </span>
                         </div>
                       </div>
@@ -141,27 +193,6 @@ const AddProject = ({ user }) => {
                     label: "group-data-[filled=true]:-translate-y-5",
                     trigger: "min-h-16",
                   }}
-                  listboxProps={{
-                    itemClasses: {
-                      base: [
-                        "rounded-md",
-                        "text-default-500",
-                        "transition-opacity",
-                        "data-[hover=true]:text-foreground",
-                        "data-[hover=true]:bg-default-100",
-                        "dark:data-[hover=true]:bg-default-50",
-                        "data-[selectable=true]:focus:bg-default-50",
-                        "data-[pressed=true]:opacity-70",
-                        "data-[focus-visible=true]:ring-default-500",
-                      ],
-                    },
-                  }}
-                  popoverProps={{
-                    classNames: {
-                      base: "before:bg-default-200",
-                      content: "p-0 border-small border-divider bg-background",
-                    },
-                  }}
                   renderValue={(items) => {
                     return items.map((item) => (
                       <div key={item.key} className="flex items-center gap-2">
@@ -181,19 +212,19 @@ const AddProject = ({ user }) => {
                     ));
                   }}
                 >
-                  {(user) => (
-                    <SelectItem key={user.id} textValue={user.name}>
+                  {(users) => (
+                    <SelectItem key={users.id} textValue={users.name}>
                       <div className="flex gap-2 items-center">
                         <Avatar
-                          alt={user.name}
+                          alt={users.name}
                           className="flex-shrink-0"
                           size="sm"
-                          src={user.avatar}
+                          src={users.avatar}
                         />
                         <div className="flex flex-col">
-                          <span className="text-small">{user.name}</span>
+                          <span className="text-small">{users.name}</span>
                           <span className="text-tiny text-default-400">
-                            {user.email}
+                            {users.email}
                           </span>
                         </div>
                       </div>
@@ -206,6 +237,8 @@ const AddProject = ({ user }) => {
                 variant="flat"
                 label="Add Additional Comments"
                 name="additional_comments"
+                value={additionalComments}
+                onChange={(e) => setAdditionalComments(e.target.value)}
               />
               <div className="flex justify-evenly w-full gap-10">
                 <Link href="/projects">

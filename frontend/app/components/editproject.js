@@ -11,7 +11,6 @@ import {
 import users from "@/public/users";
 import SidePanel from "./sidepanel";
 import { useRouter } from "next/navigation";
-import { route } from "fontawesome";
 
 const EditProject = ({ project, user }) => {
   const router = useRouter();
@@ -303,55 +302,61 @@ const EditProject = ({ project, user }) => {
                     className="p-4 mx-auto rounded-lg overflow-y-auto"
                     style={{ scrollbarWidth: "none", maxHeight: "300px" }}
                   >
-                    {project.comments.map((comment) => {
-                      const userDetails = getUserDetailsById(comment.userId);
-                      const isCurrentUser = comment.userId === currentUserId;
-                      return (
-                        <div
-                          key={comment.id}
-                          className={`flex flex-col mb-2 ${
-                            isCurrentUser ? "items-end" : "items-start"
-                          }`}
-                        >
+                    {project.comments && project.comments.length > 0 ? (
+                      project.comments.map((comment) => {
+                        const userDetails = getUserDetailsById(comment.userId);
+                        const isCurrentUser = comment.userId === currentUserId;
+                        return (
                           <div
-                            className={`flex ${
-                              isCurrentUser
-                                ? "flex-row-reverse justify-end"
-                                : "justify-start"
-                            } gap-2.5`}
+                            key={comment.id}
+                            className={`flex flex-col mb-2 ${
+                              isCurrentUser ? "items-end" : "items-start"
+                            }`}
                           >
-                            <img
-                              className="w-8 h-8 rounded-full"
-                              src={userDetails.avatar}
-                              alt={`${userDetails.name} avatar`}
-                            />
                             <div
-                              className={`flex flex-col w-full max-w-[320px] leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-e-xl ${
+                              className={`flex ${
                                 isCurrentUser
-                                  ? "rounded-xl rounded-tr-none"
-                                  : "rounded-es-xl"
-                              } dark:bg-gray-700`}
+                                  ? "flex-row-reverse justify-end"
+                                  : "justify-start"
+                              } gap-2.5`}
                             >
+                              <img
+                                className="w-8 h-8 rounded-full"
+                                src={userDetails.avatar}
+                                alt={`${userDetails.name} avatar`}
+                              />
                               <div
-                                className={`flex items-center space-x-2 justify-between ${
-                                  isCurrentUser ? "rtl:space-x-reverse" : ""
-                                }`}
+                                className={`flex flex-col w-full max-w-[320px] leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-e-xl ${
+                                  isCurrentUser
+                                    ? "rounded-xl rounded-tr-none"
+                                    : "rounded-es-xl"
+                                } dark:bg-gray-700`}
                               >
-                                <span className="text-sm text-gray-800 dark:text-white">
-                                  {userDetails.name}
-                                </span>
-                                <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                                  {formatTime(comment.createdAt)}
-                                </span>
+                                <div
+                                  className={`flex items-center space-x-2 justify-between ${
+                                    isCurrentUser ? "rtl:space-x-reverse" : ""
+                                  }`}
+                                >
+                                  <span className="text-sm text-gray-800 dark:text-white">
+                                    {userDetails.name}
+                                  </span>
+                                  <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
+                                    {formatTime(comment.createdAt)}
+                                  </span>
+                                </div>
+                                <p className="text-md font-normal py-2.5 text-gray-900 dark:text-white">
+                                  {comment.comment}
+                                </p>
                               </div>
-                              <p className="text-md font-normal py-2.5 text-gray-900 dark:text-white">
-                                {comment.comment}
-                              </p>
                             </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })
+                    ) : (
+                      <p className="text-md font-normal py-2.5 text-gray-900 dark:text-white">
+                        No comments yet!
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>

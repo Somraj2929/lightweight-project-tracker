@@ -1,10 +1,11 @@
-import jwt from "jsonwebtoken";
+export const dynamic = "force-dynamic";
 
-export default async function handler(req, res) {
-  if (req.method === "POST") {
-    const { name, email, team, role, password } = req.body;
+export async function POST(req) {
+  
 
-    // Replace with your signup logic
+  try {
+    const { name, email, team, role, password } = await req.json();
+    
     const response = await fetch("http://localhost:8081/auth/signup", {
       method: "POST",
       headers: {
@@ -14,14 +15,20 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
+    
 
     if (response.ok) {
       const token = data.token;
-      res.status(200).json({ token });
+      return new Response(JSON.stringify({ token }), { status: 200 });
     } else {
-      res.status(400).json({ message: "Signup failed" });
+      return new Response(JSON.stringify({ message: "Signup failed" }), {
+        status: 400,
+      });
     }
-  } else {
-    res.status(405).json({ message: "Method Not Allowed" });
+  } catch (error) {
+    console.error("Error signing up:", error);
+    return new Response(JSON.stringify({ message: "Internal Server Error" }), {
+      status: 500,
+    });
   }
 }

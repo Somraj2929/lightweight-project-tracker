@@ -41,6 +41,7 @@ const LoginPage = () => {
         if (response.ok) {
           const { token } = data;
           localStorage.setItem("token", token);
+          alert("Logged in successfully!");
           router.push("/");
         } else if (response.status === 401) {
           setErrors({ form: "Invalid email or password" });

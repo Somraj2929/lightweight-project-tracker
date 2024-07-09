@@ -13,8 +13,6 @@ export async function POST(req) {
     });
 
     const data = await res.json();
-    console.log("data", data);
-    console.log("token", data.token);
 
     if (res.ok) {
       const token = data.token;

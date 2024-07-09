@@ -22,7 +22,21 @@ func Signup(c *gin.Context) {
 		return
 	}
 
-	// Generate incremental user ID
+	// Check if user already exists with the given email
+	collection := db.MongoClient.Database("project_tracker").Collection("users")
+	var existingUser models.User
+	err := collection.FindOne(c, bson.M{"email": user.Email}).Decode(&existingUser)
+	if err == nil {
+		// User already exists
+		c.JSON(http.StatusConflict, gin.H{"error": "User with this email already exists"})
+		return
+	} else if err != mongo.ErrNoDocuments {
+		// An error occurred while trying to find the user
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to check if user exists"})
+		return
+	}
+
+	
 	userID, err := models.GetNextUserID()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate user ID"})
@@ -30,7 +44,7 @@ func Signup(c *gin.Context) {
 	}
 	user.ID = userID
 
-	// Hash password before storing
+	
 	hashedPassword, err := utils.HashPassword(user.Password)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
@@ -47,7 +61,6 @@ func Signup(c *gin.Context) {
 	user.UpdatedAt = now
 
 	// Insert user into database
-	collection := db.MongoClient.Database("project_tracker").Collection("users")
 	_, err = collection.InsertOne(c, user)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
@@ -64,6 +77,7 @@ func Signup(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"token": token, "userId": user.ID})
 }
+
 
 func Login(c *gin.Context) {
 	var loginData struct {
