@@ -20,6 +20,10 @@ export default function Home() {
     return <p>Loading...</p>;
   }
 
+  if (!user) {
+    return null; // or a fallback UI
+  }
+
   return (
     <>
       <DashBoard user={user} />

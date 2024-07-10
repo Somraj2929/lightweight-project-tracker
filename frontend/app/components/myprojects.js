@@ -1,4 +1,4 @@
-import React, { Children } from "react";
+import React from "react";
 import {
   Table,
   TableHeader,
@@ -9,66 +9,18 @@ import {
   User,
   Chip,
 } from "@nextui-org/react";
+import users from "@/public/users";
 
 const columns = [
-  { name: "Project", uid: "name" },
+  { name: "My Recent Project", uid: "name" },
   { name: "Status", uid: "status" },
   { name: "Created At", uid: "createdAt" },
-  { name: "From", uid: "assignedFrom" },
+  { name: "From", uid: "fromUserId" },
 ];
 
-const projects = [
-  {
-    id: 1,
-    name: "Build a website using NextJS and TailwindCSS",
-    team: "Mamaearth",
-    status: "inprogress",
-    createdAt: "2021-09-03",
-    assignedFrom: "Tony Reichert",
-    avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
-    email: "tony.reichert@example.com",
-  },
-  {
-    id: 2,
-    name: "Build a mobile app",
-    team: "TheDermaCo",
-    status: "open",
-    createdAt: "2021-09-03",
-    assignedFrom: "Zoey Lang",
-    avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
-    email: "zoey.lang@example.com",
-  },
-  {
-    id: 3,
-    name: "Build a CRM system",
-    team: "CRM Team",
-    status: "closed",
-    createdAt: "2021-09-03",
-    assignedFrom: "Jane Fisher",
-    avatar: "https://i.pravatar.cc/150?u=a04258114e29026702d",
-    email: "jane.fisher@example.com",
-  },
-  {
-    id: 4,
-    name: "Build a marketing campaign",
-    team: "Marketing",
-    status: "closed",
-    createdAt: "2021-09-03",
-    assignedFrom: "William Howard",
-    avatar: "https://i.pravatar.cc/150?u=a048581f4e29026701d",
-    email: "william.howard@example.com",
-  },
-  {
-    id: 5,
-    name: "Build a sales strategy",
-    team: "Sales",
-    status: "inprogress",
-    createdAt: "2021-09-03",
-    assignedFrom: "Kristen Copper",
-    avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
-    email: "kristen.cooper@example.com",
-  },
-];
+const getUserDetailsById = (userId) => {
+  return users.find((user) => user.id === userId);
+};
 
 const statusColorMap = {
   closed: "success",
@@ -76,7 +28,7 @@ const statusColorMap = {
   inprogress: "warning",
 };
 
-export default function MyProjects() {
+export default function MyProjects({ projects = [], user }) {
   function formatDate(inputDate) {
     const date = new Date(inputDate);
 
@@ -104,8 +56,13 @@ export default function MyProjects() {
     return formattedDate;
   }
 
-  const renderCell = React.useCallback((project, columnKey) => {
-    const cellValue = project[columnKey];
+  const filteredProjects = projects.filter(
+    (project) => project.toUserId === user.id || project.fromUserId === user.id
+  );
+  const recentProjects = filteredProjects.slice(0, 10);
+
+  const renderCell = React.useCallback((projects, columnKey) => {
+    const cellValue = projects[columnKey];
 
     switch (columnKey) {
       case "name":
@@ -117,7 +74,7 @@ export default function MyProjects() {
           <div className="">
             <Chip
               className="uppercase font-bold"
-              color={statusColorMap[project.status]}
+              color={statusColorMap[projects.status]}
               size="sm"
               variant="flat"
             >
@@ -125,13 +82,17 @@ export default function MyProjects() {
             </Chip>
           </div>
         );
-      case "assignedFrom":
+      case "fromUserId":
+        const assignedFrom = getUserDetailsById(projects.fromUserId);
         return (
           <User
-            avatarProps={{ radius: "full", size: "sm", src: project.avatar }}
-            // description={project.email}
-            name={cellValue}
-            className="font-semibold"
+            avatarProps={{
+              radius: "full",
+              size: "sm",
+              src: assignedFrom.avatar,
+            }}
+            description={assignedFrom.email}
+            name={assignedFrom.name}
           ></User>
         );
       default:
@@ -151,7 +112,7 @@ export default function MyProjects() {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody items={projects}>
+      <TableBody items={recentProjects}>
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (

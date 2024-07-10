@@ -1,9 +1,34 @@
 "use client";
 import { useRef, useEffect } from "react";
 import { Chart } from "chart.js/auto";
+import dayjs from "dayjs";
 
-export default function LineChart() {
+export default function LineChart({ projects = [] }) {
   const chartRef = useRef(null);
+
+  const getLast7Months = () => {
+    const months = [];
+    for (let i = 6; i >= 0; i--) {
+      months.push(dayjs().subtract(i, "month").format("MMM"));
+    }
+    return months;
+  };
+
+  const countProjectsByMonth = (projects) => {
+    const monthCounts = Array(7).fill(0);
+    const now = dayjs();
+
+    projects.forEach((project) => {
+      const createdAt = dayjs(project.createdAt);
+      const diffInMonths = now.diff(createdAt, "month");
+
+      if (diffInMonths >= 0 && diffInMonths < 7) {
+        monthCounts[6 - diffInMonths]++;
+      }
+    });
+
+    return monthCounts;
+  };
 
   useEffect(() => {
     if (chartRef.current) {
@@ -12,32 +37,29 @@ export default function LineChart() {
       }
 
       const context = chartRef.current.getContext("2d");
+      const labels = getLast7Months();
+      const data = countProjectsByMonth(projects);
 
       const newChart = new Chart(context, {
         type: "line",
         data: {
-          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+          labels: labels,
           datasets: [
             {
               label: "Projects",
-              data: [34, 64, 23, 45, 67, 24, 64],
-              backgroundColor: ["rgba(147, 51, 234, 1)"],
-              borderColor: ["rgba(147, 51, 234, 1)"],
+              data: data,
+              backgroundColor: "rgba(147, 51, 234, 0.5)",
+              borderColor: "rgba(147, 51, 234, 1)",
               borderWidth: 2,
               tension: 0.3,
             },
           ],
-          borderColor: "rgba(255, 99, 132, 1)", // Red line
-          backgroundColor: "rgba(255, 99, 132, 0.5)", // Semi-transparent red fill
         },
         options: {
           plugins: {
             legend: {
               display: false,
             },
-          },
-          layout: {
-            // padding: 40,
           },
           scales: {
             x: {
@@ -57,7 +79,7 @@ export default function LineChart() {
 
       chartRef.current.chart = newChart;
     }
-  }, []);
+  }, [projects]);
 
   return (
     <div>

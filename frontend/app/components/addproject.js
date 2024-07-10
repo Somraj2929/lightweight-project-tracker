@@ -140,6 +140,8 @@ const AddProject = ({ user }) => {
                   label="Assigned From"
                   className="max-w-sm"
                   variant="flat"
+                  //defaultSelectedKeys={[user.id]}
+                  selectedKeys={user.id ? [user.id.toString()] : []}
                   classNames={{
                     label: "group-data-[filled=true]:-translate-y-5",
                     trigger: "min-h-16",

@@ -6,10 +6,39 @@ import BarChart from "./barchart";
 import LineChart from "./linechart";
 import MyProjects from "./myprojects";
 import SidePanel from "./sidepanel";
-
+import { useEffect } from "react";
+import { fetchProjects } from "../helper/apiHelpers";
 const DashBoard = ({ user }) => {
-  if (!user) {
-    return <p>Loading...</p>; // or any loading indicator
+  const [projects, setProjects] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const projectsData = await fetchProjects();
+        setProjects(projectsData);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const filterProjects = (status, userId) => {
+    return projects.filter((project) => {
+      const isAssignedToUser =
+        project.fromUserId === userId || project.toUserId === userId;
+      return project.status === status && isAssignedToUser;
+    });
+  };
+  const openProjects = filterProjects("open", user.id);
+  const inProgressProjects = filterProjects("inprogress", user.id);
+  const closedProjects = filterProjects("closed", user.id);
+
+  if (loading || !user) {
+    return <p>Loading...</p>;
   }
 
   return (
@@ -17,7 +46,7 @@ const DashBoard = ({ user }) => {
       <SidePanel />
 
       {/* Main Dashboard */}
-      <div className="bg-custom w-[75%] left-[25%] absolute">
+      <div className="bg-custom min-h-screen w-[75%] left-[25%] absolute">
         <div className="px-6 py-4">
           <div className="flex justify-between items-center">
             <h1 className="text-[35px] font-bold custom-heading">Dashboard</h1>
@@ -33,7 +62,7 @@ const DashBoard = ({ user }) => {
                 <h2 className="text-xl font-semibold leading-8">
                   Open Projects
                 </h2>
-                <p className="text-4xl font-semibold">15</p>
+                <p className="text-4xl font-semibold">{openProjects.length}</p>
               </div>
             </div>
             <div className="flex w-full h-[6.5rem] bg-white rounded-[14px] items-center px-4">
@@ -45,7 +74,9 @@ const DashBoard = ({ user }) => {
               />
               <div className="px-4">
                 <h2 className="text-xl font-semibold leading-8">In Progress</h2>
-                <p className="text-4xl font-semibold">8</p>
+                <p className="text-4xl font-semibold">
+                  {inProgressProjects.length}
+                </p>
               </div>
             </div>
             <div className="flex w-full h-[6.5rem] bg-white rounded-[14px] items-center px-4">
@@ -57,17 +88,19 @@ const DashBoard = ({ user }) => {
               />
               <div className="px-4">
                 <h2 className="text-xl font-semibold leading-8">Closed</h2>
-                <p className="text-4xl font-semibold">23</p>
+                <p className="text-4xl font-semibold">
+                  {closedProjects.length}
+                </p>
               </div>
             </div>
           </div>
           <div className="flex mt-4 justify-between gap-6">
             <div className="w-full h-auto bg-white rounded-[14px] px-4 py-2">
               <h3 className="text-lg font-semibold">Summary</h3>
-              <BarChart />
+              <BarChart projects={projects} />
             </div>
             <div className="w-full h-auto bg-white rounded-[14px] px-4 py-2">
-              <div className="flex  justify-between">
+              <div className="flex justify-between">
                 <h3 className="text-lg font-semibold">Monthly Report</h3>
                 <span className="flex items-center">
                   <div className="w-[8px] h-[8px] bg-purple-600 rounded-full"></div>
@@ -76,11 +109,11 @@ const DashBoard = ({ user }) => {
                   </p>
                 </span>
               </div>
-              <LineChart />
+              <LineChart projects={projects} />
             </div>
           </div>
           <div className="pt-4">
-            <MyProjects />
+            <MyProjects projects={projects} user={user} />
           </div>
         </div>
       </div>
