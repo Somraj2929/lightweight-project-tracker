@@ -11,6 +11,10 @@ func ChatRoutes(router *gin.Engine) {
     {
         chat.POST("/", middleware.AuthMiddleware(), controllers.CreateChatRoom)
         chat.GET("/:id", middleware.AuthMiddleware(), controllers.GetChatDetails)
-        chat.POST("/:id/messages", middleware.AuthMiddleware(), controllers.SendMessage)
+        chat.POST("/:id", middleware.AuthMiddleware(), controllers.SendMessage)
+        chat.POST("/:id/join", middleware.AuthMiddleware(), controllers.JoinChatRoom)
+        chat.POST("/:id/close", middleware.AuthMiddleware(), controllers.CloseChatRoom)
     }
 }
+
+
