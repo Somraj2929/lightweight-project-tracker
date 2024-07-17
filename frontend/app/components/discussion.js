@@ -2,20 +2,35 @@
 import React, { useState } from "react";
 import { Avatar } from "@nextui-org/react";
 import Image from "next/image";
-import Link from "next/link";
-import chatHistory from "@/public/chat-data";
+import SidePanel from "./sidepanel";
+import { validateChatId, createChatRoom } from "../helper/apiHelpers";
+import { useRouter } from "next/navigation";
 
-const Discussion = () => {
+const Discussion = ({ currentUser }) => {
+  const router = useRouter();
   const [chatid, setChatid] = useState("");
   const [error, setError] = useState("");
 
-  const validateChatId = () => {
-    const chatExists = chatHistory.some((chat) => chat.chatid === chatid);
-    if (!chatExists) {
-      setError("No Chat Room Found");
+  const handleValidateChatId = async () => {
+    const response = await validateChatId(chatid);
+    console.log(response);
+
+    if (response === null) {
+      setError("No Chat Room Found or Chat Room is Closed");
     } else {
       setError("");
-      window.location.href = `/livechat/${chatid}`;
+      router.push(`/livechat/${chatid}`);
+    }
+  };
+
+  const handleCreateChatRoom = async () => {
+    const response = await createChatRoom(currentUser.id);
+
+    if (response.error) {
+      setError(response.error);
+    } else {
+      setError("");
+      router.push(`/livechat/${response.chatID}`);
     }
   };
 
@@ -25,30 +40,30 @@ const Discussion = () => {
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      validateChatId();
+      handleValidateChatId();
     }
   };
 
   return (
     <div className="flex">
-      {/* Main Dashboard */}
+      <SidePanel />
       <div className="bg-custom w-[75%] left-[25%] absolute">
         <div className="px-6 py-4">
           <div className="flex justify-between items-center">
             <h1 className="text-[35px] font-bold custom-heading">Live Chat</h1>
             <div className="flex p-2 rounded-lg gap-2 justify-center items-center bg-slate-400">
-              <h3 className="text-lg font-semibold">Somraj Bishnoi</h3>
+              <h3 className="text-lg font-semibold">{currentUser.name}</h3>
               <Avatar
                 isBordered
                 radius="sm"
-                src="https://i.pravatar.cc/150?u=a04258a2462d826712d"
+                src={currentUser.avatar}
                 size="sm"
               />
             </div>
           </div>
 
           <div className="pt-6">
-            <div className="flex justify-center ">
+            <div className="flex justify-center">
               <Image
                 src="/images/start-chat.jpg"
                 width={600}
@@ -65,19 +80,18 @@ const Discussion = () => {
                 <div className="w-[50%] border-1 rounded-lg p-4 bg-green-200">
                   <p className="text-center leading-10 font-semibold">
                     Already have a chat room? <br /> Enter the room code to join
-                    the
                   </p>
                   <div className="flex justify-center gap-4">
                     <input
                       type="text"
-                      placeholder="XXXX-1234-ZZZZ"
+                      placeholder="2024-XYZA-1234"
                       value={chatid}
-                      onChange={(e) => setChatid(e.target.value)}
+                      onChange={(e) => setChatid(e.target.value.toLowerCase())}
                       onKeyDown={handleKeyDown}
                       className="w-[50%] border rounded p-2 text-center tracking-wide font-semibold uppercase"
                     />
                     <button
-                      onClick={validateChatId}
+                      onClick={handleValidateChatId}
                       className="bg-blue-500 text-white py-2 px-4 rounded font-semibold"
                     >
                       Join Room
@@ -90,7 +104,10 @@ const Discussion = () => {
                     Don't have a chat room? <br /> Create a new one now
                   </p>
                   <div className="flex justify-center gap-4">
-                    <button className="bg-blue-500 text-white py-2 px-4 rounded font-semibold">
+                    <button
+                      onClick={handleCreateChatRoom}
+                      className="bg-blue-500 text-white py-2 px-4 rounded font-semibold"
+                    >
                       Create Room
                     </button>
                   </div>
@@ -103,7 +120,7 @@ const Discussion = () => {
 
       {error && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className=" flex flex-col justify-center bg-white p-4 rounded-lg shadow-lg">
+          <div className="flex flex-col justify-center bg-white p-4 rounded-lg shadow-lg">
             <h2 className="text-lg text-center font-semibold mb-2">Oops🥲</h2>
             <p>{error}</p>
             <button

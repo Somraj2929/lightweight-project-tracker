@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 	"net/http"
-
+	"github.com/gorilla/websocket"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
@@ -15,7 +15,84 @@ import (
 	"github.com/Somraj2929/lightweight-project-tracker/models"
 	"github.com/Somraj2929/lightweight-project-tracker/utils"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	
 )
+
+
+var upgrader = websocket.Upgrader{
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
+}
+
+type Client struct {
+	Conn *websocket.Conn
+	Pool *ChatPool
+}
+
+func (cp *ChatPool) addClient(client *Client) {
+	cp.mu.Lock()
+	defer cp.mu.Unlock()
+	cp.clients[client] = true
+	log.Println("Client added to chat pool:", cp.chatID)
+}
+
+func (cp *ChatPool) removeClient(client *Client) {
+	cp.mu.Lock()
+	defer cp.mu.Unlock()
+	delete(cp.clients, client)
+	client.Conn.Close()
+	log.Println("Client removed from chat pool:", cp.chatID)
+}
+
+func (cp *ChatPool) broadcastMessage(message models.Message) {
+	cp.mu.Lock()
+	defer cp.mu.Unlock()
+	for client := range cp.clients {
+		if err := client.Conn.WriteJSON(message); err != nil {
+			cp.removeClient(client)
+		}
+	}
+}
+
+func ServeWebSocket(c *gin.Context) {
+	chatID := c.Query("chatID")
+	log.Println("Received WebSocket connection request for chatID:", chatID)
+
+	pool, ok := chatManager.chatPools[chatID]
+	if !ok {
+		log.Println("Chat room not found for chatID:", chatID)
+		c.JSON(http.StatusNotFound, gin.H{"error": "Chat room not found"})
+		return
+	}
+
+	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
+	if err != nil {
+		log.Println("Failed to upgrade to WebSocket:", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to upgrade to WebSocket"})
+		return
+	}
+	log.Println("WebSocket upgrade successful for chatID:", chatID)
+
+	client := &Client{Conn: conn, Pool: pool}
+	pool.addClient(client)
+	log.Println("Client added to chat pool:", chatID)
+
+	go func() {
+		defer pool.removeClient(client)
+		for {
+			var msg models.Message
+			if err := conn.ReadJSON(&msg); err != nil {
+				log.Println("Error reading message:", err)
+				break
+			}
+			msg.Timestamp = time.Now()
+			pool.messageCh <- msg
+		}
+		log.Println("Client disconnected from chat pool:", chatID)
+	}()
+}
+
 
 type ChatManager struct {
 	mu       sync.Mutex
@@ -27,6 +104,8 @@ type ChatPool struct {
 	messages  []models.Message
 	messageCh chan models.Message
 	closeCh   chan bool
+	clients   map[*Client]bool
+	mu        sync.Mutex
 }
 
 var chatManager = &ChatManager{
@@ -42,6 +121,7 @@ func (cm *ChatManager) StartChatPool(chatID string) {
 		messages:  []models.Message{},
 		messageCh: make(chan models.Message),
 		closeCh:   make(chan bool),
+		clients:   make(map[*Client]bool),
 	}
 
 	cm.chatPools[chatID] = pool
@@ -50,13 +130,14 @@ func (cm *ChatManager) StartChatPool(chatID string) {
 }
 
 func (cp *ChatPool) run() {
-	ticker := time.NewTicker(3 * time.Minute)
+	ticker := time.NewTicker(30 * time.Second)
 	defer ticker.Stop()
 
 	for {
 		select {
 		case msg := <-cp.messageCh:
 			cp.messages = append(cp.messages, msg)
+			cp.broadcastMessage(msg)
 		case <-ticker.C:
 			cp.saveMessages()
 		case <-cp.closeCh:
@@ -73,7 +154,6 @@ func (cp *ChatPool) saveMessages() {
 
 	collection := db.MongoClient.Database("project_tracker").Collection("chats")
 
-	// Find the chat and get the current message counter
 	var chat models.Chat
 	err := collection.FindOneAndUpdate(
 		context.TODO(),
@@ -86,12 +166,10 @@ func (cp *ChatPool) saveMessages() {
 		return
 	}
 
-	// Iterate over each message, assign IDs, and push to the messages array
 	for i := range cp.messages {
 		cp.messages[i].ID = chat.MessageCounter - int(len(cp.messages)) + int(i) + 1
 	}
 
-	// Push messages to the chat
 	_, err = collection.UpdateOne(
 		context.TODO(),
 		bson.M{"_id": cp.chatID},
@@ -102,10 +180,8 @@ func (cp *ChatPool) saveMessages() {
 		return
 	}
 
-	// Clear cp.messages after saving
 	cp.messages = []models.Message{}
 }
-
 
 func CreateChatRoom(c *gin.Context) {
 	var chatRoom models.Chat
@@ -125,7 +201,6 @@ func CreateChatRoom(c *gin.Context) {
 	chatRoom.MessageCounter = 0
 	chatRoom.Status = "open"
 
-	// Add default message
 	defaultMessage := models.Message{
 		Text:      "Chat's ON! Let's get talking!",
 		Timestamp: time.Now(),
@@ -169,7 +244,6 @@ func SendMessage(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Message sent successfully"})
 }
-
 
 func CloseChatRoom(c *gin.Context) {
 	chatID := c.Param("id")
@@ -226,38 +300,35 @@ func (cm *ChatManager) ResumeChatPool(chatID string) error {
 	cm.mu.Lock()
 	defer cm.mu.Unlock()
 
-// Check if the chat pool already exists
-if _, exists := cm.chatPools[chatID]; exists {
+	if _, exists := cm.chatPools[chatID]; exists {
+		return nil
+	}
+
+	var chat models.Chat
+	collection := db.MongoClient.Database("project_tracker").Collection("chats")
+	err := collection.FindOne(context.TODO(), bson.M{"_id": chatID, "status": "open"}).Decode(&chat)
+	if err != nil {
+		return err
+	}
+
+	pool := &ChatPool{
+		chatID:    chatID,
+		messages:  chat.Messages,
+		messageCh: make(chan models.Message),
+		closeCh:   make(chan bool),
+		clients:   make(map[*Client]bool),
+	}
+
+	cm.chatPools[chatID] = pool
+
+	go pool.run()
+
 	return nil
-}
-
-// Load existing chat messages from the database
-var chat models.Chat
-collection := db.MongoClient.Database("project_tracker").Collection("chats")
-err := collection.FindOne(context.TODO(), bson.M{"_id": chatID, "status": "open"}).Decode(&chat)
-if err != nil {
-	return err
-}
-
-// Initialize the chat pool with existing messages
-pool := &ChatPool{
-	chatID:    chatID,
-	messages:  chat.Messages,
-	messageCh: make(chan models.Message),
-	closeCh:   make(chan bool),
-}
-
-cm.chatPools[chatID] = pool
-
-go pool.run()
-
-return nil
 }
 
 func JoinChatRoom(c *gin.Context) {
 	chatID := c.Param("id")
 
-	// Check if the chat room exists and get its status
 	var chat models.Chat
 	collection := db.MongoClient.Database("project_tracker").Collection("chats")
 	err := collection.FindOne(context.TODO(), bson.M{"_id": chatID}).Decode(&chat)
@@ -270,13 +341,11 @@ func JoinChatRoom(c *gin.Context) {
 		return
 	}
 
-	// Check if the chat room is closed
 	if chat.Status == "closed" {
 		c.JSON(http.StatusForbidden, gin.H{"error": "Chat room is closed"})
 		return
 	}
 
-	// Resume the chat pool
 	err = chatManager.ResumeChatPool(chatID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to join chat room"})
@@ -285,4 +354,3 @@ func JoinChatRoom(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Joined chat room successfully"})
 }
-

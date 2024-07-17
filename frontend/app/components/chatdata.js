@@ -1,9 +1,34 @@
 "use client";
 import React from "react";
 import { Avatar } from "@nextui-org/react";
-import { getUserDetailsById } from "./helpers";
+import { useState, useEffect } from "react";
+import { fetchAllUsers } from "@/app/helper/apiHelpers";
+import { useRef } from "react";
 
-const ChatData = ({ messages }) => {
+const ChatData = ({ messages, user, chatId }) => {
+  const [users, setUsers] = useState([]);
+  const chatContainerRef = useRef(null);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const response = await fetchAllUsers();
+      const userMap = response.reduce((acc, curr) => {
+        acc[curr.id] = curr; // Create a map for efficient user lookup
+        return acc;
+      }, {});
+      setUsers(userMap);
+    };
+
+    fetchUsers();
+  }, []);
+
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   const formatTime = (timestamp) => {
     const formattedTime = new Date(timestamp).toLocaleTimeString([], {
       hour: "2-digit",
@@ -13,29 +38,33 @@ const ChatData = ({ messages }) => {
     return formattedTime.toUpperCase();
   };
 
-  const currentUserId = 3;
+  const currentUserId = user.id;
 
   return (
     <div className="bg-custom w-[75%] left-[25%] absolute h-screen">
       <div className="px-6 pt-4 ">
         <div className="flex justify-between items-center">
           <h1 className="text-[35px] font-bold custom-heading">Live Chat</h1>
-          <h3 className="font-semibold tracking-wider">XXXX-1234-ZZZZ</h3>
+          <h3 className="font-semibold tracking-wider uppercase">{chatId}</h3>
           <div className="flex p-2 rounded-lg gap-2 justify-center items-center bg-slate-400">
-            <h3 className="text-lg font-semibold">Somraj Bishnoi</h3>
-            <Avatar
-              isBordered
-              radius="sm"
-              src="https://i.pravatar.cc/150?u=a04258a2462d826712d"
-              size="sm"
-            />
+            <h3 className="text-lg font-semibold">{user.name}</h3>
+            <Avatar isBordered radius="sm" src={user.avatar} size="sm" />
           </div>
         </div>
         <div className="mt-7 sticky bg-pink-200 px-4 py-2 rounded-xl">
-          <div className="flex flex-col h-[80vh]">
-            <div className="overflow-y-auto" style={{ scrollbarWidth: "none" }}>
+          <div className="flex flex-col h-[82vh] pb-12">
+            <div
+              className="overflow-y-auto"
+              style={{ scrollbarWidth: "none" }}
+              ref={chatContainerRef}
+            >
               {messages.map((message) => {
-                const userDetails = getUserDetailsById(message.userId);
+                const currentMessageUserId = message.userId;
+                const userDetails = users[currentMessageUserId]; // Lookup user by ID
+
+                if (!userDetails) {
+                  return null;
+                }
                 const isCurrentUser = message.userId === currentUserId;
                 return (
                   <div
@@ -64,18 +93,18 @@ const ChatData = ({ messages }) => {
                         } dark:bg-gray-700`}
                       >
                         <div
-                          className={`flex items-center space-x-2 ${
+                          className={`flex items-center space-x-2 justify-between ${
                             isCurrentUser ? "rtl:space-x-reverse" : ""
                           }`}
                         >
                           <span className="text-sm font-semibold text-gray-900 dark:text-white">
                             {userDetails.name}
                           </span>
-                          <span className="text-sm font-normal text-gray-500 dark:text-gray-400 ">
+                          <span className="text-xs font-normal text-gray-500 dark:text-gray-400">
                             {formatTime(message.timestamp)}
                           </span>
                         </div>
-                        <p className="text-sm font-normal py-2.5 text-gray-900 dark:text-white">
+                        <p className="text-md font-normal pt-2.5 text-gray-900 dark:text-white message-break">
                           {message.text}
                         </p>
                       </div>
@@ -83,19 +112,6 @@ const ChatData = ({ messages }) => {
                   </div>
                 );
               })}
-            </div>
-
-            <div className="fixed w-[70%] top-[87%] border-t border-gray-200">
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  placeholder="Type your message..."
-                  className="flex-1 border border-gray-300 rounded-lg p-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <button className="bg-blue-500 text-white font-semibold py-3 px-6 rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                  Send
-                </button>
-              </div>
             </div>
           </div>
         </div>

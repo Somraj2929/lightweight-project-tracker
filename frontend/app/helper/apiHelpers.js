@@ -40,3 +40,48 @@ export const fetchProjectById = async (id) => {
   const url = `${API_BASE_URL}/projects/${id}`;
   return await fetchData(url);
 };
+
+export const fetchAllUsers = async () => {
+  const url = `${API_BASE_URL}/users/`;
+  return await fetchData(url);
+};
+
+export const fetchMessagesByChatId = async (chatId) => {
+  const url = `${API_BASE_URL}/chats/${chatId}`;
+  return await fetchData(url);
+};
+
+export const validateChatId = async (chatid) => {
+  const response = await fetch(`${API_BASE_URL}/chats/${chatid}/join`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ chatid }),
+  });
+
+  if (response.ok) {
+    return response.json();
+  } else {
+    return null;
+  }
+};
+
+export const createChatRoom = async (currentUser) => {
+  console.log(currentUser);
+  const response = await fetch(`${API_BASE_URL}/chats/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ createdBy: currentUser }),
+  });
+
+  if (response.ok) {
+    return response.json();
+  } else {
+    return null;
+  }
+};

@@ -86,3 +86,9 @@ body {
   font-size: 25px;
   font-weight: bold;
 }
+
+.message-break {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
