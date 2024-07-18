@@ -6,7 +6,7 @@ import SidePanel from "./sidepanel";
 import { validateChatId, createChatRoom } from "../helper/apiHelpers";
 import { useRouter } from "next/navigation";
 
-const Discussion = ({ currentUser }) => {
+const Discussion = ({ user }) => {
   const router = useRouter();
   const [chatid, setChatid] = useState("");
   const [error, setError] = useState("");
@@ -46,19 +46,14 @@ const Discussion = ({ currentUser }) => {
 
   return (
     <div className="flex">
-      <SidePanel />
+      <SidePanel currentUser={user} />
       <div className="bg-custom w-[75%] left-[25%] absolute">
         <div className="px-6 py-4">
           <div className="flex justify-between items-center">
             <h1 className="text-[35px] font-bold custom-heading">Live Chat</h1>
             <div className="flex p-2 rounded-lg gap-2 justify-center items-center bg-slate-400">
-              <h3 className="text-lg font-semibold">{currentUser.name}</h3>
-              <Avatar
-                isBordered
-                radius="sm"
-                src={currentUser.avatar}
-                size="sm"
-              />
+              <h3 className="text-lg font-semibold">{user.name}</h3>
+              <Avatar isBordered radius="sm" src={user.avatar} size="sm" />
             </div>
           </div>
 

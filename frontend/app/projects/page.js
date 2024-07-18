@@ -1,27 +1,13 @@
 "use client";
 import AllProjects from "../components/projects";
-import useAuth from "../hooks/useAuth";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import withAuth from "@/app/hooks/withAuth";
 
-const Projects = () => {
-  const { loading, user } = useAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push("/users/login");
-    }
-  }, [loading, user, router]);
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
+function Projects({ user }) {
   return (
     <>
       <AllProjects user={user} />
     </>
   );
-};
+}
 
-export default Projects;
+export default withAuth(Projects);

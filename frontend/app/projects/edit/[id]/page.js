@@ -4,10 +4,9 @@ import { useParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import EditProject from "@/app/components/editproject";
 import { fetchProjectById } from "@/app/helper/apiHelpers";
-import useAuth from "@/app/hooks/useAuth";
+import withAuth from "@/app/hooks/withAuth";
 
-const Edit = () => {
-  const { loading, user } = useAuth();
+function Edit({ user }) {
   const { id } = useParams();
 
   const [editProject, setEditProject] = useState(null);
@@ -30,7 +29,7 @@ const Edit = () => {
     memoizedFetchProject(); // Trigger the memoized function to fetch project data
   }, [memoizedFetchProject]);
 
-  if (loading || projectLoading) {
+  if (projectLoading) {
     return <p>Loading...</p>;
   }
 
@@ -43,6 +42,6 @@ const Edit = () => {
       <EditProject project={editProject} user={user} />
     </>
   );
-};
+}
 
-export default Edit;
+export default withAuth(Edit);

@@ -1,4 +1,5 @@
 import { nextui } from "@nextui-org/react";
+import { image } from "fontawesome";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -11,6 +12,7 @@ module.exports = {
   theme: {
     extend: {},
   },
+
   darkMode: "class",
   plugins: [nextui()],
 };

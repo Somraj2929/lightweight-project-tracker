@@ -8,7 +8,7 @@ import AllProjectsData from "./allprojectdata";
 const AllProjects = ({ user }) => {
   return (
     <div className="flex">
-      <SidePanel />
+      <SidePanel currentUser={user} />
       <div className="bg-pink-200 min-h-screen w-[75%] left-[25%] absolute">
         <div className="px-6 py-4">
           <div className="flex justify-between items-center">

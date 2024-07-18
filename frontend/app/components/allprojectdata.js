@@ -29,6 +29,7 @@ import users from "@/public/users";
 
 import { fetchColumns, fetchProjects } from "../helper/apiHelpers";
 import Link from "next/link";
+import SpinnerCustom from "./spinner";
 
 const statusColorMap = {
   open: "primary",
@@ -409,7 +410,11 @@ export default function SampleProjects() {
   }, [page, pages, onPreviousPage, onNextPage]);
 
   if (loading) {
-    return <div>Loading...</div>; // You can customize this with a spinner or other loading indicator
+    return (
+      <>
+        <SpinnerCustom />
+      </>
+    );
   }
 
   return (

@@ -1,13 +1,12 @@
 "use client";
-import SidePanel from "@/app/components/sidepanel";
+
 import ViewProject from "@/app/components/viewproject";
 import { useParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import { fetchProjectById } from "@/app/helper/apiHelpers";
-import useAuth from "@/app/hooks/useAuth";
+import withAuth from "@/app/hooks/withAuth";
 
-const View = () => {
-  const { loading, user } = useAuth();
+function View({ user }) {
   const { id } = useParams();
 
   const [viewProject, setViewProject] = useState(null);
@@ -30,7 +29,7 @@ const View = () => {
     memoizedFetchProject(); // Trigger the memoized function to fetch project data
   }, [memoizedFetchProject]);
 
-  if (loading || projectLoading) {
+  if (projectLoading) {
     return <p>Loading...</p>;
   }
 
@@ -40,10 +39,9 @@ const View = () => {
 
   return (
     <>
-      
       <ViewProject project={viewProject} user={user} />
     </>
   );
-};
+}
 
-export default View;
+export default withAuth(View);

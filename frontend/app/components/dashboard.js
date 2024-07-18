@@ -8,6 +8,9 @@ import MyProjects from "./myprojects";
 import SidePanel from "./sidepanel";
 import { useEffect } from "react";
 import { fetchProjects } from "../helper/apiHelpers";
+import router from "next/navigation";
+import SpinnerCustom from "./spinner";
+
 const DashBoard = ({ user }) => {
   const [projects, setProjects] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
@@ -37,13 +40,21 @@ const DashBoard = ({ user }) => {
   const inProgressProjects = filterProjects("inprogress", user.id);
   const closedProjects = filterProjects("closed", user.id);
 
-  if (loading || !user) {
-    return <p>Loading...</p>;
+  if (!user) {
+    router.push("/users/login");
+  }
+
+  if (loading) {
+    return (
+      <>
+        <SpinnerCustom />
+      </>
+    );
   }
 
   return (
     <div>
-      <SidePanel />
+      <SidePanel currentUser={user} />
 
       {/* Main Dashboard */}
       <div className="bg-custom min-h-screen w-[75%] left-[25%] absolute">

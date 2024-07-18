@@ -3,23 +3,15 @@ import SidePanel from "@/app/components/sidepanel";
 import ChatData from "@/app/components/chatdata";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import useAuth from "@/app/hooks/useAuth";
 import { fetchMessagesByChatId } from "@/app/helper/apiHelpers"; // Import the fetch function
 
-const LiveChatData = () => {
-  const { loading, user } = useAuth();
-  const router = useRouter();
+import withAuth from "@/app/hooks/withAuth";
+
+function LiveChatData({ user }) {
   const { chatId } = useParams();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [ws, setWs] = useState(null);
-
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push("/users/login");
-    }
-  }, [loading, user, router]);
 
   useEffect(() => {
     if (chatId) {
@@ -71,13 +63,9 @@ const LiveChatData = () => {
     }
   };
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
   return (
     <>
-      <SidePanel />
+      <SidePanel currentUser={user} />
       {chatId ? (
         <ChatData messages={messages} user={user} chatId={chatId} />
       ) : (
@@ -103,6 +91,6 @@ const LiveChatData = () => {
       </div>
     </>
   );
-};
+}
 
-export default LiveChatData;
+export default withAuth(LiveChatData);

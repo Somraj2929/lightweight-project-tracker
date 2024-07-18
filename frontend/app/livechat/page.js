@@ -1,27 +1,13 @@
 "use client";
 import Discussion from "../components/discussion";
-import useAuth from "../hooks/useAuth";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import withAuth from "@/app/hooks/withAuth";
 
-const LiveChat = () => {
-  const { loading, user } = useAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push("/users/login");
-    }
-  }, [loading, user, router]);
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
+function LiveChat({ user }) {
   return (
     <>
-      <Discussion currentUser={user} />
+      <Discussion user={user} />
     </>
   );
-};
+}
 
-export default LiveChat;
+export default withAuth(LiveChat);
