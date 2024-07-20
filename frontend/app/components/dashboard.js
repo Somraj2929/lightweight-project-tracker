@@ -8,11 +8,9 @@ import MyProjects from "./myprojects";
 import SidePanel from "./sidepanel";
 import { useEffect } from "react";
 import { fetchProjects } from "../helper/apiHelpers";
-import { useRouter } from "next/navigation";
 import SpinnerCustom from "./spinner";
 
 const DashBoard = ({ user }) => {
-  const router = useRouter();
   const [projects, setProjects] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   useEffect(() => {
@@ -40,10 +38,6 @@ const DashBoard = ({ user }) => {
   const openProjects = filterProjects("open", user.id);
   const inProgressProjects = filterProjects("inprogress", user.id);
   const closedProjects = filterProjects("closed", user.id);
-
-  if (!user) {
-    router.push("/users/login");
-  }
 
   if (loading) {
     return (

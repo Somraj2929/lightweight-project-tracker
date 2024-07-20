@@ -1,5 +1,3 @@
-import React from "react";
-
 export const teams = [
   { key: "mamaearth", label: "Mamaearth" },
   { key: "thedermaco", label: "TheDermaCo" },

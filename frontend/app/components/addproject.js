@@ -10,7 +10,6 @@ import {
 } from "@nextui-org/react";
 import users from "@/public/users";
 import Link from "next/link";
-import router from "next/navigation";
 import SidePanel from "./sidepanel";
 import { useRouter } from "next/navigation";
 
@@ -60,12 +59,6 @@ const AddProject = ({ user }) => {
     } catch (error) {
       console.error("Error saving project:", error);
     }
-  };
-
-  const statusColorMap = {
-    open: "primary",
-    inprogress: "warning",
-    closed: "success",
   };
 
   return (

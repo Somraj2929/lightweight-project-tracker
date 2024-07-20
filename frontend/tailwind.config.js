@@ -1,5 +1,4 @@
 import { nextui } from "@nextui-org/react";
-import { image } from "fontawesome";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {

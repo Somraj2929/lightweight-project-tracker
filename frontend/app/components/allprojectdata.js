@@ -275,7 +275,7 @@ export default function FetchAllProjects() {
   const topContent = useMemo(() => {
     return (
       <div className="flex flex-col gap-4 w-auto">
-        <div className="flex justify-between flex-col gap-3 items-end">
+        <div className="flex justify-between flex-col md:flex-row gap-3 items-end">
           <Input
             isClearable
             className="w-full sm:max-w-[30%]"

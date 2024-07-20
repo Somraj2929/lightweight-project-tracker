@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { Avatar, Input, Select, SelectItem, Textarea } from "@nextui-org/react";
 import users from "@/public/users";
