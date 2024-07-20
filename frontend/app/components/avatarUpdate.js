@@ -1,0 +1,81 @@
+import React, { useState } from "react";
+import S3 from "react-s3";
+import imageCompression from "browser-image-compression";
+import s3Config from "@/app/config/s3Config";
+import { updateUserAvatar } from "@/app/helper/apiHelpers";
+
+function ProfilePictureUpload({ user }) {
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [preview, setPreview] = useState(null);
+
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
+    setPreview(URL.createObjectURL(event.target.files[0]));
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      alert("Please select a file first.");
+      return;
+    }
+
+    try {
+      setUploading(true);
+
+      // Compress the image
+      const compressedFile = await imageCompression(selectedFile, {
+        maxSizeMB: 0.5,
+        maxWidthOrHeight: 200,
+        useWebWorker: true,
+      });
+
+      // Ensure unique file name by appending timestamp
+      const uniqueFileName = `${Date.now()}-${compressedFile.name}`;
+
+      // Upload the compressed image to S3
+      const s3Response = await S3.uploadFile(
+        new File([compressedFile], uniqueFileName),
+        s3Config
+      );
+      const avatarUrl = s3Response.location;
+      console.log("Avatar URL:", avatarUrl);
+      // Update the avatar URL in MongoDB using the helper function
+      const imageStatus = await updateUserAvatar(user.id, avatarUrl);
+      if (imageStatus) {
+        alert("Profile picture updated successfully!");
+        window.location.reload();
+      } else {
+        console.error("Error updating the profile picture:", imageStatus);
+      }
+
+      //alert("Profile picture updated successfully!");
+    } catch (error) {
+      console.error("Error uploading the image:", error);
+      alert("Failed to upload the image. Please try again.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div className="flex">
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+        className="border-b-2"
+      />
+      {preview && <img src={preview} alt="Preview" height={50} width={50} />}
+      <button
+        className="bg-green-800 py-2 px-4  text-white rounded"
+        onClick={handleUpload}
+        disabled={uploading}
+      >
+        {uploading ? "Uploading..." : "Upload"}
+      </button>
+    </div>
+  );
+}
+
+export default ProfilePictureUpload;

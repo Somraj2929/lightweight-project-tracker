@@ -101,7 +101,7 @@ export default function MyProjects({ projects = [], user }) {
   }, []);
 
   return (
-    <Table isStriped aria-label="my latest projects">
+    <Table isStriped aria-label="my latest projects" className="w-auto">
       <TableHeader columns={columns}>
         {(column) => (
           <TableColumn

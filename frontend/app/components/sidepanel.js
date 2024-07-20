@@ -3,11 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { TbLogout } from "react-icons/tb";
 import { GrFormEdit } from "react-icons/gr";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
+import ProfilePictureUpload from "./avatarUpdate";
 
 const SidePanel = ({ currentUser }) => {
-  const router = useRouter();
-  const isEditingProfilePicture = true;
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -15,11 +15,15 @@ const SidePanel = ({ currentUser }) => {
   };
 
   const handleEditProfilePic = () => {
-    console.log("Edit profile picture");
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
-    <div className="w-[25%] h-screen bg-white fixed border-r-2">
+    <div className="max-w-[25%] h-screen bg-white fixed border-r-2 hidden md:block">
       <div className="p-6 border-b-2">
         <Image src="/images/logo.svg" alt="logo" width={335} height={52} />
       </div>
@@ -73,15 +77,14 @@ const SidePanel = ({ currentUser }) => {
               alt="profile picture"
               width={100}
               height={100}
-              className="rounded-full"
+              className="rounded-full object-contain"
             />
-            {isEditingProfilePicture && (
-              <div>
-                <span className="absolute bottom-0 right-0 bg-blue-200 rounded-full">
-                  <GrFormEdit className="w-8 h-8" />
-                </span>
-              </div>
-            )}
+            <span
+              className="absolute bottom-0 right-0 bg-blue-200 rounded-full cursor-pointer"
+              onClick={handleEditProfilePic}
+            >
+              <GrFormEdit className="w-8 h-8" />
+            </span>
           </div>
           <div className="flex w-full justify-center border-y-2  p-2">
             <span className="flex w-[90%] justify-center text-lg font-bold items-center border-r-2">
@@ -95,6 +98,22 @@ const SidePanel = ({ currentUser }) => {
           </div>
         </div>
       </div>
+
+      {isModalOpen && (
+        <div className="fixed left-0 justify-center right-[75%] inset-0 bg-black bg-opacity-50 flex items-center">
+          <div className="bg-white w-[22vw] p-4 rounded-lg shadow-lg relative z-10">
+            <ProfilePictureUpload user={currentUser} />
+            <div className="flex justify-between items-center px-24">
+              <button
+                onClick={closeModal}
+                className="mt-4 w-full bg-red-500 right-0 text-white py-2 px-4 rounded"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

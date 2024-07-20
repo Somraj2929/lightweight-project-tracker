@@ -71,7 +71,7 @@ const AddProject = ({ user }) => {
   return (
     <div>
       <SidePanel currentUser={user} />
-      <div className="bg-custom h-screen w-[75%] left-[25%] absolute">
+      <div className="bg-custom h-screen min-w-[75%] left-[25%] absolute">
         <div className="px-6 py-4">
           <div className="flex justify-between items-center">
             <h1 className="text-[35px] font-bold custom-heading">

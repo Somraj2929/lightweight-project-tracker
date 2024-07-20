@@ -85,3 +85,20 @@ export const createChatRoom = async (currentUser) => {
     return null;
   }
 };
+
+export const updateUserAvatar = async (userId, avatarUrl) => {
+  const response = await fetch(`${API_BASE_URL}/users/${userId}/avatar`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ avatar: avatarUrl }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update avatar URL");
+  } else {
+    return response.json();
+  }
+};

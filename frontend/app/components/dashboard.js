@@ -8,10 +8,11 @@ import MyProjects from "./myprojects";
 import SidePanel from "./sidepanel";
 import { useEffect } from "react";
 import { fetchProjects } from "../helper/apiHelpers";
-import router from "next/navigation";
+import { useRouter } from "next/navigation";
 import SpinnerCustom from "./spinner";
 
 const DashBoard = ({ user }) => {
+  const router = useRouter();
   const [projects, setProjects] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   useEffect(() => {
@@ -57,17 +58,21 @@ const DashBoard = ({ user }) => {
       <SidePanel currentUser={user} />
 
       {/* Main Dashboard */}
-      <div className="bg-custom min-h-screen w-[75%] left-[25%] absolute">
+      <div className="bg-custom min-h-screen md:w-[75%] md:left-[25%] absolute w-full">
         <div className="px-6 py-4">
           <div className="flex justify-between items-center">
-            <h1 className="text-[35px] font-bold custom-heading">Dashboard</h1>
+            <h1 className="md:text-[35px] text-[24px] font-bold custom-heading">
+              Dashboard
+            </h1>
             <div className="flex p-2 rounded-lg gap-2 justify-center items-center bg-slate-400">
-              <h3 className="text-lg font-semibold">{user.name}</h3>
+              <h3 className="hidden md:block text-lg font-semibold">
+                {user.name}
+              </h3>
               <Avatar isBordered radius="sm" src={user.avatar} size="sm" />
             </div>
           </div>
-          <div className="mt-7 flex justify-between text-black gap-4">
-            <div className="flex w-full h-[6.5rem] bg-white rounded-[14px] items-center px-4">
+          <div className="mt-7 flex flex-col md:flex-row justify-between text-black gap-4">
+            <div className="flex w-auto h-[6.5rem] bg-white rounded-[14px] items-center px-4">
               <Image src="/images/open.svg" width={85} height={85} alt="open" />
               <div className="px-4">
                 <h2 className="text-xl font-semibold leading-8">
@@ -76,7 +81,7 @@ const DashBoard = ({ user }) => {
                 <p className="text-4xl font-semibold">{openProjects.length}</p>
               </div>
             </div>
-            <div className="flex w-full h-[6.5rem] bg-white rounded-[14px] items-center px-4">
+            <div className="flex w-auto h-[6.5rem] bg-white rounded-[14px] items-center px-4">
               <Image
                 src="/images/inprogress.svg"
                 width={85}
@@ -90,7 +95,7 @@ const DashBoard = ({ user }) => {
                 </p>
               </div>
             </div>
-            <div className="flex w-full h-[6.5rem] bg-white rounded-[14px] items-center px-4">
+            <div className="flex w-auto h-[6.5rem] bg-white rounded-[14px] items-center px-4">
               <Image
                 src="/images/closed.svg"
                 width={85}
@@ -105,7 +110,7 @@ const DashBoard = ({ user }) => {
               </div>
             </div>
           </div>
-          <div className="flex mt-4 justify-between gap-6">
+          <div className="flex mt-4 flex-col md:flex-row justify-between gap-6">
             <div className="w-full h-auto bg-white rounded-[14px] px-4 py-2">
               <h3 className="text-lg font-semibold">Summary</h3>
               <BarChart projects={projects} />
@@ -123,7 +128,7 @@ const DashBoard = ({ user }) => {
               <LineChart projects={projects} />
             </div>
           </div>
-          <div className="pt-4">
+          <div className="pt-4 w-auto">
             <MyProjects projects={projects} user={user} />
           </div>
         </div>

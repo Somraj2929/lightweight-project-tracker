@@ -9,16 +9,20 @@ const AllProjects = ({ user }) => {
   return (
     <div className="flex">
       <SidePanel currentUser={user} />
-      <div className="bg-pink-200 min-h-screen w-[75%] left-[25%] absolute">
+      <div className="bg-pink-200 min-h-screen md:w-[75%] md:left-[25%] absolute w-full">
         <div className="px-6 py-4">
           <div className="flex justify-between items-center">
-            <h1 className="text-[35px] font-bold custom-heading">Projects</h1>
+            <h1 className="md:text-[35px] text-[24px] font-bold custom-heading">
+              Projects
+            </h1>
             <div className="flex p-2 rounded-lg gap-2 justify-center items-center bg-slate-400">
-              <h3 className="text-lg font-semibold">{user.name}</h3>
+              <h3 className="hidden md:block text-lg font-semibold">
+                {user.name}
+              </h3>
               <Avatar isBordered radius="sm" src={user.avatar} size="sm" />
             </div>
           </div>
-          <div className="mt-7">
+          <div className="mt-7 w-auto">
             <AllProjectsData />
           </div>
         </div>

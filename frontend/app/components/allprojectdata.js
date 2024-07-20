@@ -46,7 +46,7 @@ const INITIAL_VISIBLE_COLUMNS = [
   "actions",
 ];
 
-export default function SampleProjects() {
+export default function FetchAllProjects() {
   const [columns, setColumns] = useState([]);
   const [statusOptions, setStatusOptions] = useState([]);
   const [projects, setProjects] = useState([]);
@@ -274,11 +274,11 @@ export default function SampleProjects() {
 
   const topContent = useMemo(() => {
     return (
-      <div className="flex flex-col gap-4">
-        <div className="flex justify-between gap-3 items-end">
+      <div className="flex flex-col gap-4 w-auto">
+        <div className="flex justify-between flex-col gap-3 items-end">
           <Input
             isClearable
-            className="w-full sm:max-w-[44%]"
+            className="w-full sm:max-w-[30%]"
             placeholder="Search by name..."
             startContent={<SearchIcon />}
             value={filterValue}
@@ -424,8 +424,9 @@ export default function SampleProjects() {
       bottomContent={bottomContent}
       bottomContentPlacement="outside"
       classNames={{
-        wrapper: "max-h-[auto]", //382px 5 rows
+        wrapper: "max-h-auto w-auto",
       }}
+      className="w-auto"
       selectedKeys={selectedKeys}
       selectionMode="single"
       selectionBehavior="toggle"
