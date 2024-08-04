@@ -1,11 +1,9 @@
 export const dynamic = "force-dynamic";
 
 export async function POST(req) {
-  
-
   try {
     const { name, email, team, role, password } = await req.json();
-    
+
     const response = await fetch("http://localhost:8081/auth/signup", {
       method: "POST",
       headers: {
@@ -15,7 +13,6 @@ export async function POST(req) {
     });
 
     const data = await response.json();
-    
 
     if (response.ok) {
       const token = data.token;

@@ -1,12 +1,18 @@
 "use client";
 import React from "react";
-import { Avatar } from "@nextui-org/react";
+import { Avatar, Tooltip } from "@nextui-org/react";
 import { useState, useEffect } from "react";
 import { fetchAllUsers } from "@/app/helper/apiHelpers";
 import { useRef } from "react";
+import { LuClipboardCopy } from "react-icons/lu";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Image from "next/image";
+import Link from "next/link";
 
 const ChatData = ({ messages, user, chatId }) => {
   const [users, setUsers] = useState([]);
+  const [copied, setCopied] = useState(false);
   const chatContainerRef = useRef(null);
 
   useEffect(() => {
@@ -30,29 +36,92 @@ const ChatData = ({ messages, user, chatId }) => {
   }, [messages]);
 
   const formatTime = (timestamp) => {
-    const formattedTime = new Date(timestamp).toLocaleTimeString([], {
-      hour: "2-digit",
+    const [datePart, timePart] = timestamp.split("T");
+    const [year, month, day] = datePart.split("-");
+    const [hours, minutes, seconds] = timePart.split(":");
+
+    const date = new Date(year, month - 1, day, hours, minutes);
+    const formattedDate = `${date.getDate()} ${date.toLocaleString("default", {
+      month: "short",
+    })}`; // DD MMM format
+    const formattedTime = date.toLocaleString("en-US", {
+      hour: "numeric",
       minute: "2-digit",
       hour12: true,
-    });
-    return formattedTime.toUpperCase();
+    }); // hh:mm A format
+
+    return `${formattedDate} ${formattedTime}`;
+  };
+
+  const notify = () => toast("Copied to clipboard!", { type: "success" });
+
+  const copyToClipboard = () => {
+    navigator.clipboard
+      .writeText(chatId)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000); // Hide the copied message after 2 seconds
+        notify();
+      })
+      .catch((err) => {
+        console.error("Failed to copy: ", err);
+      });
   };
 
   const currentUserId = user.id;
 
   return (
-    <div className="bg-custom w-[75%] left-[25%] absolute h-screen">
-      <div className="px-6 pt-4 ">
+    <div className="bg-custom md:w-[75%] w-full md:left-[25%] absolute h-full overflow-hidden">
+      <div className="md:px-6 pt-4 px-2 h-auto ">
+        <ToastContainer autoClose={700} />
         <div className="flex justify-between items-center">
+          <Link href="/" className="md:hidden block">
+            <Image
+              src="/images/short-logo.svg"
+              alt="logo"
+              width={60}
+              height={72}
+              className="mix-blend-multiply"
+            />
+          </Link>
           <h1 className="text-[35px] font-bold custom-heading">Live Chat</h1>
-          <h3 className="font-semibold tracking-wider uppercase">{chatId}</h3>
-          <div className="flex p-2 rounded-lg gap-2 justify-center items-center bg-slate-400">
-            <h3 className="text-lg font-semibold">{user.name}</h3>
+          <div className="md:flex items-center space-x-2 bg-blue-100 p-2 rounded-lg hidden">
+            <pre className="font-semibold tracking-wider uppercase">
+              {chatId}
+            </pre>
+            <Tooltip showArrow={true} content="Copy to Clipboard">
+              <button
+                onClick={copyToClipboard}
+                className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none"
+              >
+                <LuClipboardCopy />
+              </button>
+            </Tooltip>
+          </div>
+          <div className="flex md:p-2 rounded-lg gap-2 justify-center items-center bg-slate-400">
+            <h3 className="text-lg hidden md:block font-semibold">
+              {user.name}
+            </h3>
             <Avatar isBordered radius="sm" src={user.avatar} size="sm" />
           </div>
         </div>
+        <div className="flex items-center justify-center md:hidden mt-2">
+          <div className="flex w-auto space-x-2 bg-blue-100 p-2 rounded-lg">
+            <pre className="font-semibold tracking-wider uppercase">
+              {chatId}
+            </pre>
+            <Tooltip showArrow={true} content="Copy to Clipboard">
+              <button
+                onClick={copyToClipboard}
+                className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none"
+              >
+                <LuClipboardCopy />
+              </button>
+            </Tooltip>
+          </div>
+        </div>
         <div className="mt-7 sticky bg-pink-200 px-4 py-2 rounded-xl">
-          <div className="flex flex-col h-[82vh] pb-12">
+          <div className="flex flex-col md:h-[82vh] h-[84vh] md:pb-12 pb-[4.3rem]">
             <div
               className="overflow-y-auto"
               style={{ scrollbarWidth: "none" }}
@@ -86,7 +155,7 @@ const ChatData = ({ messages, user, chatId }) => {
                         alt={`${userDetails.name} avatar`}
                       />
                       <div
-                        className={`flex flex-col w-full max-w-[320px] leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-e-xl ${
+                        className={`flex flex-col w-full max-w-[320px] leading-1.5 p-2 border-gray-200 bg-gray-100 rounded-e-xl ${
                           isCurrentUser
                             ? "rounded-xl rounded-tr-none"
                             : "rounded-es-xl"
@@ -100,13 +169,13 @@ const ChatData = ({ messages, user, chatId }) => {
                           <span className="text-sm font-semibold text-gray-900 dark:text-white">
                             {userDetails.name}
                           </span>
-                          <span className="text-xs font-normal text-gray-500 dark:text-gray-400">
-                            {formatTime(message.timestamp)}
-                          </span>
                         </div>
-                        <p className="text-md font-normal pt-2.5 text-gray-900 dark:text-white message-break">
+                        <p className="text-md font-normal md:py-1.5 py-1 text-gray-900 dark:text-white message-break">
                           {message.text}
                         </p>
+                        <span className="flex justify-end text-xs font-normal text-gray-500 dark:text-gray-400">
+                          {formatTime(message.timestamp)}
+                        </span>
                       </div>
                     </div>
                   </div>

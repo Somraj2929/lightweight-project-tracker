@@ -1,4 +1,8 @@
+//import { getCookie } from "../utils/cookies";
+
 const API_BASE_URL = process.env.BACKEND_BASE_URL || "http://localhost:8081";
+
+//const token = getCookie("token");
 const token = localStorage.getItem("token");
 
 // Helper function to fetch data and parse JSON

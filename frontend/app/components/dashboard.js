@@ -9,10 +9,12 @@ import SidePanel from "./sidepanel";
 import { useEffect } from "react";
 import { fetchProjects } from "../helper/apiHelpers";
 import SpinnerCustom from "./spinner";
+import Link from "next/link";
 
 const DashBoard = ({ user }) => {
   const [projects, setProjects] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -21,7 +23,8 @@ const DashBoard = ({ user }) => {
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
-        setLoading(false);
+        setLoading(true);
+        window.location.reload();
       }
     };
 
@@ -55,10 +58,19 @@ const DashBoard = ({ user }) => {
       <div className="bg-custom min-h-screen md:w-[75%] md:left-[25%] absolute w-full">
         <div className="px-6 py-4">
           <div className="flex justify-between items-center">
+            <Link href="/" className="md:hidden block">
+              <Image
+                src="/images/short-logo.svg"
+                alt="logo"
+                width={60}
+                height={72}
+                className="mix-blend-multiply"
+              />
+            </Link>
             <h1 className="md:text-[35px] text-[24px] font-bold custom-heading">
               Dashboard
             </h1>
-            <div className="flex p-2 rounded-lg gap-2 justify-center items-center bg-slate-400">
+            <div className="flex md:p-2 rounded-lg gap-2 justify-center items-center bg-slate-400">
               <h3 className="hidden md:block text-lg font-semibold">
                 {user.name}
               </h3>
@@ -66,7 +78,7 @@ const DashBoard = ({ user }) => {
             </div>
           </div>
           <div className="mt-7 flex flex-col md:flex-row justify-between text-black gap-4">
-            <div className="flex w-auto h-[6.5rem] bg-white rounded-[14px] items-center px-4">
+            <div className="flex w-full h-[6.5rem] bg-white rounded-[14px] items-center px-4">
               <Image src="/images/open.svg" width={85} height={85} alt="open" />
               <div className="px-4">
                 <h2 className="text-xl font-semibold leading-8">
@@ -75,7 +87,7 @@ const DashBoard = ({ user }) => {
                 <p className="text-4xl font-semibold">{openProjects.length}</p>
               </div>
             </div>
-            <div className="flex w-auto h-[6.5rem] bg-white rounded-[14px] items-center px-4">
+            <div className="flex w-full h-[6.5rem] bg-white rounded-[14px] items-center px-4">
               <Image
                 src="/images/inprogress.svg"
                 width={85}
@@ -89,7 +101,7 @@ const DashBoard = ({ user }) => {
                 </p>
               </div>
             </div>
-            <div className="flex w-auto h-[6.5rem] bg-white rounded-[14px] items-center px-4">
+            <div className="flex w-full h-[6.5rem] bg-white rounded-[14px] items-center px-4">
               <Image
                 src="/images/closed.svg"
                 width={85}

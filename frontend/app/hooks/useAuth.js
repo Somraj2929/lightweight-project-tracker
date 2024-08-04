@@ -1,6 +1,8 @@
-// hooks/useAuth.js
+// Purpouse: This hook is used to check if the user is authenticated and fetch the user info.
+"use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+//import { getCookie, eraseCookie } from "../utils/cookies";
 
 const useAuth = () => {
   const [loading, setLoading] = useState(true);
@@ -28,32 +30,40 @@ const useAuth = () => {
     };
 
     const checkAuth = async () => {
-      const token = localStorage.getItem("token");
+      if (typeof window !== "undefined") {
+        //let token = getCookie("token");
+        let token = localStorage.getItem("token");
 
-      if (token) {
-        try {
-          const response = await fetch("/api/auth/verify", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+        if (token) {
+          try {
+            const response = await fetch("/api/auth/verify", {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
 
-          if (response.ok) {
-            const userData = await response.json();
-            await fetchUserInfo(userData.userID, token); // Pass token for fetching user info
-          } else {
+            if (response.ok) {
+              const userData = await response.json();
+
+              await fetchUserInfo(userData.userID, token); // Pass token for fetching user info
+            } else {
+              console.error("Token verification failed");
+              //eraseCookie("token");
+              localStorage.removeItem("token");
+              router.push("/users/login");
+            }
+          } catch (error) {
+            console.error("Error verifying token:", error);
+            //eraseCookie("token");
             localStorage.removeItem("token");
             router.push("/users/login");
           }
-        } catch (error) {
-          console.error("Error verifying token:", error);
-          localStorage.removeItem("token");
+        } else {
+          console.error("No token found, redirecting to login");
           router.push("/users/login");
         }
-      } else {
-        router.push("/users/login");
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     checkAuth();

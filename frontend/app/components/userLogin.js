@@ -7,6 +7,7 @@ import { EyeFilledIcon } from "./extraIcons/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "./extraIcons/EyeSlashFilledIcon";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+//import { setCookie } from "../utils/cookies";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -40,8 +41,8 @@ const LoginPage = () => {
         console.log(data);
         if (response.ok) {
           const { token } = data;
+          //setCookie("token", token);
           localStorage.setItem("token", token);
-          alert("Logged in successfully!");
           router.push("/");
         } else if (response.status === 401) {
           setErrors({ form: "Invalid email or password" });

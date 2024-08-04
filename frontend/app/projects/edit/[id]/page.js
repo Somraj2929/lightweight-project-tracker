@@ -13,7 +13,7 @@ function Edit({ user }) {
   const [projectLoading, setProjectLoading] = useState(true);
 
   const memoizedFetchProject = useCallback(async () => {
-    if (!loading && user) {
+    if (user) {
       try {
         const projectData = await fetchProjectById(id); // Fetch project by ID
         setEditProject(projectData);
@@ -23,7 +23,7 @@ function Edit({ user }) {
         setProjectLoading(false);
       }
     }
-  }, [loading, user, id]);
+  }, [user, id]);
 
   useEffect(() => {
     memoizedFetchProject(); // Trigger the memoized function to fetch project data

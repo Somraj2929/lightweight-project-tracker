@@ -7,6 +7,8 @@ export async function GET(req) {
     // Ensure proper extraction of the token
     const authorizationHeader = req.headers.get("authorization");
     if (!authorizationHeader) {
+      console.error("Authorization header missing");
+      console.log("Authorization header missing");
       return new Response(
         JSON.stringify({ message: "Authorization header missing" }),
         { status: 401 }

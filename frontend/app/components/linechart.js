@@ -2,6 +2,11 @@
 import { useRef, useEffect } from "react";
 import { Chart } from "chart.js/auto";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export default function LineChart({ projects = [] }) {
   const chartRef = useRef(null);
@@ -16,10 +21,10 @@ export default function LineChart({ projects = [] }) {
 
   const countProjectsByMonth = (projects) => {
     const monthCounts = Array(7).fill(0);
-    const now = dayjs();
+    const now = dayjs().utc().startOf("month");
 
     projects.forEach((project) => {
-      const createdAt = dayjs(project.createdAt);
+      const createdAt = dayjs(project.createdAt).utc().startOf("month");
       const diffInMonths = now.diff(createdAt, "month");
 
       if (diffInMonths >= 0 && diffInMonths < 7) {

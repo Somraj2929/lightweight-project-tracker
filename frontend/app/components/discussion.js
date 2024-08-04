@@ -5,6 +5,7 @@ import Image from "next/image";
 import SidePanel from "./sidepanel";
 import { validateChatId, createChatRoom } from "../helper/apiHelpers";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const Discussion = ({ user }) => {
   const router = useRouter();
@@ -24,7 +25,7 @@ const Discussion = ({ user }) => {
   };
 
   const handleCreateChatRoom = async () => {
-    const response = await createChatRoom(currentUser.id);
+    const response = await createChatRoom(user.id);
 
     if (response.error) {
       setError(response.error);
@@ -45,14 +46,27 @@ const Discussion = ({ user }) => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex ">
       <SidePanel currentUser={user} />
-      <div className="bg-custom w-[75%] left-[25%] absolute">
+      <div className="bg-custom md:w-[75%] md:left-[25%] absolute h-screen">
         <div className="px-6 py-4">
           <div className="flex justify-between items-center">
-            <h1 className="text-[35px] font-bold custom-heading">Live Chat</h1>
-            <div className="flex p-2 rounded-lg gap-2 justify-center items-center bg-slate-400">
-              <h3 className="text-lg font-semibold">{user.name}</h3>
+            <Link href="/" className="md:hidden block">
+              <Image
+                src="/images/short-logo.svg"
+                alt="logo"
+                width={60}
+                height={72}
+                className="mix-blend-multiply"
+              />
+            </Link>
+            <h1 className="md:text-[35px] text-[24px] font-bold custom-heading">
+              Live Chat
+            </h1>
+            <div className="flex md:p-2 rounded-lg gap-2 justify-center items-center bg-slate-400">
+              <h3 className="text-lg hidden md:block font-semibold">
+                {user.name}
+              </h3>
               <Avatar isBordered radius="sm" src={user.avatar} size="sm" />
             </div>
           </div>
@@ -68,11 +82,11 @@ const Discussion = ({ user }) => {
               />
             </div>
             <div className="p-4">
-              <h2 className="text-xl font-bold leading-8 text-center pb-2">
+              <h2 className="text-xl font-bold leading-8 text-center md:pb-2 py-8 md:pt-2">
                 Create a Private Chat Room
               </h2>
-              <div className="flex justify-between gap-16">
-                <div className="w-[50%] border-1 rounded-lg p-4 bg-green-200">
+              <div className="flex flex-col md:flex-row justify-between md:gap-16 gap-4">
+                <div className="md:w-[50%] border-1 rounded-lg p-4 bg-green-200">
                   <p className="text-center leading-10 font-semibold">
                     Already have a chat room? <br /> Enter the room code to join
                   </p>
@@ -94,7 +108,7 @@ const Discussion = ({ user }) => {
                   </div>
                 </div>
 
-                <div className="w-[50%] border-1 rounded-lg p-4 bg-green-200">
+                <div className="md:w-[50%] border-1 rounded-lg p-4 bg-green-200">
                   <p className="text-center leading-10 font-semibold">
                     Don't have a chat room? <br /> Create a new one now
                   </p>

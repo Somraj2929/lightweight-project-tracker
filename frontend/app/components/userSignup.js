@@ -7,6 +7,7 @@ import { teams, roles } from "@/public/signupdetails";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+//import { setCookie } from "../utils/cookies";
 
 const UserSignup = () => {
   const [name, setName] = useState("");
@@ -67,8 +68,8 @@ const UserSignup = () => {
         const data = await response.json();
         if (response.ok) {
           const { token } = data;
+          //setCookie("token", token);
           localStorage.setItem("token", token);
-          alert("Signup successful");
           router.push("/");
         } else {
           if (response.status === 400) {

@@ -3,6 +3,7 @@ import S3 from "react-s3";
 import imageCompression from "browser-image-compression";
 import s3Config from "@/app/config/s3Config";
 import { updateUserAvatar } from "@/app/helper/apiHelpers";
+import { FaUpload } from "react-icons/fa6";
 
 function ProfilePictureUpload({ user }) {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -59,21 +60,28 @@ function ProfilePictureUpload({ user }) {
   };
 
   return (
-    <div className="flex">
-      <input
-        type="file"
-        accept="image/*"
-        onChange={handleFileChange}
-        className="border-b-2"
-      />
-      {preview && <img src={preview} alt="Preview" height={50} width={50} />}
-      <button
-        className="bg-green-800 py-2 px-4  text-white rounded"
-        onClick={handleUpload}
-        disabled={uploading}
-      >
-        {uploading ? "Uploading..." : "Upload"}
-      </button>
+    <div className="flex flex-col">
+      <div className="flex">
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          className="border-b-2 w-full p-2"
+        />
+
+        <button
+          className="bg-green-800 py-2 px-4  text-white rounded"
+          onClick={handleUpload}
+          disabled={uploading}
+        >
+          {uploading ? "Uploading..." : <FaUpload />}
+        </button>
+      </div>
+      <div className="flex justify-center items-center pt-2">
+        {preview && (
+          <img src={preview} alt="Preview" height={160} width={100} />
+        )}
+      </div>
     </div>
   );
 }

@@ -125,6 +125,7 @@ func UpdateProject(c *gin.Context) {
         return
     }
 
+    
     updateData.UpdatedAt = time.Now()
 
     // Fetch existing project data including comments
@@ -133,7 +134,8 @@ func UpdateProject(c *gin.Context) {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
     }
-
+    
+    updateData.CreatedAt = existingProject.CreatedAt
     // Calculate max comment ID in existing comments
     maxCommentID := getMaxCommentID(existingProject.Comments)
 

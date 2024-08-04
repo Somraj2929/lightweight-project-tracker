@@ -11,8 +11,11 @@ import {
 import users from "@/public/users";
 import SidePanel from "./sidepanel";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+//import { getCookie } from "../utils/cookies";
 
 const EditProject = ({ project, user }) => {
+  //const [token, setToken] = useState(null);
   const router = useRouter();
   const currentUserId = user.id;
   const [additionalComments, setAdditionalComments] = useState("");
@@ -42,7 +45,8 @@ const EditProject = ({ project, user }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const token = localStorage.getItem("token"); // Get the token from localStorage
+    //const token = getCookie("token"); // Get the token from cookies
+    const token = localStorage.getItem("token");
 
     const formData = {
       id: project.id,
@@ -95,21 +99,37 @@ const EditProject = ({ project, user }) => {
   return (
     <div className="flex">
       <SidePanel currentUser={user} />
-      <div className="bg-custom w-[75%] left-[25%] absolute">
-        <div className="px-6 py-4">
+      <div className="bg-custom md:w-[75%] md:left-[25%] absolute">
+        <div className="md:px-6 px-2 py-4">
           <div className="flex justify-between items-center">
-            <h1 className="text-[35px] font-bold custom-heading">
+            <Link href="/" className="md:hidden block">
+              <Image
+                src="/images/short-logo.svg"
+                alt="logo"
+                width={60}
+                height={72}
+                className="mix-blend-multiply"
+              />
+            </Link>
+            <h1 className="md:text-[35px] text-[24px] font-bold custom-heading">
               Edit Project
             </h1>
-            <div className="flex p-2 rounded-lg gap-2 justify-center items-center bg-slate-400">
-              <h3 className="text-lg font-semibold">{user.name}</h3>
+            <div className="flex md:p-2 rounded-lg gap-2 justify-center items-center bg-slate-400">
+              <h3 className="hidden md:block text-lg font-semibold">
+                {user.name}
+              </h3>
               <Avatar isBordered radius="sm" src={user.avatar} size="sm" />
             </div>
           </div>
-          <div className="mt-7 pt-2 text-xl font-bold p-4 rounded-xl">
+          <div className="md:mt-7 pt-2 text-xl font-bold md:p-4 rounded-xl">
+            <div className="flex justify-center ">
+              <div className="flex bg-slate-200 p-2 rounded-lg m-4">
+                Project ID : {project.id}
+              </div>
+            </div>
             <form
               onSubmit={handleSubmit}
-              className="flex w-full flex-wrap mb-6 gap-4 px-6"
+              className="flex w-full flex-wrap mb-6 md:gap-4 gap-2 md:px-6"
             >
               <Input
                 isRequired
@@ -119,7 +139,7 @@ const EditProject = ({ project, user }) => {
                 name="project_name"
                 defaultValue={project.name}
               />
-              <div className="flex w-full justify-between">
+              <div className="flex flex-col md:flex-row w-full justify-between gap-2 md:gap-0">
                 <Select
                   isRequired
                   label="Select Team"
@@ -161,7 +181,7 @@ const EditProject = ({ project, user }) => {
                 name="description"
                 defaultValue={project.description}
               />
-              <div className="flex w-full justify-between">
+              <div className="flex flex-col md:flex-row w-full justify-between gap-2 md:gap-0">
                 <Select
                   items={users}
                   selectedKeys={
@@ -299,7 +319,7 @@ const EditProject = ({ project, user }) => {
                 <h2 className="text-2xl font-bold mb-4">Comments</h2>
                 <div className="bg-pink-200 rounded-lg">
                   <div
-                    className="p-4 mx-auto rounded-lg overflow-y-auto"
+                    className="md:p-4 p-2 mx-auto rounded-lg overflow-y-auto"
                     style={{ scrollbarWidth: "none", maxHeight: "300px" }}
                   >
                     {project.comments && project.comments.length > 0 ? (

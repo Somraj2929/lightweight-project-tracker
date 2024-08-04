@@ -12,6 +12,8 @@ import users from "@/public/users";
 import Link from "next/link";
 import SidePanel from "./sidepanel";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+//import { getCookie } from "../utils/cookies";
 
 const AddProject = ({ user }) => {
   const router = useRouter();
@@ -19,7 +21,8 @@ const AddProject = ({ user }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const token = localStorage.getItem("token"); // Get the token from localStorage
+    //const token = getCookie("token");
+    const token = localStorage.getItem("token");
 
     const formData = {
       name: e.target.project_name.value,
@@ -64,21 +67,32 @@ const AddProject = ({ user }) => {
   return (
     <div>
       <SidePanel currentUser={user} />
-      <div className="bg-custom h-screen min-w-[75%] left-[25%] absolute">
-        <div className="px-6 py-4">
+      <div className="bg-custom h-screen md:min-w-[75%] md:left-[25%] absolute">
+        <div className="md:px-6 px-4 py-4">
           <div className="flex justify-between items-center">
-            <h1 className="text-[35px] font-bold custom-heading">
+            <Link href="/" className="md:hidden block">
+              <Image
+                src="/images/short-logo.svg"
+                alt="logo"
+                width={60}
+                height={72}
+                className="mix-blend-multiply"
+              />
+            </Link>
+            <h1 className="md:text-[35px] text-[24px] font-bold custom-heading">
               Add Project
             </h1>
-            <div className="flex p-2 rounded-lg gap-2 justify-center items-center bg-slate-400">
-              <h3 className="text-lg font-semibold">{user.name}</h3>
+            <div className="flex md:p-2 rounded-lg gap-2 justify-center items-center bg-slate-400">
+              <h3 className="hidden md:block text-lg font-semibold">
+                {user.name}
+              </h3>
               <Avatar isBordered radius="sm" src={user.avatar} size="sm" />
             </div>
           </div>
-          <div className="mt-7 pt-2 text-xl font-bold p-4 rounded-xl">
+          <div className="md:mt-7 pt-2 text-xl font-bold md:p-4 rounded-xl">
             <form
               onSubmit={handleSubmit}
-              className="flex w-full flex-wrap mb-6 gap-4 px-6"
+              className="flex w-full flex-wrap my-4 md:gap-4 gap-2 md:px-6"
             >
               <Input
                 isRequired
@@ -87,7 +101,7 @@ const AddProject = ({ user }) => {
                 label="Project Name"
                 name="project_name"
               />
-              <div className="flex w-full justify-between">
+              <div className="flex flex-col md:flex-row w-full justify-between gap-2 md:gap-0">
                 <Select
                   isRequired
                   label="Select Team"
@@ -125,7 +139,7 @@ const AddProject = ({ user }) => {
                 placeholder="Enter your description"
                 name="description"
               />
-              <div className="flex w-full justify-between">
+              <div className="flex flex-col md:flex-row w-full justify-between gap-2 md:gap-0">
                 <Select
                   items={users}
                   isRequired

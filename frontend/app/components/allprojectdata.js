@@ -26,9 +26,8 @@ import { SearchIcon } from "./tableicons/SearchIcon";
 import { ChevronDownIcon } from "./tableicons/ChevronDownIcon";
 import { capitalize } from "./utils";
 import users from "@/public/users";
-
-import { fetchColumns, fetchProjects } from "../helper/apiHelpers";
 import Link from "next/link";
+import { fetchColumns, fetchProjects } from "../helper/apiHelpers";
 import SpinnerCustom from "./spinner";
 
 const statusColorMap = {
@@ -376,7 +375,7 @@ export default function FetchAllProjects() {
   const bottomContent = useMemo(() => {
     return (
       <div className="py-2 px-2 flex justify-center items-center">
-        <div className="hidden sm:flex w-full justify-between">
+        <div className="flex w-full justify-between">
           <Button
             isDisabled={pages === 1}
             size="sm"
