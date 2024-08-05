@@ -150,10 +150,11 @@ const ChatData = ({ messages, user, chatId }) => {
                       } gap-2.5`}
                     >
                       <img
-                        className="w-8 h-8 rounded-full"
+                        className="w-8 h-8 rounded-full object-fit:cover"
                         src={userDetails.avatar}
                         alt={`${userDetails.name} avatar`}
                       />
+
                       <div
                         className={`flex flex-col w-full max-w-[320px] leading-1.5 p-2 border-gray-200 bg-gray-100 rounded-e-xl ${
                           isCurrentUser
