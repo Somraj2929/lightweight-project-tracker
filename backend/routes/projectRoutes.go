@@ -13,6 +13,6 @@ func ProjectRoutes(router *gin.Engine) {
         project.GET("/:id", middleware.AuthMiddleware(), controllers.GetProjectDetails)
         project.PUT("/:id", middleware.AuthMiddleware(), controllers.UpdateProject)
         project.GET("/", middleware.AuthMiddleware(), controllers.GetAllProjects) 
-		project.DELETE("/:id", middleware.AuthMiddleware(), controllers.DeleteProject) 
+		project.DELETE("/:id/:userID", middleware.AuthMiddleware(), controllers.DeleteProject) 
     }
 }

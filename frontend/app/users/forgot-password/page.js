@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { Input } from "@nextui-org/react";
 import Image from "next/image";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -30,14 +32,26 @@ const ForgotPassword = () => {
     });
 
     if (response.ok) {
-      alert("Check your email for the password reset link.");
+      //setMessage("Check your email for the password reset link.");
+      notify();
+    } else if (response.status === 429) {
+      setMessage("Too many requests. Please try again later.");
     } else {
       setMessage("Error requesting password reset.");
     }
   };
 
+  const notify = () => toast("Check your email for the password reset link.");
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSubmit();
+    }
+  };
+
   return (
     <div className="flex justify-center items-center h-screen bg-signup">
+      <ToastContainer />
       <div className="md:max-w-[26rem] w-auto max-w-[22rem] bg-white rounded-lg shadow-lg p-8">
         <Image
           src="/images/logo.svg"
@@ -48,7 +62,7 @@ const ForgotPassword = () => {
         />
         <h2 className="text-2xl font-bold text-center mb-4">Send Reset Link</h2>
         <form>
-          <div className="mb-4">
+          <div className="mb-2">
             <Input
               isRequired
               variant="underlined"
@@ -65,10 +79,11 @@ const ForgotPassword = () => {
           {message && <p className="text-red-500 text-xs mb-2">{message}</p>}
           <button
             type="submit"
+            onKeyDown={handleKeyDown}
             onClick={handleSubmit}
             className="w-full bg-blue-500 text-white rounded-lg px-4 py-2"
           >
-            Send Password Reset Link
+            Send Reset Link
           </button>
         </form>
       </div>

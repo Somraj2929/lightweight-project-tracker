@@ -66,7 +66,7 @@ const LoginPage = () => {
           height={100}
           className="flex justify-center items-center mx-auto m-4"
         />
-        <h2 className="text-2xl font-bold text-center mb-6">Reset Password</h2>
+        <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
         <form>
           <div className="mb-4">
             <Input
@@ -132,6 +132,14 @@ const LoginPage = () => {
               className="text-blue-500 hover:underline"
             >
               Sign Up
+            </Link>
+          </p>
+          <p className="text-center mt-2">
+            <Link
+              href="/users/forgot-password"
+              className="text-blue-500 underline"
+            >
+              Forgot Password
             </Link>
           </p>
         </form>

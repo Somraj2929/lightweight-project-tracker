@@ -6,9 +6,10 @@ import (
 	"strconv"
 	"time"
 	"crypto/rand"
+	 mathRand "math/rand"
 	"encoding/base64"
 	"context"
-
+	
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
@@ -40,7 +41,7 @@ func Signup(c *gin.Context) {
 		return
 	}
 
-	
+	// Generate user ID
 	userID, err := models.GetNextUserID()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate user ID"})
@@ -48,7 +49,7 @@ func Signup(c *gin.Context) {
 	}
 	user.ID = userID
 
-	
+	// Hash the password
 	hashedPassword, err := utils.HashPassword(user.Password)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
@@ -56,8 +57,35 @@ func Signup(c *gin.Context) {
 	}
 	user.Password = hashedPassword
 
-	// Set default avatar
-	user.Avatar = "https://d2u8k2ocievbld.cloudfront.net/memojis/male/1.png"
+	// Array of avatar links
+	avatars := []string{
+		"https://d2u8k2ocievbld.cloudfront.net/memojis/male/1.png",
+		"https://d2u8k2ocievbld.cloudfront.net/memojis/male/2.png",
+		"https://d2u8k2ocievbld.cloudfront.net/memojis/male/3.png",
+		"https://d2u8k2ocievbld.cloudfront.net/memojis/female/1.png",
+		"https://d2u8k2ocievbld.cloudfront.net/memojis/female/2.png",
+		"https://d2u8k2ocievbld.cloudfront.net/memojis/female/3.png",
+		"https://d2u8k2ocievbld.cloudfront.net/memojis/male/4.png",
+		"https://d2u8k2ocievbld.cloudfront.net/memojis/male/5.png",
+		"https://d2u8k2ocievbld.cloudfront.net/memojis/male/6.png",
+		"https://d2u8k2ocievbld.cloudfront.net/memojis/male/7.png",
+		"https://d2u8k2ocievbld.cloudfront.net/memojis/male/8.png",
+		"https://d2u8k2ocievbld.cloudfront.net/memojis/male/9.png",
+		"https://d2u8k2ocievbld.cloudfront.net/memojis/male/10.png",
+		"https://d2u8k2ocievbld.cloudfront.net/memojis/female/4.png",
+		"https://d2u8k2ocievbld.cloudfront.net/memojis/female/5.png",
+		"https://d2u8k2ocievbld.cloudfront.net/memojis/female/6.png",
+		"https://d2u8k2ocievbld.cloudfront.net/memojis/female/7.png",
+		"https://d2u8k2ocievbld.cloudfront.net/memojis/female/8.png",
+		"https://d2u8k2ocievbld.cloudfront.net/memojis/female/9.png",
+		"https://d2u8k2ocievbld.cloudfront.net/memojis/female/10.png",
+	}
+
+	// Seed the random number generator and select a random avatar
+	source := mathRand.NewSource(time.Now().UnixNano())
+	r := mathRand.New(source)
+	randomIndex := r.Intn(len(avatars))
+	user.Avatar = avatars[randomIndex]
 
 	// Set created and updated timestamps
 	now := time.Now()

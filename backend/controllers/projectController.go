@@ -9,6 +9,7 @@ import (
 	"github.com/Somraj2929/lightweight-project-tracker/models"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+    "go.mongodb.org/mongo-driver/mongo"
 	//"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -192,6 +193,14 @@ func getProjectByID(c *gin.Context, id int) (models.Project, error) {
 
 func DeleteProject(c *gin.Context) {
 	projectID := c.Param("id")
+    userIDStr := c.Param("userID")
+    
+    userID, err := strconv.Atoi(userIDStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		return
+	}
+
 	id, err := strconv.Atoi(projectID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid project ID"})
@@ -199,6 +208,23 @@ func DeleteProject(c *gin.Context) {
 	}
 
 	collection := db.MongoClient.Database("project_tracker").Collection("projects")
+	var project models.Project
+	err = collection.FindOne(c, bson.M{"id": id}).Decode(&project)
+	if err == mongo.ErrNoDocuments {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Project not found"})
+		return
+	} else if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Check if the user is authorized to delete the project
+	if project.FromUserID != userID {
+		c.JSON(http.StatusForbidden, gin.H{"error": "You are not authorized to delete this project"})
+		return
+	}
+
+	// Delete the project from the database
 	_, err = collection.DeleteOne(c, bson.M{"id": id})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

@@ -15,8 +15,6 @@ export async function POST(req) {
       }
     );
 
-    const data = await res.json();
-
     if (res.ok) {
       return new Response(
         JSON.stringify({
@@ -26,9 +24,9 @@ export async function POST(req) {
       );
     } else {
       return new Response(
-        JSON.stringify({ message: "Error requesting password reset." }),
+        JSON.stringify({ message: "Too many request. Please try again later" }),
         {
-          status: 401,
+          status: 429,
         }
       );
     }
