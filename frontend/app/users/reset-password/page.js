@@ -1,10 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Input } from "@nextui-org/react";
 import Image from "next/image";
 
-const ResetPassword = () => {
+const ResetPasswordComponent = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -104,5 +104,11 @@ const ResetPassword = () => {
     </div>
   );
 };
+
+const ResetPassword = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <ResetPasswordComponent />
+  </Suspense>
+);
 
 export default ResetPassword;
