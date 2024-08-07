@@ -11,7 +11,7 @@ const AllProjects = ({ user }) => {
   return (
     <div className="flex">
       <SidePanel currentUser={user} />
-      <div className="bg-pink-200 min-h-screen md:w-[75%] md:left-[25%] absolute w-full">
+      <div className="bg-custom min-h-screen md:w-[75%] md:left-[25%] absolute w-full">
         <div className="px-6 py-4">
           <div className="flex justify-between items-center">
             <Link href="/" className="md:hidden block">
@@ -34,7 +34,7 @@ const AllProjects = ({ user }) => {
             </div>
           </div>
           <div className="mt-7 w-auto">
-            <AllProjectsData />
+            <AllProjectsData currentUser={user} />
           </div>
         </div>
       </div>

@@ -48,7 +48,7 @@ const Discussion = ({ user }) => {
   return (
     <div className="flex ">
       <SidePanel currentUser={user} />
-      <div className="bg-custom md:w-[75%] md:left-[25%] absolute h-screen">
+      <div className="bg-custom md:w-[75%] md:left-[25%] w-full absolute h-full">
         <div className="px-6 py-4">
           <div className="flex justify-between items-center">
             <Link href="/" className="md:hidden block">

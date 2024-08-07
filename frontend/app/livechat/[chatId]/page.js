@@ -10,6 +10,7 @@ import withAuth from "@/app/hooks/withAuth";
 function LiveChatData({ user }) {
   const { chatId } = useParams();
   const [messages, setMessages] = useState([]);
+  const [chatDetails, setChatDetails] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [ws, setWs] = useState(null);
 
@@ -19,6 +20,7 @@ function LiveChatData({ user }) {
         try {
           const fetchedChatDetails = await fetchMessagesByChatId(chatId);
           const fetchedMessages = fetchedChatDetails.messages;
+          setChatDetails(fetchedChatDetails);
           setMessages(fetchedMessages);
         } catch (error) {
           console.error("Error fetching messages:", error);
@@ -67,11 +69,11 @@ function LiveChatData({ user }) {
     <>
       <SidePanel currentUser={user} />
       {chatId ? (
-        <ChatData messages={messages} user={user} chatId={chatId} />
+        <ChatData messages={messages} user={user} chatDetails={chatDetails} />
       ) : (
         <p>Loading...</p>
       )}
-      <div className="fixed md:w-[70%] w-full px-4 md:left-[27.5%] bottom-1 md:top-[90%] border-gray-200">
+      <div className="fixed md:w-[70%] w-full px-4 pt-1 md:left-[27.5%] bottom-1 md:top-[90%] border-gray-200">
         <div className="flex items-center gap-2">
           <input
             type="text"

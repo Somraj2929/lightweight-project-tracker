@@ -144,7 +144,7 @@ const EditProject = ({ project, user }) => {
                   isRequired
                   label="Select Team"
                   placeholder="Select a Team"
-                  className="max-w-sm"
+                  className="max-w-auto"
                   name="team"
                   defaultSelectedKeys={[project.team]}
                 >
@@ -161,7 +161,7 @@ const EditProject = ({ project, user }) => {
                   color={statusColorMap[project.status]}
                   label="Select Status"
                   placeholder="Select project status"
-                  className="max-w-sm"
+                  className="max-w-auto"
                   variant="flat"
                   name="status"
                   defaultSelectedKeys={[project.status]}
@@ -189,7 +189,7 @@ const EditProject = ({ project, user }) => {
                   }
                   name="fromUserId"
                   label="Assigned From"
-                  className="max-w-sm"
+                  className="max-w-auto"
                   variant="flat"
                   classNames={{
                     label: "group-data-[filled=true]:-translate-y-5",
@@ -238,7 +238,7 @@ const EditProject = ({ project, user }) => {
                   isRequired
                   label="Assigned To"
                   name="toUserId"
-                  className="max-w-sm"
+                  className="max-w-auto"
                   variant="flat"
                   selectedKeys={
                     project.toUserId ? [project.toUserId.toString()] : []

@@ -106,7 +106,7 @@ const AddProject = ({ user }) => {
                   isRequired
                   label="Select Team"
                   placeholder="Select a Team"
-                  className="max-w-sm"
+                  className="max-w-auto"
                   name="team"
                 >
                   <SelectSection title="All Teams">
@@ -121,7 +121,7 @@ const AddProject = ({ user }) => {
                   isRequired
                   label="Select Status"
                   placeholder="Select project status"
-                  className="max-w-sm"
+                  className="max-w-auto"
                   variant="flat"
                   name="status"
                 >
@@ -145,7 +145,7 @@ const AddProject = ({ user }) => {
                   isRequired
                   name="assigned_from"
                   label="Assigned From"
-                  className="max-w-sm"
+                  className="max-w-auto"
                   variant="flat"
                   //defaultSelectedKeys={[user.id]}
                   selectedKeys={user.id ? [user.id.toString()] : []}
@@ -196,7 +196,7 @@ const AddProject = ({ user }) => {
                   isRequired
                   label="Assigned To"
                   name="assigned_to"
-                  className="max-w-sm"
+                  className="max-w-auto"
                   variant="flat"
                   classNames={{
                     label: "group-data-[filled=true]:-translate-y-5",

@@ -2,18 +2,21 @@
 import React from "react";
 import { Avatar, Tooltip } from "@nextui-org/react";
 import { useState, useEffect } from "react";
-import { fetchAllUsers } from "@/app/helper/apiHelpers";
+import { fetchAllUsers, closeChatRoom } from "@/app/helper/apiHelpers";
 import { useRef } from "react";
 import { LuClipboardCopy } from "react-icons/lu";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Image from "next/image";
 import Link from "next/link";
+import { MdClose } from "react-icons/md";
+import { useRouter } from "next/navigation";
 
-const ChatData = ({ messages, user, chatId }) => {
+const ChatData = ({ messages, user, chatDetails }) => {
   const [users, setUsers] = useState([]);
   const [copied, setCopied] = useState(false);
   const chatContainerRef = useRef(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -57,7 +60,7 @@ const ChatData = ({ messages, user, chatId }) => {
 
   const copyToClipboard = () => {
     navigator.clipboard
-      .writeText(chatId)
+      .writeText(chatDetails.id)
       .then(() => {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000); // Hide the copied message after 2 seconds
@@ -69,6 +72,26 @@ const ChatData = ({ messages, user, chatId }) => {
   };
 
   const currentUserId = user.id;
+
+  const closeChat = async () => {
+    if (chatDetails.createdBy === currentUserId) {
+      if (confirm("Are you sure you want to close this chat?")) {
+        try {
+          const response = await closeChatRoom(chatDetails.id);
+
+          if (response.success === true) {
+            alert(response.message);
+            router.push("/livechat");
+          } else {
+            alert("Failed to close the chat");
+          }
+        } catch (error) {
+          console.error("Error closing chat:", error);
+          alert("Failed to close the chat");
+        }
+      }
+    }
+  };
 
   return (
     <div className="bg-custom md:w-[75%] w-full md:left-[25%] absolute h-full overflow-hidden">
@@ -87,14 +110,22 @@ const ChatData = ({ messages, user, chatId }) => {
           <h1 className="text-[35px] font-bold custom-heading">Live Chat</h1>
           <div className="md:flex items-center space-x-2 bg-blue-100 p-2 rounded-lg hidden">
             <pre className="font-semibold tracking-wider uppercase">
-              {chatId}
+              {chatDetails.id}
             </pre>
             <Tooltip showArrow={true} content="Copy to Clipboard">
               <button
                 onClick={copyToClipboard}
-                className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none"
+                className="px-2 py-1 bg-green-500 text-white rounded hover:bg-blue-600 focus:outline-none"
               >
                 <LuClipboardCopy />
+              </button>
+            </Tooltip>
+            <Tooltip showArrow={true} content="Close the Chat">
+              <button
+                onClick={closeChat}
+                className="px-2 py-1 bg-red-400 text-white rounded hover:bg-red -600 focus:outline-none"
+              >
+                <MdClose />
               </button>
             </Tooltip>
           </div>
@@ -108,7 +139,7 @@ const ChatData = ({ messages, user, chatId }) => {
         <div className="flex items-center justify-center md:hidden mt-2">
           <div className="flex w-auto space-x-2 bg-blue-100 p-2 rounded-lg">
             <pre className="font-semibold tracking-wider uppercase">
-              {chatId}
+              {chatDetails.id}
             </pre>
             <Tooltip showArrow={true} content="Copy to Clipboard">
               <button
@@ -116,6 +147,14 @@ const ChatData = ({ messages, user, chatId }) => {
                 className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none"
               >
                 <LuClipboardCopy />
+              </button>
+            </Tooltip>
+            <Tooltip showArrow={true} content="Close the Chat">
+              <button
+                onClick={closeChat}
+                className="px-2 py-1 bg-red-400 text-white rounded hover:bg-red -600 focus:outline-none"
+              >
+                <MdClose />
               </button>
             </Tooltip>
           </div>

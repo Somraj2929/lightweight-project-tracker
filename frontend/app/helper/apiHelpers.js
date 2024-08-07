@@ -106,3 +106,38 @@ export const updateUserAvatar = async (userId, avatarUrl) => {
     return response.json();
   }
 };
+
+export const deleteProjects = async (projectId, currentUserId) => {
+  const response = await fetch(
+    `${API_BASE_URL}/projects/${projectId}/${currentUserId}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to delete project");
+  } else {
+    return { success: true, message: "Project deleted successfully" };
+  }
+};
+
+export const closeChatRoom = async (chatId) => {
+  const response = await fetch(`${API_BASE_URL}/chats/${chatId}/close`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to close chat room");
+  } else {
+    return { success: true, message: "Chat room closed successfully" };
+  }
+};

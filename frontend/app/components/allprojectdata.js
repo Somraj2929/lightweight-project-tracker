@@ -25,10 +25,18 @@ import { DeleteIcon } from "./tableicons/DeleteIcon";
 import { SearchIcon } from "./tableicons/SearchIcon";
 import { ChevronDownIcon } from "./tableicons/ChevronDownIcon";
 import { capitalize } from "./utils";
-import users from "@/public/users";
+//import users from "@/public/users";
 import Link from "next/link";
-import { fetchColumns, fetchProjects } from "../helper/apiHelpers";
+import {
+  fetchColumns,
+  fetchProjects,
+  fetchAllUsers,
+  deleteProjects,
+} from "../helper/apiHelpers";
 import SpinnerCustom from "./spinner";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/navigation";
 
 const statusColorMap = {
   open: "primary",
@@ -45,23 +53,27 @@ const INITIAL_VISIBLE_COLUMNS = [
   "actions",
 ];
 
-export default function FetchAllProjects() {
+export default function FetchAllProjects({ currentUser }) {
   const [columns, setColumns] = useState([]);
   const [statusOptions, setStatusOptions] = useState([]);
   const [projects, setProjects] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [columnsData, projectsData] = await Promise.all([
+        const [columnsData, projectsData, usersData] = await Promise.all([
           fetchColumns(),
           fetchProjects(),
+          fetchAllUsers(),
         ]);
 
         setStatusOptions(columnsData[0].statusOptions);
         setColumns(columnsData[0].columns);
         setProjects(projectsData);
+        setUsers(usersData);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -72,8 +84,34 @@ export default function FetchAllProjects() {
     fetchData();
   }, []);
 
+  const unauthorized = () =>
+    toast("You are not the creator of the project", { type: "error" });
+
+  const authorized = () =>
+    toast("Project deleted successfully", { type: "success" });
+
+  const handleProjectDelete = async (projectFromUserId, projectId) => {
+    const authorizedUser = currentUser.id;
+
+    if (projectFromUserId === authorizedUser) {
+      try {
+        const response = await deleteProjects(projectId, authorizedUser);
+
+        if (response.success === true) {
+          authorized();
+          window.location.reload();
+        } else {
+          console.error("Error deleting project:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error deleting project:", error);
+      }
+    } else {
+      unauthorized();
+    }
+  };
+
   const getUserDetailsById = (userId) => {
-    console.log(`Getting user details for ID: ${userId}`);
     return users.find((user) => user.id === userId);
   };
 
@@ -164,85 +202,94 @@ export default function FetchAllProjects() {
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = useCallback((project, columnKey) => {
-    const cellValue = project[columnKey];
+  const renderCell = useCallback(
+    (project, columnKey) => {
+      const cellValue = project[columnKey];
 
-    switch (columnKey) {
-      case "id":
-        return <div className="font-semibold">{cellValue}</div>;
+      switch (columnKey) {
+        case "id":
+          return <div className="font-semibold">{cellValue}</div>;
 
-      case "name":
-        return <div className="text-slate-800 font-semibold ">{cellValue}</div>;
-      case "status":
-        return (
-          <Chip
-            className="uppercase font-bold"
-            color={statusColorMap[project.status]}
-            size="sm"
-            variant="flat"
-          >
-            {cellValue}
-          </Chip>
-        );
+        case "name":
+          return (
+            <div className="text-slate-800 font-semibold ">{cellValue}</div>
+          );
+        case "status":
+          return (
+            <Chip
+              className="uppercase font-bold"
+              color={statusColorMap[project.status]}
+              size="sm"
+              variant="flat"
+            >
+              {cellValue}
+            </Chip>
+          );
 
-      case "createdAt":
-        return <div className="font-semibold">{formatDate(cellValue)}</div>;
+        case "createdAt":
+          return <div className="font-semibold">{formatDate(cellValue)}</div>;
 
-      case "updatedAt":
-        return <div className="font-semibold">{formatDate(cellValue)}</div>;
+        case "updatedAt":
+          return <div className="font-semibold">{formatDate(cellValue)}</div>;
 
-      case "fromUserId":
-        const assignedFromUser = getUserDetailsById(project.fromUserId);
-        console.log(assignedFromUser);
-        return (
-          <User
-            avatarProps={{ radius: "full", src: assignedFromUser.avatar }}
-            name={assignedFromUser.name}
-            description={assignedFromUser.email}
-          ></User>
-        );
+        case "fromUserId":
+          const assignedFromUser = getUserDetailsById(project.fromUserId);
+          return (
+            <User
+              avatarProps={{ radius: "full", src: assignedFromUser.avatar }}
+              name={assignedFromUser.name}
+              description={assignedFromUser.email}
+            ></User>
+          );
 
-      case "toUserId":
-        const assignedToUser = getUserDetailsById(project.toUserId);
-        console.log(assignedToUser);
-        return (
-          <User
-            avatarProps={{ radius: "full", src: assignedToUser.avatar }}
-            name={assignedToUser.name}
-            description={assignedToUser.email}
-          ></User>
-        );
+        case "toUserId":
+          const assignedToUser = getUserDetailsById(project.toUserId);
+          return (
+            <User
+              avatarProps={{ radius: "full", src: assignedToUser.avatar }}
+              name={assignedToUser.name}
+              description={assignedToUser.email}
+            ></User>
+          );
 
-      case "team":
-        return <div className="font-semibold">{cellValue}</div>;
-      case "actions":
-        return (
-          <div className="relative flex items-center gap-2">
-            <Link href={`/projects/view/${project.id}`}>
-              <Tooltip color="primary" content="View Project">
-                <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                  <EyeIcon />
-                </span>
-              </Tooltip>
-            </Link>
-            <Link href={`/projects/edit/${project.id}`}>
-              <Tooltip color="primary" content="Edit Project">
-                <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                  <EditIcon />
-                </span>
-              </Tooltip>
-            </Link>
-            <Tooltip color="danger" content="Delete Project">
-              <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                <DeleteIcon />
-              </span>
-            </Tooltip>
-          </div>
-        );
-      default:
-        return cellValue;
-    }
-  }, []);
+        case "team":
+          return <div className="font-semibold">{cellValue}</div>;
+        case "actions":
+          return (
+            <div className="relative flex items-center gap-2">
+              <Link href={`/projects/view/${project.id}`}>
+                <Tooltip color="primary" content="View Project">
+                  <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                    <EyeIcon />
+                  </span>
+                </Tooltip>
+              </Link>
+              <Link href={`/projects/edit/${project.id}`}>
+                <Tooltip color="primary" content="Edit Project">
+                  <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                    <EditIcon />
+                  </span>
+                </Tooltip>
+              </Link>
+              <div
+                onClick={() =>
+                  handleProjectDelete(project.fromUserId, project.id)
+                }
+              >
+                <Tooltip color="danger" content="Delete Project">
+                  <span className="text-lg text-danger cursor-pointer active:opacity-50">
+                    <DeleteIcon />
+                  </span>
+                </Tooltip>
+              </div>
+            </div>
+          );
+        default:
+          return cellValue;
+      }
+    },
+    [users]
+  );
 
   const onNextPage = useCallback(() => {
     if (page < pages) {
@@ -417,44 +464,47 @@ export default function FetchAllProjects() {
   }
 
   return (
-    <Table
-      aria-label="All projects table"
-      isHeaderSticky
-      bottomContent={bottomContent}
-      bottomContentPlacement="outside"
-      classNames={{
-        wrapper: "max-h-auto w-auto",
-      }}
-      className="w-auto"
-      selectedKeys={selectedKeys}
-      selectionMode="single"
-      selectionBehavior="toggle"
-      sortDescriptor={sortDescriptor}
-      topContent={topContent}
-      topContentPlacement="outside"
-      onSelectionChange={setSelectedKeys}
-      onSortChange={setSortDescriptor}
-    >
-      <TableHeader columns={headerColumns}>
-        {(column) => (
-          <TableColumn
-            key={column.uid}
-            align={column.uid === "actions" ? "center" : "start"}
-            allowsSorting={column.sortable}
-          >
-            {column.name}
-          </TableColumn>
-        )}
-      </TableHeader>
-      <TableBody emptyContent={"No project found"} items={sortedItems}>
-        {(item) => (
-          <TableRow key={item.id}>
-            {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
-            )}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+    <>
+      <ToastContainer />
+      <Table
+        aria-label="All projects table"
+        isHeaderSticky
+        bottomContent={bottomContent}
+        bottomContentPlacement="outside"
+        classNames={{
+          wrapper: "max-h-auto w-auto",
+        }}
+        className="w-auto"
+        selectedKeys={selectedKeys}
+        selectionMode="single"
+        selectionBehavior="toggle"
+        sortDescriptor={sortDescriptor}
+        topContent={topContent}
+        topContentPlacement="outside"
+        onSelectionChange={setSelectedKeys}
+        onSortChange={setSortDescriptor}
+      >
+        <TableHeader columns={headerColumns}>
+          {(column) => (
+            <TableColumn
+              key={column.uid}
+              align={column.uid === "actions" ? "center" : "start"}
+              allowsSorting={column.sortable}
+            >
+              {column.name}
+            </TableColumn>
+          )}
+        </TableHeader>
+        <TableBody emptyContent={"No project found"} items={sortedItems}>
+          {(item) => (
+            <TableRow key={item.id}>
+              {(columnKey) => (
+                <TableCell>{renderCell(item, columnKey)}</TableCell>
+              )}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </>
   );
 }

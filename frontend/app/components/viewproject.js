@@ -80,7 +80,7 @@ const ViewProject = ({ project, user }) => {
                 <Select
                   label="Team"
                   placeholder="Select a Team"
-                  className="max-w-sm"
+                  className="max-w-auto"
                   variant="flat"
                   selectedKeys={[project.team]}
                 >
@@ -94,7 +94,7 @@ const ViewProject = ({ project, user }) => {
                   label="Status"
                   color={statusColorMap[project.status]}
                   placeholder="Select project status"
-                  className="max-w-sm "
+                  className="max-w-auto"
                   variant="flat"
                   selectedKeys={[project.status]}
                 >
@@ -117,7 +117,7 @@ const ViewProject = ({ project, user }) => {
                   }
                   name="fromUserId"
                   label="Assigned From"
-                  className="max-w-sm"
+                  className="max-w-auto"
                   variant="flat"
                   classNames={{
                     label: "group-data-[filled=true]:-translate-y-5",
@@ -165,7 +165,7 @@ const ViewProject = ({ project, user }) => {
                   items={users}
                   label="Assigned To"
                   name="toUserId"
-                  className="max-w-sm"
+                  className="max-w-auto"
                   variant="flat"
                   selectedKeys={
                     project.toUserId ? [project.toUserId.toString()] : []
