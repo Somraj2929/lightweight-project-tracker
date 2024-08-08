@@ -63,5 +63,10 @@ func main() {
     routes.StatusAndColumnsRoutes(router)
 
     // Start server
-    router.Run(os.Getenv("PORT"))
+    //router.Run(os.Getenv("PORT"))
+    err := router.Run(":" + os.Getenv("PORT"))
+    if err != nil {
+        panic(err)
+    }
+    
 }
