@@ -28,7 +28,7 @@ function LiveChatData({ user }) {
       };
 
       const socket = new WebSocket(
-        `ws://localhost:8081/chats/ws?chatID=${chatId}`
+        `wss://somraj-project-tracker-nma47.ondigitalocean.app/chats/ws?chatID=${chatId}`
       );
 
       socket.onopen = async () => {
