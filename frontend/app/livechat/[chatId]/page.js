@@ -73,7 +73,7 @@ function LiveChatData({ user }) {
       ) : (
         <p>Loading...</p>
       )}
-      <div className="fixed md:w-[70%] w-full px-4 pt-1 md:left-[27.5%] bottom-1 md:top-[90%] border-gray-200">
+      <div className="fixed md:w-[70%] w-full px-4  md:left-[27.5%] bottom-1 md:top-[90%] border-gray-200">
         <div className="flex items-center gap-2">
           <input
             type="text"

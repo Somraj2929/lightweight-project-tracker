@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   Input,
@@ -18,11 +18,20 @@ import Image from "next/image";
 const AddProject = ({ user }) => {
   const router = useRouter();
   const [additionalComments, setAdditionalComments] = useState("");
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    //setToken(getCookie("token"));
+    setToken(localStorage.getItem("token"));
+  }, []);
+
+  console.log(token);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     //const token = getCookie("token");
-    const token = localStorage.getItem("token");
+    // const token = localStorage.getItem("token");
 
     const formData = {
       name: e.target.project_name.value,

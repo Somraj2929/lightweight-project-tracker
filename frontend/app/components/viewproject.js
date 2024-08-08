@@ -14,14 +14,12 @@ const ViewProject = ({ project, user }) => {
   };
 
   const formatTime = (timestamp) => {
-    const [datePart, timePart] = timestamp.split(" ");
-    const [year, month, day] = datePart.split("-");
-    const [hours, minutes, seconds] = timePart.split(":");
+    const date = new Date(timestamp);
 
-    const date = new Date(year, month - 1, day, hours, minutes);
     const formattedDate = `${date.getDate()} ${date.toLocaleString("default", {
       month: "short",
     })}`; // DD MMM format
+
     const formattedTime = date.toLocaleString("en-US", {
       hour: "numeric",
       minute: "2-digit",
@@ -41,7 +39,7 @@ const ViewProject = ({ project, user }) => {
     <div className="flex">
       <SidePanel currentUser={user} />
       <div className="bg-custom md:w-[75%] md:left-[25%] absolute">
-        <div className="md:px-6 px-2 py-4">
+        <div className="md:px-8 px-2 py-4">
           <div className="flex justify-between items-center">
             <Link href="/" className="md:hidden block">
               <Image
@@ -76,7 +74,7 @@ const ViewProject = ({ project, user }) => {
                 label="Project Name"
                 value={project.name}
               />
-              <div className="flex flex-col md:flex-row w-full justify-between gap-2 md:gap-0">
+              <div className="flex flex-col md:flex-row w-full justify-between md:gap-4 gap-2">
                 <Select
                   label="Team"
                   placeholder="Select a Team"
@@ -109,7 +107,7 @@ const ViewProject = ({ project, user }) => {
                 variant="flat"
                 value={project.description}
               />
-              <div className="flex w-full flex-col md:flex-row justify-between gap-2 md:gap-0">
+              <div className="flex w-full flex-col md:flex-row justify-between gap-2 md:gap-4">
                 <Select
                   items={users}
                   selectedKeys={

@@ -3,7 +3,12 @@
 const API_BASE_URL = process.env.BACKEND_BASE_URL || "http://localhost:8081";
 
 //const token = getCookie("token");
-const token = localStorage.getItem("token");
+
+// const token = localStorage.getItem("token");
+let token;
+if (typeof window !== "undefined") {
+  token = localStorage.getItem("token");
+}
 
 // Helper function to fetch data and parse JSON
 const fetchData = async (url) => {

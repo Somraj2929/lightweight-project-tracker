@@ -97,8 +97,8 @@ func GetProjectDetails(c *gin.Context) {
         Name:          project.Name,
         Team:          project.Team,
         Status:        project.Status,
-        CreatedAt:     project.CreatedAt.Format("2006-01-02 15:04:05"), // Example format
-        UpdatedAt:     project.UpdatedAt.Format("2006-01-02 15:04:05"), // Example format
+        CreatedAt:     project.CreatedAt.Format(time.RFC3339), // Example format
+        UpdatedAt:     project.UpdatedAt.Format(time.RFC3339), // Example format
         FromUserID:    project.FromUserID,
         ToUserID:      project.ToUserID,
         Description:   project.Description,
@@ -267,8 +267,8 @@ func GetAllProjects(c *gin.Context) {
             Name:          project.Name,
             Team:          project.Team,
             Status:        project.Status,
-            CreatedAt:     project.CreatedAt.Format("2006-01-02 15:04:05"), // Example format
-            UpdatedAt:     project.UpdatedAt.Format("2006-01-02 15:04:05"), // Example format
+            CreatedAt:     project.CreatedAt.Format(time.RFC3339), // Example format
+            UpdatedAt:     project.UpdatedAt.Format(time.RFC3339), // Example format
             FromUserID:    project.FromUserID,
             ToUserID:      project.ToUserID,
             Description:   project.Description,
@@ -287,7 +287,7 @@ func convertCommentsToResponse(comments []models.Comment) []CommentResponse {
         commentResponse := CommentResponse{
             ID:        comment.ID,
             Comment:   comment.Comment,
-            CreatedAt: comment.CreatedAt.Format("2006-01-02 15:04:05"), // Example format
+            CreatedAt: comment.CreatedAt.Format(time.RFC3339), // Example format
             UserID:    comment.UserID,
         }
         commentsResponse = append(commentsResponse, commentResponse)

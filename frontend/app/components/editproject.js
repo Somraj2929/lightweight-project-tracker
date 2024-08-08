@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   Avatar,
@@ -15,7 +15,7 @@ import Image from "next/image";
 //import { getCookie } from "../utils/cookies";
 
 const EditProject = ({ project, user }) => {
-  //const [token, setToken] = useState(null);
+  const [token, setToken] = useState(null);
   const router = useRouter();
   const currentUserId = user.id;
   const [additionalComments, setAdditionalComments] = useState("");
@@ -25,14 +25,12 @@ const EditProject = ({ project, user }) => {
   };
 
   const formatTime = (timestamp) => {
-    const [datePart, timePart] = timestamp.split(" ");
-    const [year, month, day] = datePart.split("-");
-    const [hours, minutes, seconds] = timePart.split(":");
+    const date = new Date(timestamp);
 
-    const date = new Date(year, month - 1, day, hours, minutes);
     const formattedDate = `${date.getDate()} ${date.toLocaleString("default", {
       month: "short",
     })}`; // DD MMM format
+
     const formattedTime = date.toLocaleString("en-US", {
       hour: "numeric",
       minute: "2-digit",
@@ -42,11 +40,16 @@ const EditProject = ({ project, user }) => {
     return `${formattedDate} ${formattedTime}`;
   };
 
+  useEffect(() => {
+    //setToken(getCookie("token"));
+    setToken(localStorage.getItem("token"));
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     //const token = getCookie("token"); // Get the token from cookies
-    const token = localStorage.getItem("token");
+    //const token = localStorage.getItem("token");
 
     const formData = {
       id: project.id,
@@ -100,7 +103,7 @@ const EditProject = ({ project, user }) => {
     <div className="flex">
       <SidePanel currentUser={user} />
       <div className="bg-custom md:w-[75%] md:left-[25%] absolute">
-        <div className="md:px-6 px-2 py-4">
+        <div className="md:px-8 px-2 py-4">
           <div className="flex justify-between items-center">
             <Link href="/" className="md:hidden block">
               <Image
@@ -139,7 +142,7 @@ const EditProject = ({ project, user }) => {
                 name="project_name"
                 defaultValue={project.name}
               />
-              <div className="flex flex-col md:flex-row w-full justify-between gap-2 md:gap-0">
+              <div className="flex flex-col md:flex-row w-full justify-between gap-2 md:gap-4">
                 <Select
                   isRequired
                   label="Select Team"
@@ -181,7 +184,7 @@ const EditProject = ({ project, user }) => {
                 name="description"
                 defaultValue={project.description}
               />
-              <div className="flex flex-col md:flex-row w-full justify-between gap-2 md:gap-0">
+              <div className="flex flex-col md:flex-row w-full justify-between gap-2 md:gap-4">
                 <Select
                   items={users}
                   selectedKeys={

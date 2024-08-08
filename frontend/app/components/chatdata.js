@@ -39,19 +39,22 @@ const ChatData = ({ messages, user, chatDetails }) => {
   }, [messages]);
 
   const formatTime = (timestamp) => {
-    const [datePart, timePart] = timestamp.split("T");
-    const [year, month, day] = datePart.split("-");
-    const [hours, minutes, seconds] = timePart.split(":");
+    const date = new Date(timestamp);
 
-    const date = new Date(year, month - 1, day, hours, minutes);
-    const formattedDate = `${date.getDate()} ${date.toLocaleString("default", {
-      month: "short",
-    })}`; // DD MMM format
-    const formattedTime = date.toLocaleString("en-US", {
+    //const offset = 5.5 * 60 * 60 * 1000;
+    const istDate = new Date(date.getTime());
+
+    const formattedDate = `${istDate.getDate()} ${istDate.toLocaleString(
+      "default",
+      {
+        month: "short",
+      }
+    )}`;
+    const formattedTime = istDate.toLocaleString("en-US", {
       hour: "numeric",
       minute: "2-digit",
       hour12: true,
-    }); // hh:mm A format
+    });
 
     return `${formattedDate} ${formattedTime}`;
   };

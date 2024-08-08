@@ -36,7 +36,6 @@ import {
 import SpinnerCustom from "./spinner";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useRouter } from "next/navigation";
 
 const statusColorMap = {
   open: "primary",
@@ -59,7 +58,6 @@ export default function FetchAllProjects({ currentUser }) {
   const [projects, setProjects] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
