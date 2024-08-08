@@ -69,7 +69,7 @@ const EditProject = ({ project, user }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:8081/projects/${project.id}`,
+        `https://somraj-project-tracker-nma47.ondigitalocean.app/projects/${project.id}`,
         {
           method: "PUT",
           headers: {

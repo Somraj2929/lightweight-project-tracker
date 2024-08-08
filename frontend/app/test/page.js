@@ -8,7 +8,9 @@ const Testing = () => {
   useEffect(() => {
     const fetchProjectsData = async () => {
       try {
-        const response = await fetch("http://localhost:8081/projects");
+        const response = await fetch(
+          "https://somraj-project-tracker-nma47.ondigitalocean.app/projects"
+        );
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }

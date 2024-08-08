@@ -12,12 +12,15 @@ const useAuth = () => {
   useEffect(() => {
     const fetchUserInfo = async (userId, token) => {
       try {
-        const response = await fetch(`http://localhost:8081/users/${userId}`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          `https://somraj-project-tracker-nma47.ondigitalocean.app/users/${userId}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         if (response.ok) {
           const userData = await response.json();
           setUser(userData);

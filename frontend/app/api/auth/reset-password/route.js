@@ -4,13 +4,16 @@ export async function POST(req) {
   try {
     const { token, password } = await req.json();
 
-    const res = await fetch("http://localhost:8081/auth/reset-password", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ token, password }),
-    });
+    const res = await fetch(
+      "https://somraj-project-tracker-nma47.ondigitalocean.app/auth/reset-password",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token, password }),
+      }
+    );
 
     if (res.ok) {
       return new Response(

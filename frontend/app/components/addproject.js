@@ -51,14 +51,17 @@ const AddProject = ({ user }) => {
     };
 
     try {
-      const response = await fetch(`http://localhost:8081/projects/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Include the token in the Authorization header
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        `https://somraj-project-tracker-nma47.ondigitalocean.app/projects/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to create project.");

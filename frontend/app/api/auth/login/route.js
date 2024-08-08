@@ -4,13 +4,16 @@ export async function POST(req) {
   try {
     const { email, password } = await req.json();
 
-    const res = await fetch("http://localhost:8081/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
+    const res = await fetch(
+      "https://somraj-project-tracker-nma47.ondigitalocean.app/auth/login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      }
+    );
 
     const data = await res.json();
 
