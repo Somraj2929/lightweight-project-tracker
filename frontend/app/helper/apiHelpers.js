@@ -1,6 +1,8 @@
 //import { getCookie } from "../utils/cookies";
 
-const API_BASE_URL = process.env.BACKEND_BASE_URL || "http://localhost:8081";
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_BACKEND_BASE_URL ||
+  "https://somraj-project-tracker-nma47.ondigitalocean.app";
 
 //const token = getCookie("token");
 
