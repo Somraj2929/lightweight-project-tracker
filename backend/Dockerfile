@@ -20,5 +20,9 @@ RUN go build -o main .
 # Set the environment variable to specify the location of the .env file
 ENV DOTENV_PATH .env
 
+ENV GIN_MODE=release
+
+
+
 # Command to run the executable
 CMD ["./main"]
