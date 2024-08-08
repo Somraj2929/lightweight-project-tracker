@@ -1,7 +1,7 @@
 package main
 
 import (
-	
+	"os"
 	"time"
     "net/http"
     
@@ -63,5 +63,5 @@ func main() {
     routes.StatusAndColumnsRoutes(router)
 
     // Start server
-    router.Run(":8081")
+    router.Run(os.Getenv("PORT"))
 }
