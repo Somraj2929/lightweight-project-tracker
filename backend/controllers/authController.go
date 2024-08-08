@@ -9,6 +9,7 @@ import (
 	 mathRand "math/rand"
 	"encoding/base64"
 	"context"
+	"strings"
 	
 
 	"github.com/gin-gonic/gin"
@@ -222,8 +223,10 @@ func RequestPasswordReset(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to store token"})
 		return
 	}
+	userFullName := user.ToCheckIn().Name
+	userName := strings.Split(userFullName, " ")[0]
 
-	utils.SendPasswordResetEmail(user.Email, token)
+	utils.SendPasswordResetEmail(user.Email, token, userName)
 
 	// Log the password reset request
 	resetRequest := models.PasswordResetRequest{

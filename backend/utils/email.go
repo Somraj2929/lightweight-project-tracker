@@ -7,7 +7,7 @@ import (
 	"fmt"
 )
 
-func SendPasswordResetEmail(email, token string) {
+func SendPasswordResetEmail(email, token string, userName string) {
 	from := os.Getenv("RESET_EMAIL")
 	password := os.Getenv("RESET_EMAIL_PASSWORD")
 	to := email
@@ -20,7 +20,7 @@ func SendPasswordResetEmail(email, token string) {
 		<title>Password Reset Request</title>
 	</head>
 	<body>
-		<p>Dear User,</p>
+		<p>Hi %s,</p>
 		<p>You requested to reset your password. Please click the link below to reset your password:</p>
 		<p>
 			<a href="https://lightweight-project-tracker.vercel.app/users/reset-password?token=%s" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; border-radius: 5px;">
@@ -28,10 +28,10 @@ func SendPasswordResetEmail(email, token string) {
 			</a>
 		</p>
 		<p>If you did not request this change, please ignore this email.</p>
-		<p>Thank you,<br>Your Company Name</p>
+		<p>Thank you,<br>Project Tracker Admin</p>
 	</body>
 	</html>
-	`, token)
+	`, userName, token)
 
 	message := []byte("From: " + from + "\r\n" +
 		"To: " + to + "\r\n" +
