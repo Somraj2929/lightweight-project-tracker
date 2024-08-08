@@ -4,6 +4,7 @@ import (
 	"log"
 	"time"
     "net/http"
+    "os"
 	// "github.com/Somraj2929/lightweight-project-tracker/config"
 	"github.com/Somraj2929/lightweight-project-tracker/db"
 	"github.com/Somraj2929/lightweight-project-tracker/routes"
@@ -15,10 +16,18 @@ import (
 
 func main() {
     // Load environment variables
-    err := godotenv.Load()
-    if err != nil {
-        log.Fatal("Error loading .env file")
+    // err := godotenv.Load()
+    // if err != nil {
+    //     log.Fatal("Error loading .env file")
+    // }
+
+    if os.Getenv("APP_ENV") != "production" {
+        err := godotenv.Load(".env")
+        if err != nil {
+            log.Println("Error loading .env file")
+        }
     }
+    
 
 	seedValue := time.Now().UnixNano() // Example: use current time as seed
     utils.Seed(seedValue)
