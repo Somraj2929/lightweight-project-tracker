@@ -18,7 +18,7 @@ RUN go build -o main .
 # EXPOSE 8000
 
 # Set the environment variable to specify the location of the .env file
-ENV DOTENV_PATH .env
+# ENV DOTENV_PATH .env
 
 ENV GIN_MODE=release
 
