@@ -1,17 +1,16 @@
 package utils
 
 import (
-	
+	"log"
+	"os"
 	"time"
-    "log"
 
 	"github.com/dgrijalva/jwt-go"
-    
 )
 
+var jwtSecretKey = os.Getenv("JWT_SECRET")
 
-
-var jwtKey = []byte("somraj@2929")
+var jwtKey = []byte(jwtSecretKey)
 
 type Claims struct {
     UserID string `json:"userID"`
