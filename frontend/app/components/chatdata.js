@@ -60,6 +60,8 @@ const ChatData = ({ messages, user, chatDetails }) => {
   };
 
   const notify = () => toast("Copied to clipboard!", { type: "success" });
+  const notifyCloseChat = () =>
+    toast("You are not allowed to close this chat", { type: "error" });
 
   const copyToClipboard = () => {
     navigator.clipboard
@@ -93,6 +95,8 @@ const ChatData = ({ messages, user, chatDetails }) => {
           alert("Failed to close the chat");
         }
       }
+    } else {
+      notifyCloseChat();
     }
   };
 
