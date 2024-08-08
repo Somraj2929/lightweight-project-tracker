@@ -11,18 +11,16 @@ RUN go mod download
 # Copy the rest of the application source code
 COPY . .
 
+# Copy the .env file
+COPY .env .env
+
 # Build the Go application
 RUN go build -o main .
-
-# Expose the port the server listens on
-# EXPOSE 8000
 
 # Set the environment variable to specify the location of the .env file
 # ENV DOTENV_PATH .env
 
 ENV GIN_MODE=release
-
-
 
 # Command to run the executable
 CMD ["./main"]
