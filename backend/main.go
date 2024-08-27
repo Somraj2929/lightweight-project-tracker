@@ -9,27 +9,25 @@ import (
 	"github.com/Somraj2929/lightweight-project-tracker/db"
 	"github.com/Somraj2929/lightweight-project-tracker/routes"
 	"github.com/Somraj2929/lightweight-project-tracker/utils"
+    "github.com/newrelic/go-agent/v3/newrelic"
+    nrgin "github.com/newrelic/go-agent/v3/integrations/nrgin"
+
 
 	"github.com/gin-gonic/gin"
 	
 )
 
 func main() {
-    // Load environment variables
-    // err := godotenv.Load()
-    // if err != nil {
-    //     log.Fatal("Error loading .env file")
-    // }
-
-    // if os.Getenv("APP_ENV") != "production" {
-    //     err := godotenv.Load(".env")
-    //     if err != nil {
-    //         log.Println("Error loading .env file")
-    //     }
-    // }
+   
+    app, err := newrelic.NewApplication(
+        newrelic.ConfigAppName("backend-tracker"),
+        newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
+        newrelic.ConfigAppLogForwardingEnabled(true),
+      )
+      
     
 
-	seedValue := time.Now().UnixNano() // Example: use current time as seed
+	seedValue := time.Now().UnixNano() 
     utils.Seed(seedValue)
 
     // Connect to MongoDB
@@ -41,8 +39,9 @@ func main() {
 
     // Setup Gin
     router := gin.Default()
+    router.Use(nrgin.Middleware(app))
     router.Use(func(c *gin.Context) {
-        c.Writer.Header().Set("Access-Control-Allow-Origin", "*") // Allow requests from frontend origin
+        c.Writer.Header().Set("Access-Control-Allow-Origin", "*") 
         c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
         c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
         c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
@@ -63,10 +62,10 @@ func main() {
     routes.StatusAndColumnsRoutes(router)
 
     // Start server
-    //router.Run(os.Getenv("PORT"))
-    err := router.Run(":" + os.Getenv("PORT"))
+    
+    _ = router.Run(":" + os.Getenv("PORT"))
     if err != nil {
         panic(err)
     }
-    
+
 }
