@@ -11,8 +11,7 @@ import {
 import SidePanel from "./sidepanel";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { spinner } from "@nextui-org/react";
-
+import { Spinner } from "@nextui-org/react";
 
 const EditProject = ({ project, user, users }) => {
   const [token, setToken] = useState(null);
@@ -94,7 +93,6 @@ const EditProject = ({ project, user, users }) => {
     } finally {
       setSpinner(false);
     }
-  
   };
 
   const statusColorMap = {
@@ -399,7 +397,7 @@ const EditProject = ({ project, user, users }) => {
                   className="bg-success text-white px-8 py-2 rounded-lg"
                 >
                   {spinner ? (
-                    <spinner size="sm" color="white" />
+                    <Spinner size="sm" color="white" />
                   ) : (
                     "Save Project"
                   )}

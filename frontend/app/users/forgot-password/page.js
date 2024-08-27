@@ -45,7 +45,7 @@ const ForgotPassword = () => {
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      handleSubmit();
+      handleSubmit(e);
     }
   };
 
