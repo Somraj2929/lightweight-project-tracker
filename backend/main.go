@@ -20,10 +20,11 @@ import (
 func main() {
    
     app, err := newrelic.NewApplication(
-        newrelic.ConfigAppName(""),
+        newrelic.ConfigAppName("backend-tracker"),
         newrelic.ConfigLicense("913a16c1be1683863567bfed29a4ec27FFFFNRAL"),
         newrelic.ConfigAppLogForwardingEnabled(true),
       )
+      
       
       
     
