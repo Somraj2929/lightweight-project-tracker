@@ -9,7 +9,7 @@ import AllProjectsData from "./allprojectdata";
 
 const AllProjects = ({ user }) => {
   return (
-    <div className="flex">
+    <div className="flex ">
       <SidePanel currentUser={user} />
       <div className="bg-custom min-h-screen md:w-[75%] md:left-[25%] absolute w-full">
         <div className="px-6 py-4">

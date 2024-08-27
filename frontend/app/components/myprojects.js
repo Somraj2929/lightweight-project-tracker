@@ -9,7 +9,6 @@ import {
   User,
   Chip,
 } from "@nextui-org/react";
-import users from "@/public/users";
 
 const columns = [
   { name: "My Recent Project", uid: "name" },
@@ -18,17 +17,13 @@ const columns = [
   { name: "From", uid: "fromUserId" },
 ];
 
-const getUserDetailsById = (userId) => {
-  return users.find((user) => user.id === userId);
-};
-
 const statusColorMap = {
   closed: "success",
   open: "primary",
   inprogress: "warning",
 };
 
-export default function MyProjects({ projects = [], user }) {
+export default function MyProjects({ projects = [], user, users }) {
   function formatDate(inputDate) {
     const date = new Date(inputDate);
 
@@ -55,6 +50,9 @@ export default function MyProjects({ projects = [], user }) {
 
     return formattedDate;
   }
+  const getUserDetailsById = (userId) => {
+    return users.find((user) => user.id === userId);
+  };
 
   const filteredProjects = projects.filter(
     (project) => project.toUserId === user.id || project.fromUserId === user.id

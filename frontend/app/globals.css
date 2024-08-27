@@ -92,3 +92,13 @@ body {
   overflow-wrap: break-word;
   white-space: normal;
 }
+
+::-webkit-scrollbar {
+  width: 0px;
+  /* width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  /* color of the tracking area */
+}

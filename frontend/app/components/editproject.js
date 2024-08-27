@@ -8,14 +8,15 @@ import {
   SelectSection,
   Textarea,
 } from "@nextui-org/react";
-import users from "@/public/users";
 import SidePanel from "./sidepanel";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-//import { getCookie } from "../utils/cookies";
+import { spinner } from "@nextui-org/react";
 
-const EditProject = ({ project, user }) => {
+
+const EditProject = ({ project, user, users }) => {
   const [token, setToken] = useState(null);
+  const [spinner, setSpinner] = useState(false);
   const router = useRouter();
   const currentUserId = user.id;
   const [additionalComments, setAdditionalComments] = useState("");
@@ -47,7 +48,7 @@ const EditProject = ({ project, user }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setSpinner(true);
     //const token = getCookie("token"); // Get the token from cookies
     //const token = localStorage.getItem("token");
 
@@ -90,7 +91,10 @@ const EditProject = ({ project, user }) => {
       console.log("Project saved successfully!");
     } catch (error) {
       console.error("Error saving project:", error);
+    } finally {
+      setSpinner(false);
     }
+  
   };
 
   const statusColorMap = {
@@ -391,9 +395,14 @@ const EditProject = ({ project, user }) => {
                 </Link>
                 <button
                   type="submit"
+                  disabled={spinner}
                   className="bg-success text-white px-8 py-2 rounded-lg"
                 >
-                  Save
+                  {spinner ? (
+                    <spinner size="sm" color="white" />
+                  ) : (
+                    "Save Project"
+                  )}
                 </button>
               </div>
             </form>

@@ -1,12 +1,11 @@
 import React from "react";
 
 import { Avatar, Input, Select, SelectItem, Textarea } from "@nextui-org/react";
-import users from "@/public/users";
 import SidePanel from "./sidepanel";
 import Link from "next/link";
 import Image from "next/image";
 
-const ViewProject = ({ project, user }) => {
+const ViewProject = ({ project, user, users }) => {
   const currentUserId = user.id;
 
   const getUserDetailsById = (userId) => {

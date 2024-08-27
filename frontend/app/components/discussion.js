@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Avatar } from "@nextui-org/react";
+import { Avatar, Spinner } from "@nextui-org/react";
 import Image from "next/image";
 import SidePanel from "./sidepanel";
 import { validateChatId, createChatRoom } from "../helper/apiHelpers";
@@ -11,8 +11,11 @@ const Discussion = ({ user }) => {
   const router = useRouter();
   const [chatid, setChatid] = useState("");
   const [error, setError] = useState("");
+  const [isJoining, setIsJoining] = useState(false); // State for Join Room spinner
+  const [isCreating, setIsCreating] = useState(false); // State for Create Room spinner
 
   const handleValidateChatId = async () => {
+    setIsJoining(true); // Start spinner for joining
     const response = await validateChatId(chatid);
     console.log(response);
 
@@ -22,9 +25,11 @@ const Discussion = ({ user }) => {
       setError("");
       router.push(`/livechat/${chatid}`);
     }
+    setIsJoining(false); // Stop spinner after join attempt
   };
 
   const handleCreateChatRoom = async () => {
+    setIsCreating(true); // Start spinner for creating
     const response = await createChatRoom(user.id);
 
     if (response.error) {
@@ -33,6 +38,7 @@ const Discussion = ({ user }) => {
       setError("");
       router.push(`/livechat/${response.chatID}`);
     }
+    setIsCreating(false); // Stop spinner after create attempt
   };
 
   const closeModal = () => {
@@ -48,7 +54,7 @@ const Discussion = ({ user }) => {
   return (
     <div className="flex ">
       <SidePanel currentUser={user} />
-      <div className="bg-custom md:w-[75%] md:left-[25%] w-full absolute h-full">
+      <div className="bg-custom md:w-[75%] md:left-[25%] w-full absolute h-auto">
         <div className="px-6 py-4">
           <div className="flex justify-between items-center">
             <Link href="/" className="md:hidden block">
@@ -101,9 +107,14 @@ const Discussion = ({ user }) => {
                     />
                     <button
                       onClick={handleValidateChatId}
-                      className="bg-blue-500 text-white py-2 px-4 rounded font-semibold"
+                      className="bg-blue-500 text-white py-2 px-4 rounded font-semibold w-[30%]"
+                      disabled={isJoining}
                     >
-                      Join Room
+                      {isJoining ? (
+                        <Spinner size="sm" color="white" />
+                      ) : (
+                        "Join Room"
+                      )}
                     </button>
                   </div>
                 </div>
@@ -115,9 +126,14 @@ const Discussion = ({ user }) => {
                   <div className="flex justify-center gap-4">
                     <button
                       onClick={handleCreateChatRoom}
-                      className="bg-blue-500 text-white py-2 px-4 rounded font-semibold"
+                      className="bg-blue-500 text-white py-2 px-4 rounded font-semibold w-[40%]"
+                      disabled={isCreating}
                     >
-                      Create Room
+                      {isCreating ? (
+                        <Spinner size="sm" color="white" />
+                      ) : (
+                        "Create Room"
+                      )}
                     </button>
                   </div>
                 </div>

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Input, Select, SelectItem } from "@nextui-org/react";
+import { Input, Select, SelectItem, Spinner } from "@nextui-org/react";
 import { EyeFilledIcon } from "./extraIcons/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "./extraIcons/EyeSlashFilledIcon";
 import { teams, roles } from "@/public/signupdetails";
@@ -18,6 +18,7 @@ const UserSignup = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const [isConfirmVisible, setIsConfirmVisible] = useState(false);
+  const [spinner, setSpinner] = useState(false);
   const [errors, setErrors] = useState({});
   const router = useRouter();
 
@@ -36,7 +37,7 @@ const UserSignup = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-
+    setSpinner(true);
     let tempErrors = {};
 
     if (!name) tempErrors.name = "Name is required";
@@ -55,6 +56,7 @@ const UserSignup = () => {
 
     if (Object.keys(tempErrors).length > 0) {
       setErrors(tempErrors);
+      setSpinner(false);
     } else {
       try {
         const response = await fetch("/api/auth/signup", {
@@ -84,6 +86,8 @@ const UserSignup = () => {
         setErrors({
           form: `An error occurred while signing up: ${error.message}`,
         });
+      } finally {
+        setSpinner(false);
       }
     }
   };
@@ -145,7 +149,7 @@ const UserSignup = () => {
                 label="Select Team"
                 placeholder="Select Your Team"
                 value={team}
-                onChange={(e) => setTeam(e.target.value)} // Use e.target.value
+                onChange={(e) => setTeam(e.target.value)}
               >
                 {teams.map((team) => (
                   <SelectItem key={team.key} value={team.key}>
@@ -163,7 +167,7 @@ const UserSignup = () => {
                 label="Select Role"
                 placeholder="Select Your Role"
                 value={role}
-                onChange={(e) => setRole(e.target.value)} // Use e.target.value
+                onChange={(e) => setRole(e.target.value)}
               >
                 {roles.map((role) => (
                   <SelectItem key={role.key} value={role.key}>
@@ -243,9 +247,10 @@ const UserSignup = () => {
           )}
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white rounded-lg px-4 py-2"
+            className="w-full bg-blue-500 text-white rounded-lg px-4 py-2 flex justify-center items-center"
+            disabled={spinner}
           >
-            Sign Up
+            {spinner ? <Spinner size="sm" className="mr-2" /> : "Sign Up"}
           </button>
         </form>
         <p className="text-center mt-6">

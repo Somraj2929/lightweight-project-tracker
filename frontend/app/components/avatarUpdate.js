@@ -4,6 +4,7 @@ import imageCompression from "browser-image-compression";
 import s3Config from "@/app/config/s3Config";
 import { updateUserAvatar } from "@/app/helper/apiHelpers";
 import { FaUpload } from "react-icons/fa6";
+import { Spinner } from "@nextui-org/react";
 
 function ProfilePictureUpload({ user }) {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -74,7 +75,7 @@ function ProfilePictureUpload({ user }) {
           onClick={handleUpload}
           disabled={uploading}
         >
-          {uploading ? "Uploading..." : <FaUpload />}
+          {uploading ? <Spinner size="sm" color="white" /> : <FaUpload />}
         </button>
       </div>
       <div className="flex justify-center items-center pt-2">

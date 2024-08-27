@@ -7,19 +7,24 @@ import LineChart from "./linechart";
 import MyProjects from "./myprojects";
 import SidePanel from "./sidepanel";
 import { useEffect } from "react";
-import { fetchProjects } from "../helper/apiHelpers";
+import { fetchProjects, fetchAllUsers } from "../helper/apiHelpers";
 import SpinnerCustom from "./spinner";
 import Link from "next/link";
 
 const DashBoard = ({ user }) => {
+  const [users, setUsers] = React.useState([]);
   const [projects, setProjects] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const projectsData = await fetchProjects();
+        const [projectsData, usersData] = await Promise.all([
+          fetchProjects(),
+          fetchAllUsers(),
+        ]);
         setProjects(projectsData);
+        setUsers(usersData);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -135,7 +140,7 @@ const DashBoard = ({ user }) => {
             </div>
           </div>
           <div className="pt-4 w-auto">
-            <MyProjects projects={projects} user={user} />
+            <MyProjects projects={projects} user={user} users={users} />
           </div>
         </div>
       </div>

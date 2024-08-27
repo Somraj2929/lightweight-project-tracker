@@ -8,15 +8,16 @@ import {
   SelectSection,
   Textarea,
 } from "@nextui-org/react";
-import users from "@/public/users";
+
 import Link from "next/link";
 import SidePanel from "./sidepanel";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-//import { getCookie } from "../utils/cookies";
+import { Spinner } from "@nextui-org/react";
 
-const AddProject = ({ user }) => {
+const AddProject = ({ user, users }) => {
   const router = useRouter();
+  const [spinner, setSpinner] = useState(false);
   const [additionalComments, setAdditionalComments] = useState("");
   const [token, setToken] = useState("");
 
@@ -29,7 +30,7 @@ const AddProject = ({ user }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setSpinner(true);
     //const token = getCookie("token");
     // const token = localStorage.getItem("token");
 
@@ -69,10 +70,10 @@ const AddProject = ({ user }) => {
 
       alert("Project created successfully!");
       router.push("/projects");
-
-      console.log("Project saved successfully!");
     } catch (error) {
       console.error("Error saving project:", error);
+    } finally {
+      setSpinner(false);
     }
   };
 
@@ -113,7 +114,7 @@ const AddProject = ({ user }) => {
                 label="Project Name"
                 name="project_name"
               />
-              <div className="flex flex-col md:flex-row w-full justify-between gap-2 md:gap-0">
+              <div className="flex flex-col md:flex-row w-full justify-between gap-2 md:gap-4">
                 <Select
                   isRequired
                   label="Select Team"
@@ -151,7 +152,7 @@ const AddProject = ({ user }) => {
                 placeholder="Enter your description"
                 name="description"
               />
-              <div className="flex flex-col md:flex-row w-full justify-between gap-2 md:gap-0">
+              <div className="flex flex-col md:flex-row w-full justify-between gap-2 md:gap-4">
                 <Select
                   items={users}
                   isRequired
@@ -269,9 +270,14 @@ const AddProject = ({ user }) => {
                 </Link>
                 <button
                   type="submit"
+                  disabled={spinner}
                   className="bg-success text-white px-4 py-2 rounded-lg"
                 >
-                  Save
+                  {spinner ? (
+                    <Spinner size="sm" color="white" />
+                  ) : (
+                    "Add Project"
+                  )}
                 </button>
               </div>
             </form>

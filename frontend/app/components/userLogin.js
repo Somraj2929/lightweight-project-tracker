@@ -7,12 +7,13 @@ import { EyeFilledIcon } from "./extraIcons/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "./extraIcons/EyeSlashFilledIcon";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-//import { setCookie } from "../utils/cookies";
+import { Spinner } from "@nextui-org/react";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isVisible, setIsVisible] = useState(false);
+  const [spinner, setSpinner] = useState(false);
   const [errors, setErrors] = useState({});
   const router = useRouter();
 
@@ -20,6 +21,7 @@ const LoginPage = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setSpinner(true);
 
     let tempErrors = {};
     if (!email) tempErrors.email = "Email is required";
@@ -27,6 +29,7 @@ const LoginPage = () => {
 
     if (Object.keys(tempErrors).length > 0) {
       setErrors(tempErrors);
+      setSpinner(false);
     } else {
       try {
         const response = await fetch("/api/auth/login", {
@@ -38,7 +41,6 @@ const LoginPage = () => {
         });
 
         const data = await response.json();
-        console.log(data);
         if (response.ok) {
           const { token } = data;
           //setCookie("token", token);
@@ -52,6 +54,8 @@ const LoginPage = () => {
       } catch (error) {
         console.error("Error logging in", error);
         setErrors({ form: "An error occurred while logging in." });
+      } finally {
+        setSpinner(false);
       }
     }
   };
@@ -121,9 +125,10 @@ const LoginPage = () => {
           <button
             type="submit"
             onClick={handleLogin}
-            className="w-full bg-blue-500 text-white rounded-lg px-4 py-2"
+            disabled={spinner}
+            className="w-full bg-blue-500 text-white rounded-lg px-4 py-3 flex justify-center items-center"
           >
-            Login
+            {spinner ? <Spinner size="sm" color="white" /> : "Login"}
           </button>
           <p className="text-center mt-6">
             Don't have an account? &nbsp;
