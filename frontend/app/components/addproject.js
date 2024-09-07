@@ -54,6 +54,11 @@ const AddProject = ({ user, users }) => {
     };
 
     try {
+      if (typeof window !== "undefined" && window.sa_event) {
+        window.sa_event("add-project", {
+          project_name: formData.name,
+        });
+      }
       const response = await fetch(
         `https://somraj-project-tracker-nma47.ondigitalocean.app/projects/`,
         {

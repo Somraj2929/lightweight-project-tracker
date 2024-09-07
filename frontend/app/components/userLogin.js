@@ -32,6 +32,11 @@ const LoginPage = () => {
       setSpinner(false);
     } else {
       try {
+        if (typeof window !== "undefined" && window.sa_event) {
+          window.sa_event("login-attempt", {
+            email,
+          });
+        }
         const response = await fetch("/api/auth/login", {
           method: "POST",
           headers: {

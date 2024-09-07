@@ -59,6 +59,16 @@ const UserSignup = () => {
       setSpinner(false);
     } else {
       try {
+        // Trigger the Simple Analytics event
+        if (typeof window !== "undefined" && window.sa_event) {
+          window.sa_event("signup-attempt", {
+            name,
+            email,
+            team,
+            role,
+          });
+        }
+
         const response = await fetch("/api/auth/signup", {
           method: "POST",
           headers: {
