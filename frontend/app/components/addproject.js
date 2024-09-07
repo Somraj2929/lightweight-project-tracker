@@ -28,8 +28,6 @@ const AddProject = ({ user, users }) => {
     setToken(localStorage.getItem("token"));
   }, []);
 
-  console.log(token);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSpinner(true);
@@ -56,7 +54,7 @@ const AddProject = ({ user, users }) => {
     try {
       if (typeof window !== "undefined" && window.sa_event) {
         window.sa_event("add-project", {
-          project_name: formData.name,
+          project_name: formData.name || "unknown",
         });
       }
       const response = await fetch(

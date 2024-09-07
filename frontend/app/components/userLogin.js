@@ -34,7 +34,7 @@ const LoginPage = () => {
       try {
         if (typeof window !== "undefined" && window.sa_event) {
           window.sa_event("login-attempt", {
-            email,
+            email: email || "unknown",
           });
         }
         const response = await fetch("/api/auth/login", {

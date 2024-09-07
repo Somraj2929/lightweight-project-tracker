@@ -31,7 +31,11 @@ export default function RootLayout({ children }) {
         strategy="afterInteractive"
         data-collect-dnt="true"
         src="https://api.project-tracker.somraj.tech/latest.js"
-        data-hostname="project-tracker.somraj.tech"
+        data-hostname="https://project-tracker.somraj.tech"
+        onLoad={() =>
+          console.log("Simple Analytics script loaded successfully")
+        }
+        onError={() => console.error("Failed to load Simple Analytics script")}
       />
     </html>
   );

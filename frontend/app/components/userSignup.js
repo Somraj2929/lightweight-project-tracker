@@ -62,10 +62,10 @@ const UserSignup = () => {
         // Trigger the Simple Analytics event
         if (typeof window !== "undefined" && window.sa_event) {
           window.sa_event("signup-attempt", {
-            name,
-            email,
-            team,
-            role,
+            name: name || "unknown",
+            email: email || "unknown",
+            team: team || "unknown",
+            role: role || "unknown",
           });
         }
 
