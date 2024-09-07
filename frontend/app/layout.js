@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
         {children}
         <SpeedInsights />
         <Analytics />
-        <Script src="https://scripts.simpleanalyticscdn.com/latest.js" />
+        <script src="https://scripts.simpleanalyticscdn.com/latest.js" />
       </body>
     </html>
   );
