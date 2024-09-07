@@ -88,6 +88,20 @@ export default function FetchAllProjects({ currentUser }) {
   const authorized = () =>
     toast("Project deleted successfully", { type: "success" });
 
+  const trackCustomEvent = (eventName, eventData) => {
+    if (typeof window !== "undefined" && window.sa_event) {
+      window.sa_event(eventName, eventData);
+    }
+  };
+
+  const viewProjectEvent = () => {
+    trackCustomEvent("view-project", { message: "View project" });
+  };
+
+  const editProjectEvent = () => {
+    trackCustomEvent("edit-project", { message: "Edit project" });
+  };
+
   const handleProjectDelete = async (projectFromUserId, projectId) => {
     const authorizedUser = currentUser.id;
 
@@ -96,6 +110,7 @@ export default function FetchAllProjects({ currentUser }) {
         const response = await deleteProjects(projectId, authorizedUser);
 
         if (response.success === true) {
+          trackCustomEvent("delete-project", { message: "Project deleted" });
           authorized();
           window.location.reload();
         } else {
@@ -105,6 +120,7 @@ export default function FetchAllProjects({ currentUser }) {
         console.error("Error deleting project:", error);
       }
     } else {
+      trackCustomEvent("delete-project", { message: "Unauthorized" });
       unauthorized();
     }
   };
@@ -255,14 +271,20 @@ export default function FetchAllProjects({ currentUser }) {
         case "actions":
           return (
             <div className="relative flex items-center gap-2">
-              <Link href={`/projects/view/${project.id}`}>
+              <Link
+                href={`/projects/view/${project.id}`}
+                onClick={viewProjectEvent}
+              >
                 <Tooltip color="primary" content="View Project">
                   <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
                     <EyeIcon />
                   </span>
                 </Tooltip>
               </Link>
-              <Link href={`/projects/edit/${project.id}`}>
+              <Link
+                href={`/projects/edit/${project.id}`}
+                onClick={editProjectEvent}
+              >
                 <Tooltip color="primary" content="Edit Project">
                   <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
                     <EditIcon />

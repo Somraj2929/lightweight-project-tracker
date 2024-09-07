@@ -14,12 +14,39 @@ const SidePanel = ({ currentUser }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
 
+  const trackCustomEvent = (eventName, eventData) => {
+    if (typeof window !== "undefined" && window.sa_event) {
+      window.sa_event(eventName, eventData);
+    }
+  };
+
+  const tabClick = (tab, currentUser) => {
+    return () => {
+      switch (tab) {
+        case "dashboard":
+          trackCustomEvent("dashboard_tab", { userId: currentUser.id });
+          break;
+        case "projects":
+          trackCustomEvent("projects_tab", { userId: currentUser.id });
+          break;
+        case "livechat":
+          trackCustomEvent("livechat_tab", { userId: currentUser.id });
+          break;
+        default:
+          console.warn("Unknown tab:", tab);
+          break;
+      }
+    };
+  };
+
   const handleLogout = () => {
+    trackCustomEvent("logout", { userId: currentUser.id });
     localStorage.removeItem("token");
     window.location.reload();
   };
 
   const handleEditProfilePic = () => {
+    trackCustomEvent("edit-profile-pic", { userId: currentUser.id });
     setIsModalOpen(true);
   };
 
@@ -28,6 +55,7 @@ const SidePanel = ({ currentUser }) => {
   };
 
   const toggleSidePanel = () => {
+    trackCustomEvent("toggle-side-panel", { userId: currentUser.id });
     setIsSidePanelOpen(!isSidePanelOpen);
   };
 
@@ -43,7 +71,7 @@ const SidePanel = ({ currentUser }) => {
         </div>
 
         <div className="flex flex-col py-4 px-10 gap-6 item-center justify-center">
-          <Link href="/">
+          <Link href="/" onClick={tabClick("dashboard", currentUser)}>
             <button className="py-2 rounded-xl bg-blue-700 flex items-center justify-center gap-4 w-[100%]">
               <span>
                 <Image
@@ -56,7 +84,7 @@ const SidePanel = ({ currentUser }) => {
               <span className="text-white text-2xl font-medium">Dashboard</span>
             </button>
           </Link>
-          <Link href="/projects">
+          <Link href="/projects" onClick={tabClick("projects", currentUser)}>
             <button className="py-2 rounded-xl bg-pink-700 flex items-center justify-center gap-4 w-[100%]">
               <span>
                 <Image
@@ -69,7 +97,7 @@ const SidePanel = ({ currentUser }) => {
               <span className="text-white text-2xl font-medium">Projects</span>
             </button>
           </Link>
-          <Link href="/livechat">
+          <Link href="/livechat" onClick={tabClick("livechat", currentUser)}>
             <button className="py-2 rounded-xl bg-red-700 flex items-center justify-center gap-4 w-[100%]">
               <span>
                 <Image

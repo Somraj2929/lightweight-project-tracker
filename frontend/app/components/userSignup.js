@@ -35,6 +35,12 @@ const UserSignup = () => {
     return re.test(password);
   };
 
+  const trackCustomEvent = (eventName, eventData) => {
+    if (typeof window !== "undefined" && window.sa_event) {
+      window.sa_event(eventName, eventData);
+    }
+  };
+
   const handleSignup = async (e) => {
     e.preventDefault();
     setSpinner(true);
@@ -68,6 +74,12 @@ const UserSignup = () => {
             role: role || "unknown",
           });
         }
+        trackCustomEvent("signup-attempt", {
+          name: name,
+          email: email,
+          team: team,
+          role: role,
+        });
 
         const response = await fetch("/api/auth/signup", {
           method: "POST",

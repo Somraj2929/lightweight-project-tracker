@@ -22,6 +22,11 @@ const EditProject = ({ project, user, users }) => {
   const currentUserId = user.id;
   const [additionalComments, setAdditionalComments] = useState("");
 
+  const trackCustomEvent = (eventName, eventData) => {
+    if (typeof window !== "undefined" && window.sa_event) {
+      window.sa_event(eventName, eventData);
+    }
+  };
   const getUserDetailsById = (userId) => {
     return users.find((user) => user.id === userId);
   };
@@ -41,6 +46,8 @@ const EditProject = ({ project, user, users }) => {
 
     return `${formattedDate} ${formattedTime}`;
   };
+
+  const editCancel = () => trackCustomEvent("project-edit-cancel", {});
 
   useEffect(() => {
     //setToken(getCookie("token"));
@@ -70,6 +77,7 @@ const EditProject = ({ project, user, users }) => {
     };
 
     try {
+      trackCustomEvent("project-update", { projectId: project.name });
       const response = await fetch(
         `https://somraj-project-tracker-nma47.ondigitalocean.app/projects/${project.id}`,
         {
@@ -389,7 +397,7 @@ const EditProject = ({ project, user, users }) => {
                 </div>
               </div>
               <div className="flex justify-evenly w-full gap-10">
-                <Link href="/projects">
+                <Link href="/projects" onClick={editCancel}>
                   <button className="bg-danger text-white px-8 py-2 rounded-lg">
                     Cancel
                   </button>

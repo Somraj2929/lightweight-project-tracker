@@ -14,6 +14,12 @@ const ForgotPassword = () => {
     return re.test(String(email).toLowerCase());
   };
 
+  const trackCustomEvent = (eventName, eventData) => {
+    if (typeof window !== "undefined" && window.sa_event) {
+      window.sa_event(eventName, eventData);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email) {
@@ -24,6 +30,7 @@ const ForgotPassword = () => {
       setMessage("Invalid email format");
       return;
     }
+    trackCustomEvent("forgot-password", { email });
     // Make an API call to request a password reset
     const response = await fetch("/api/auth/forgot-password", {
       method: "POST",

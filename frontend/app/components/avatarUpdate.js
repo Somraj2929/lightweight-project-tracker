@@ -5,15 +5,23 @@ import s3Config from "@/app/config/s3Config";
 import { updateUserAvatar } from "@/app/helper/apiHelpers";
 import { FaUpload } from "react-icons/fa6";
 import { Spinner } from "@nextui-org/react";
+import { track } from "@vercel/analytics/react";
 
 function ProfilePictureUpload({ user }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState(null);
 
+  const trackCustomEvent = (eventName, eventData) => {
+    if (typeof window !== "undefined" && window.sa_event) {
+      window.sa_event(eventName, eventData);
+    }
+  };
+
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
     setPreview(URL.createObjectURL(event.target.files[0]));
+    trackCustomEvent("profile-picture-preview", { userId: user.id });
   };
 
   const handleUpload = async () => {
@@ -24,7 +32,7 @@ function ProfilePictureUpload({ user }) {
 
     try {
       setUploading(true);
-
+      trackCustomEvent("profile-picture-uploaded", { userId: user.id });
       // Compress the image
       const compressedFile = await imageCompression(selectedFile, {
         maxSizeMB: 0.5,

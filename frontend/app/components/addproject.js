@@ -53,7 +53,7 @@ const AddProject = ({ user, users }) => {
 
     try {
       if (typeof window !== "undefined" && window.sa_event) {
-        window.sa_event("add-project", {
+        window.sa_event("project-add-attempt", {
           project_name: formData.name || "unknown",
         });
       }

@@ -17,6 +17,12 @@ const LoginPage = () => {
   const [errors, setErrors] = useState({});
   const router = useRouter();
 
+  const trackCustomEvent = (eventName, eventData) => {
+    if (typeof window !== "undefined" && window.sa_event) {
+      window.sa_event(eventName, eventData);
+    }
+  };
+
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   const handleLogin = async (e) => {
@@ -32,11 +38,7 @@ const LoginPage = () => {
       setSpinner(false);
     } else {
       try {
-        if (typeof window !== "undefined" && window.sa_event) {
-          window.sa_event("login-attempt", {
-            email: email || "unknown",
-          });
-        }
+        trackCustomEvent("login-attempt", { email });
         const response = await fetch("/api/auth/login", {
           method: "POST",
           headers: {

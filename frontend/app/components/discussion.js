@@ -14,7 +14,14 @@ const Discussion = ({ user }) => {
   const [isJoining, setIsJoining] = useState(false); // State for Join Room spinner
   const [isCreating, setIsCreating] = useState(false); // State for Create Room spinner
 
+  const trackCustomEvent = (eventName, eventData) => {
+    if (typeof window !== "undefined" && window.sa_event) {
+      window.sa_event(eventName, eventData);
+    }
+  };
+
   const handleValidateChatId = async () => {
+    trackCustomEvent("chat-room-join-attempt", { userId: user.id });
     setIsJoining(true); // Start spinner for joining
     const response = await validateChatId(chatid);
     console.log(response);
@@ -29,6 +36,7 @@ const Discussion = ({ user }) => {
   };
 
   const handleCreateChatRoom = async () => {
+    trackCustomEvent("chat-room-create", { userId: user.id });
     setIsCreating(true); // Start spinner for creating
     const response = await createChatRoom(user.id);
 

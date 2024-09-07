@@ -12,6 +12,12 @@ const ResetPasswordComponent = () => {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
+  const trackCustomEvent = (eventName, eventData) => {
+    if (typeof window !== "undefined" && window.sa_event) {
+      window.sa_event(eventName, eventData);
+    }
+  };
+
   const validatePassword = (password) => {
     const re = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/;
     return re.test(password);
@@ -34,6 +40,7 @@ const ResetPasswordComponent = () => {
       return;
     }
     console.log("token", token);
+    trackCustomEvent("reset-password", { message: "Password reset attempt" });
     // Make an API call to reset the password
     const response = await fetch("/api/auth/reset-password", {
       method: "POST",

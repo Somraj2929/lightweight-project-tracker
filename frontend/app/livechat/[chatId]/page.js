@@ -14,6 +14,12 @@ function LiveChatData({ user }) {
   const [newMessage, setNewMessage] = useState("");
   const [ws, setWs] = useState(null);
 
+  const trackCustomEvent = (eventName, eventData) => {
+    if (typeof window !== "undefined" && window.sa_event) {
+      window.sa_event(eventName, eventData);
+    }
+  };
+
   useEffect(() => {
     if (chatId) {
       const fetchAndSetMessages = async () => {
@@ -54,6 +60,7 @@ function LiveChatData({ user }) {
   }, [chatId]);
 
   const sendMessage = () => {
+    trackCustomEvent("chat-message-send", { userId: user.id });
     if (ws && newMessage) {
       const message = {
         text: newMessage,

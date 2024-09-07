@@ -18,6 +18,12 @@ const ChatData = ({ messages, user, chatDetails }) => {
   const chatContainerRef = useRef(null);
   const router = useRouter();
 
+  const trackCustomEvent = (eventName, eventData) => {
+    if (typeof window !== "undefined" && window.sa_event) {
+      window.sa_event(eventName, eventData);
+    }
+  };
+
   useEffect(() => {
     const fetchUsers = async () => {
       const response = await fetchAllUsers();
@@ -64,6 +70,7 @@ const ChatData = ({ messages, user, chatDetails }) => {
     toast("You are not allowed to close this chat", { type: "error" });
 
   const copyToClipboard = () => {
+    trackCustomEvent("chat-id-copied", { chatId: chatDetails.id });
     navigator.clipboard
       .writeText(chatDetails.id)
       .then(() => {
@@ -79,12 +86,14 @@ const ChatData = ({ messages, user, chatDetails }) => {
   const currentUserId = user.id;
 
   const closeChat = async () => {
+    trackCustomEvent("chat-close-attempt", { chatId: chatDetails.id });
     if (chatDetails.createdBy === currentUserId) {
       if (confirm("Are you sure you want to close this chat?")) {
         try {
           const response = await closeChatRoom(chatDetails.id);
 
           if (response.success === true) {
+            trackCustomEvent("chat-closed", { chatId: chatDetails.id });
             alert(response.message);
             router.push("/livechat");
           } else {
