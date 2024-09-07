@@ -251,7 +251,7 @@ export default function FetchAllProjects({ currentUser }) {
           );
 
         case "team":
-          return <div className="font-semibold">{cellValue}</div>;
+          return <div className="font-semibold capitalize">{cellValue}</div>;
         case "actions":
           return (
             <div className="relative flex items-center gap-2">

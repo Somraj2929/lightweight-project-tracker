@@ -12,10 +12,12 @@ import SidePanel from "./sidepanel";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Spinner } from "@nextui-org/react";
+import { teams } from "@/public/signupdetails";
 
 const EditProject = ({ project, user, users }) => {
   const [token, setToken] = useState(null);
   const [spinner, setSpinner] = useState(false);
+  const [team, setTeam] = useState(project.team);
   const router = useRouter();
   const currentUserId = user.id;
   const [additionalComments, setAdditionalComments] = useState("");
@@ -148,19 +150,20 @@ const EditProject = ({ project, user, users }) => {
                 <Select
                   isRequired
                   label="Select Team"
-                  placeholder="Select a Team"
+                  placeholder="Select Your Team"
+                  value={team}
+                  onChange={(e) => setTeam(e.target.value)}
                   className="max-w-auto"
                   name="team"
                   defaultSelectedKeys={[project.team]}
                 >
-                  <SelectSection title="All Teams">
-                    <SelectItem key="mamaearth">Mamaearth</SelectItem>
-                    <SelectItem key="thedermaco">TheDermaCo</SelectItem>
-                    <SelectItem key="aqualogica">Aqualogica</SelectItem>
-                    <SelectItem key="bblunt">BBlunt</SelectItem>
-                    <SelectItem key="staze">Staze</SelectItem>
-                  </SelectSection>
+                  {teams.map((team) => (
+                    <SelectItem key={team.key} value={team.key}>
+                      {team.label}
+                    </SelectItem>
+                  ))}
                 </Select>
+
                 <Select
                   isRequired
                   color={statusColorMap[project.status]}

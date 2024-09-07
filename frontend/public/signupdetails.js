@@ -1,9 +1,15 @@
+import { key } from "fontawesome";
+
 export const teams = [
-  { key: "mamaearth", label: "Mamaearth" },
-  { key: "thedermaco", label: "TheDermaCo" },
-  { key: "aqualogica", label: "Aqualogica" },
-  { key: "bblunt", label: "BBlunt" },
-  { key: "staze", label: "Staze" },
+  { key: "design", label: "Design" },
+  { key: "development", label: "Development" },
+  { key: "marketing", label: "Marketing" },
+  { key: "hr", label: "HR" },
+  { key: "finance", label: "Finance" },
+  { key: "operations", label: "Operations" },
+  { key: "management", label: "Management" },
+  { key: "sales", label: "Sales" },
+  { key: "support", label: "Support" },
 ];
 
 export const roles = [

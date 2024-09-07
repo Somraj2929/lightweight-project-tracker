@@ -1,11 +1,14 @@
+"use client";
 import React from "react";
-
 import { Avatar, Input, Select, SelectItem, Textarea } from "@nextui-org/react";
+import { useState } from "react";
 import SidePanel from "./sidepanel";
 import Link from "next/link";
 import Image from "next/image";
+import { teams } from "@/public/signupdetails";
 
 const ViewProject = ({ project, user, users }) => {
+  const [team, setTeam] = useState(project.team);
   const currentUserId = user.id;
 
   const getUserDetailsById = (userId) => {
@@ -75,18 +78,23 @@ const ViewProject = ({ project, user, users }) => {
               />
               <div className="flex flex-col md:flex-row w-full justify-between md:gap-4 gap-2">
                 <Select
-                  label="Team"
-                  placeholder="Select a Team"
+                  isRequired
+                  label="Select Team"
+                  placeholder="Select Your Team"
+                  value={team}
+                  onChange={(e) => setTeam(e.target.value)}
                   className="max-w-auto"
+                  name="team"
                   variant="flat"
                   selectedKeys={[project.team]}
                 >
-                  <SelectItem key="mamaearth">Mamaearth</SelectItem>
-                  <SelectItem key="thedermaco">TheDermaCo</SelectItem>
-                  <SelectItem key="aqualogica">Aqualogica</SelectItem>
-                  <SelectItem key="bblunt">BBlunt</SelectItem>
-                  <SelectItem key="staze">Staze</SelectItem>
+                  {teams.map((team) => (
+                    <SelectItem key={team.key} value={team.key}>
+                      {team.label}
+                    </SelectItem>
+                  ))}
                 </Select>
+
                 <Select
                   label="Status"
                   color={statusColorMap[project.status]}
