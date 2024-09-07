@@ -1,7 +1,7 @@
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
-import AnalyticsScript from "@/components/AnalyticsScript";
+import AnalyticsScript from "@/app/components/AnalyticsScript";
 
 export const metadata = {
   title: "Project Management System",
