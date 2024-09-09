@@ -47,12 +47,10 @@ func main() {
 
 	// Create a background logger
 	backgroundLogger := zap.New(backgroundCore)
-	defer backgroundLogger.Sync()
+
 
 	// Log a message
 	txn := app.StartTransaction("nrzap example transaction") 
-	defer txn.End()
-
 	txnCore, err := nrzap.WrapTransactionCore(core, txn)
 	if err != nil && err != nrzap.ErrNilTxn {
 		panic(err)

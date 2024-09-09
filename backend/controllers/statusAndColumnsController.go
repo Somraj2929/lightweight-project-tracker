@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"context"
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -12,7 +11,6 @@ import (
 )
 
 func ColumnStatusHandler(c *gin.Context) {
-    log.Println("ColumnStatusHandler")
 
     collection := db.MongoClient.Database("project_tracker").Collection("columnsStatusOptions")
     if collection == nil {
