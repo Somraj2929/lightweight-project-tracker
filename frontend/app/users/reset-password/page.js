@@ -1,13 +1,14 @@
 "use client";
 import React, { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Input } from "@nextui-org/react";
+import { Input, Spinner } from "@nextui-org/react";
 import Image from "next/image";
 
 const ResetPasswordComponent = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [spinner, setSpinner] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -25,36 +26,48 @@ const ResetPasswordComponent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSpinner(true); // Start showing spinner
+
     if (!password) {
       setMessage("Password is required");
+      setSpinner(false); // Hide spinner on validation error
       return;
     }
     if (password !== confirmPassword) {
       setMessage("Passwords don't match");
+      setSpinner(false); // Hide spinner on validation error
       return;
     }
     if (!validatePassword(password)) {
       setMessage(
         "Password must be at least 8 characters long and include uppercase letters, digits, and symbols"
       );
+      setSpinner(false); // Hide spinner on validation error
       return;
     }
+
     console.log("token", token);
     trackCustomEvent("reset-password", { message: "Password reset attempt" });
-    // Make an API call to reset the password
-    const response = await fetch("/api/auth/reset-password", {
-      method: "POST",
-      body: JSON.stringify({ token, password }),
-      headers: { "Content-Type": "application/json" },
-    });
 
-    if (response.ok) {
-      setMessage(
-        "Password reset successful. You can now log in with your new password."
-      );
-      router.push("/users/login");
-    } else {
-      setMessage("Error resetting password.");
+    try {
+      const response = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        body: JSON.stringify({ token, password }),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (response.ok) {
+        setMessage(
+          "Password reset successful. You can now log in with your new password."
+        );
+        router.push("/users/login");
+      } else {
+        setMessage("Error resetting password.");
+      }
+    } catch (error) {
+      setMessage("An error occurred. Please try again later.");
+    } finally {
+      setSpinner(false); // Hide spinner after request completes
     }
   };
 
@@ -103,8 +116,9 @@ const ResetPasswordComponent = () => {
             type="submit"
             onClick={handleSubmit}
             className="w-full bg-blue-500 text-white rounded-lg px-4 py-2"
+            disabled={spinner} // Disable button when spinner is active
           >
-            Reset Password
+            {spinner ? <Spinner size="sm" color="white" /> : "Reset Password"}
           </button>
         </form>
       </div>

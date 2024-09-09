@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Input } from "@nextui-org/react";
+import { Input, Spinner } from "@nextui-org/react";
 import Image from "next/image";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [spinner, setSpinner] = useState(false);
 
   const validateEmail = (email) => {
     const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -22,29 +23,42 @@ const ForgotPassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSpinner(true);
+    setMessage("");
+
     if (!email) {
       setMessage("Email is required");
+      setSpinner(false);
       return;
     }
+
     if (!validateEmail(email)) {
       setMessage("Invalid email format");
+      setSpinner(false);
       return;
     }
-    trackCustomEvent("forgot-password", { email });
-    // Make an API call to request a password reset
-    const response = await fetch("/api/auth/forgot-password", {
-      method: "POST",
-      body: JSON.stringify({ email }),
-      headers: { "Content-Type": "application/json" },
-    });
 
-    if (response.ok) {
-      //setMessage("Check your email for the password reset link.");
-      notify();
-    } else if (response.status === 429) {
-      setMessage("Too many requests. Please try again later.");
-    } else {
-      setMessage("Error requesting password reset.");
+    trackCustomEvent("forgot-password", { email });
+
+    try {
+      const response = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        body: JSON.stringify({ email }),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (response.ok) {
+        notify();
+        setMessage("");
+      } else if (response.status === 429) {
+        setMessage("Too many requests. Please try again later.");
+      } else {
+        setMessage("Error requesting password reset.");
+      }
+    } catch (error) {
+      setMessage("An error occurred. Please try again later.");
+    } finally {
+      setSpinner(false);
     }
   };
 
@@ -88,9 +102,10 @@ const ForgotPassword = () => {
             type="submit"
             onKeyDown={handleKeyDown}
             onClick={handleSubmit}
+            disabled={spinner}
             className="w-full bg-blue-500 text-white rounded-lg px-4 py-2"
           >
-            Send Reset Link
+            {spinner ? <Spinner size="sm" color="white" /> : "Send Reset Link"}
           </button>
         </form>
       </div>

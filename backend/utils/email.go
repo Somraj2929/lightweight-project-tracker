@@ -23,7 +23,7 @@ func SendPasswordResetEmail(email, token string, userName string) {
 		<p>Hi %s,</p>
 		<p>You requested to reset your password. Please click the link below to reset your password:</p>
 		<p>
-			<a href="https://lightweight-project-tracker.vercel.app/users/reset-password?token=%s" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; border-radius: 5px;">
+			<a href="https://project-tracker.somraj.tech/users/reset-password?token=%s" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; border-radius: 5px;">
 				Reset Password
 			</a>
 		</p>

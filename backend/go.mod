@@ -8,8 +8,10 @@ require (
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/gorilla/websocket v1.5.3
 	github.com/newrelic/go-agent/v3 v3.34.0
+	github.com/newrelic/go-agent/v3/integrations/logcontext-v2/nrzap v1.2.1
 	github.com/newrelic/go-agent/v3/integrations/nrgin v1.3.1
 	go.mongodb.org/mongo-driver v1.15.1
+	go.uber.org/zap v1.27.0
 	golang.org/x/crypto v0.23.0
 )
 
@@ -45,6 +47,7 @@ require (
 	github.com/xdg-go/scram v1.1.2 // indirect
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
+	go.uber.org/multierr v1.10.0 // indirect
 	golang.org/x/arch v0.8.0 // indirect
 	golang.org/x/net v0.25.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
