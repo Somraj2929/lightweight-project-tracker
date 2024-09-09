@@ -4,69 +4,48 @@ import (
     "os"
     "time"
     "net/http"
-
+    
     "github.com/Somraj2929/lightweight-project-tracker/db"
     "github.com/Somraj2929/lightweight-project-tracker/routes"
     "github.com/Somraj2929/lightweight-project-tracker/utils"
-
-    "github.com/gin-gonic/gin"
     "github.com/newrelic/go-agent/v3/newrelic"
-    "github.com/newrelic/go-agent/v3/integrations/nrgin"
-    "github.com/newrelic/go-agent/v3/integrations/logcontext-v2/nrzap"
-    "go.uber.org/zap"
-    "go.uber.org/zap/zapcore"
+    nrgin "github.com/newrelic/go-agent/v3/integrations/nrgin"
+    "github.com/rs/zerolog"
+    "github.com/newrelic/go-agent/v3/integrations/logcontext-v2/zerologWriter"
+    "github.com/gin-gonic/gin"
 )
 
 func main() {
     
-    core := zapcore.NewCore(
-        zapcore.NewJSONEncoder(zap.NewProductionEncoderConfig()),
-        zapcore.AddSync(os.Stdout),
-        zap.InfoLevel,
-    )
-
-    
-    backgroundLogger := zap.New(core)
-    defer backgroundLogger.Sync() 
-
-    // Initialize New Relic application with error logging
     app, err := newrelic.NewApplication(
         newrelic.ConfigAppName("backend-tracker"),
-        newrelic.ConfigLicense("0664bff9d3479d36fb00749f559d74855073NRAL"), 
+        newrelic.ConfigLicense("0664bff9d3479d36fb00749f559d74855073NRAL"),
         newrelic.ConfigAppLogForwardingEnabled(true),
-        newrelic.ConfigDebugLogger(os.Stdout), 
     )
     if err != nil {
-        backgroundLogger.Error("failed to initialize New Relic", zap.Error(err))
-        return
+        panic(err)
     }
 
-    if app == nil {
-        backgroundLogger.Fatal("New Relic app is nil after initialization")
-        return
-    }
+    // Create a zerologWriter for New Relic
+    writer := zerologWriter.New(os.Stdout, app)
+    // Create a zerolog logger with the writer
+    logger := zerolog.New(writer).With().Timestamp().Logger()
 
-    txn := app.StartTransaction("nrzap-example-transaction")
-    txnCore, err := nrzap.WrapTransactionCore(core, txn)
-    if err != nil && err != nrzap.ErrNilTxn {
-        backgroundLogger.Error("failed to wrap transaction core", zap.Error(err))
-        return
-    }
+    // Log application startup
+    logger.Info().Msg("Application starting")
 
-    txnLogger := zap.New(txnCore)
-    txnLogger.Info("transaction log message", zap.String("info", "transaction log message"))
-
+    // Seed the random number generator
     seedValue := time.Now().UnixNano()
     utils.Seed(seedValue)
 
+    // Connect to MongoDB
     db.ConnectMongoDB()
 
+    // Setup Gin
     router := gin.Default()
     router.Use(nrgin.Middleware(app))
-
-    // Allow CORS
     router.Use(func(c *gin.Context) {
-        c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+        c.Writer.Header().Set("Access-Control-Allow-Origin", "*") 
         c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
         c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
         c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
@@ -75,6 +54,7 @@ func main() {
             c.AbortWithStatus(http.StatusOK)
             return
         }
+
         c.Next()
     })
 
@@ -85,13 +65,10 @@ func main() {
     routes.ChatRoutes(router)
     routes.StatusAndColumnsRoutes(router)
 
-    port := os.Getenv("PORT")
-    if port == "" {
-        port = "8080" // Default port
-    }
-
-    err = router.Run(":" + port)
+    // Start server
+    err = router.Run(":" + os.Getenv("PORT"))
     if err != nil {
-        backgroundLogger.Fatal("failed to start server", zap.Error(err))
+        logger.Error().Err(err).Msg("Failed to start server")
+        panic(err)
     }
 }
