@@ -32,7 +32,7 @@ func main() {
     // Initialize New Relic application with error logging
     app, err := newrelic.NewApplication(
         newrelic.ConfigAppName("backend-tracker"),
-        newrelic.ConfigLicense("YOUR_NEW_RELIC_LICENSE_KEY"), 
+        newrelic.ConfigLicense("NEW_RELIC_LICENSE_KEY"), 
         newrelic.ConfigAppLogForwardingEnabled(true),
         newrelic.ConfigDebugLogger(os.Stdout), 
     )
