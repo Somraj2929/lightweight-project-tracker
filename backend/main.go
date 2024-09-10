@@ -19,7 +19,7 @@ func main() {
     
     app, err := newrelic.NewApplication(
         newrelic.ConfigAppName("backend-tracker"),
-        newrelic.ConfigLicense("0664bff9d3479d36fb00749f559d74855073NRAL"),
+        newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
         newrelic.ConfigAppLogForwardingEnabled(true),
     )
     if err != nil {

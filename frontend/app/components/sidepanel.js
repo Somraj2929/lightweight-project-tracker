@@ -62,7 +62,7 @@ const SidePanel = ({ currentUser }) => {
   return (
     <>
       <div
-        className={`fixed inset-y-0 left-0 w-[80%]  bg-white z-50 transform ${
+        className={`fixed inset-y-0 left-0 w-[80%]  bg-white z-10 transform ${
           isSidePanelOpen ? "translate-x-0" : "-translate-x-full"
         } transition-transform md:translate-x-0 md:w-[25%] md:block md:border-r-2`}
       >
