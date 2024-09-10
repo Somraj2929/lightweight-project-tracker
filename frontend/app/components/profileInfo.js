@@ -45,12 +45,23 @@ const ProfileInfo = ({ user, onClose }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { month, year } = joiningMonthAndYear(user.createdAt);
-        setJoiningMonth(month);
-        setJoiningYear(year);
-        const projectsData = await fetchProjects();
-        setProjects(projectsData);
-        setLoading(false);
+        // Check localStorage for cached projects
+        const cachedProjects = localStorage.getItem("all-projects");
+        if (cachedProjects) {
+          const { month, year } = joiningMonthAndYear(user.createdAt);
+          setJoiningMonth(month);
+          setJoiningYear(year);
+          setProjects(JSON.parse(cachedProjects));
+          setLoading(false);
+        } else {
+          const { month, year } = joiningMonthAndYear(user.createdAt);
+          setJoiningMonth(month);
+          setJoiningYear(year);
+          const projectsData = await fetchProjects();
+          setProjects(projectsData);
+          setLoading(false);
+          localStorage.setItem("all-projects", JSON.stringify(projectsData)); // Cache projects
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
         setLoading(true);
