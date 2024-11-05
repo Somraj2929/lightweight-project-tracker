@@ -19,5 +19,7 @@ ENV  DOTENV_PATH=/app/.env
 
 ENV GIN_MODE=release
 
+EXPOSE 8081
+
 # Command to run the executable
 CMD ["./main"]
