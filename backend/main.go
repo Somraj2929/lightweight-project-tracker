@@ -13,10 +13,16 @@ import (
     "github.com/rs/zerolog"
     "github.com/newrelic/go-agent/v3/integrations/logcontext-v2/zerologWriter"
     "github.com/gin-gonic/gin"
+    "github.com/joho/godotenv"
 )
 
 func main() {
     
+    err := godotenv.Load()
+    if err != nil {
+        panic(err)
+    }
+
     app, err := newrelic.NewApplication(
         newrelic.ConfigAppName("backend-tracker"),
         newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
