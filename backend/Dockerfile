@@ -1,25 +1,40 @@
-# Use a base image with Go installed
-FROM golang:latest
+# Stage 1: Build the application
+FROM golang:1.20 AS builder
 
-# Set the working directory inside the container
+# Set the working directory
 WORKDIR /app
 
-# Copy the Go module files and download dependencies
+# Copy go module files and download dependencies
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy the rest of the application source code
+# Copy the application source code
 COPY . .
 
-# Build the Go application
-RUN go build -o main .
+# Build the application
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
-# Set the environment variable to specify the location of the .env file
-ENV  DOTENV_PATH=/app/.env
+# Stage 2: Create a minimal final image
+FROM alpine:latest
 
-ENV GIN_MODE=release
+# Install necessary CA certificates for HTTPS
+RUN apk --no-cache add ca-certificates
 
+# Set working directory
+WORKDIR /app
+
+# Copy the executable from the builder stage
+COPY --from=builder /app/main .
+
+# Copy the .env file (if applicable)
+COPY .env /app/.env
+
+# Set environment variables
+ENV DOTENV_PATH=/app/.env \
+    GIN_MODE=release
+
+# Expose the application port
 EXPOSE 8081
 
-# Command to run the executable
+# Command to run the application
 CMD ["./main"]
