@@ -2,7 +2,7 @@
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_BACKEND_BASE_URL ||
-  "https://somraj-project-tracker-nma47.ondigitalocean.app";
+  "https://project-backend.somraj.tech";
 
 //const token = getCookie("token");
 
