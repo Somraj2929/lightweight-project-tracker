@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
           <img
             src="https://api.project-tracker.somraj.tech/noscript.gif"
             alt=""
-            referrerpolicy="no-referrer-when-downgrade"
+            referrerPolicy="no-referrer-when-downgrade"
           />
         </noscript>
       </body>
