@@ -5,7 +5,7 @@ export async function POST(req) {
     const { name, email, team, role, password } = await req.json();
 
     const response = await fetch(
-      "https://somraj-project-tracker-nma47.ondigitalocean.app/auth/signup",
+      "https://project-backend.somraj.tech/auth/signup",
       {
         method: "POST",
         headers: {

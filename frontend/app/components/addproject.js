@@ -60,7 +60,7 @@ const AddProject = ({ user, users }) => {
         });
       }
       const response = await fetch(
-        `https://somraj-project-tracker-nma47.ondigitalocean.app/projects/`,
+        `https://project-backend.somraj.tech/projects/`,
         {
           method: "POST",
           headers: {

@@ -13,7 +13,7 @@ const useAuth = () => {
     const fetchUserInfo = async (userId, token) => {
       try {
         const response = await fetch(
-          `https://somraj-project-tracker-nma47.ondigitalocean.app/users/${userId}`,
+          `https://project-backend.somraj.tech/users/${userId}`,
           {
             method: "GET",
             headers: {
