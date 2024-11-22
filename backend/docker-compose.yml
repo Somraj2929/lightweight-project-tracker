@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - DOTENV_PATH=/app/.env
+      - GIN_MODE=release
+    volumes:
+      - .:/app
+    restart: always
