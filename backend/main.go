@@ -13,7 +13,6 @@ import (
     "github.com/rs/zerolog"
     "github.com/newrelic/go-agent/v3/integrations/logcontext-v2/zerologWriter"
     "github.com/gin-gonic/gin"
-    "github.com/joho/godotenv"
 )
 
 func main() {
