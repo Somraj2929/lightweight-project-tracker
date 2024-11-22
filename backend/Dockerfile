@@ -12,7 +12,7 @@ RUN go mod download
 COPY . .
 
 # Build the application
-RUN CGO_ENABLED=0 GOOS=linux GOMAXPROCS=4 go build -o main .
+RUN CGO_ENABLED=0 GOOS=linux go build -o main .
 
 # Stage 2: Final Image
 FROM alpine:latest
