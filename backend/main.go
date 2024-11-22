@@ -18,11 +18,6 @@ import (
 
 func main() {
     
-    err := godotenv.Load()
-    if err != nil {
-        panic(err)
-    }
-
     app, err := newrelic.NewApplication(
         newrelic.ConfigAppName("backend-tracker"),
         newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
