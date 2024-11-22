@@ -10,6 +10,4 @@ services:
     environment:
       - DOTENV_PATH=/app/.env
       - GIN_MODE=release
-    volumes:
-      - .:/app
     restart: always
