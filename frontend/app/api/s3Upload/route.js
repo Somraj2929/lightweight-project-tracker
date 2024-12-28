@@ -10,7 +10,6 @@ export async function POST(req) {
   try {
     const body = await req.json();
     const { fileName, fileType } = body;
-    console.log("S3 Access Key ID:", process.env.S3_ACCESS_KEY_ID);
     // Generate a single unique file name
     const uniqueFileName = `profiles/${Date.now()}-${fileName}`;
 
