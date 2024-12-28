@@ -8,4 +8,5 @@ services:
     environment:
       - DOTENV_PATH=/app/.env
       - GIN_MODE=release
+      - JWT_SECRET=${JWT_SECRET}
     restart: always
