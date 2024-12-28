@@ -3,7 +3,7 @@ import SidePanel from "@/app/components/sidepanel";
 import ChatData from "@/app/components/chatdata";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { fetchMessagesByChatId } from "@/app/helper/apiHelpers"; // Import the fetch function
+import { fetchMessagesByChatId } from "@/app/helper/apiHelpers";
 
 import withAuth from "@/app/hooks/withAuth";
 
@@ -39,7 +39,7 @@ function LiveChatData({ user }) {
 
       socket.onopen = async () => {
         console.log("WebSocket connection opened");
-        await fetchAndSetMessages(); // Fetch and set messages only once on connection open
+        await fetchAndSetMessages();
       };
 
       socket.onmessage = (event) => {

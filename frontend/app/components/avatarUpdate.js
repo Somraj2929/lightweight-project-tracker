@@ -1,11 +1,8 @@
 import React, { useState } from "react";
-import S3 from "react-s3";
 import imageCompression from "browser-image-compression";
-import s3Config from "@/app/config/s3Config";
 import { updateUserAvatar } from "@/app/helper/apiHelpers";
 import { FaUpload } from "react-icons/fa6";
 import { Spinner } from "@nextui-org/react";
-import { track } from "@vercel/analytics/react";
 
 function ProfilePictureUpload({ user }) {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -32,7 +29,6 @@ function ProfilePictureUpload({ user }) {
 
     try {
       setUploading(true);
-      trackCustomEvent("profile-picture-uploaded", { userId: user.id });
       // Compress the image
       const compressedFile = await imageCompression(selectedFile, {
         maxSizeMB: 0.5,
@@ -40,26 +36,41 @@ function ProfilePictureUpload({ user }) {
         useWebWorker: true,
       });
 
-      // Ensure unique file name by appending timestamp
+      // Get the file name and type
       const uniqueFileName = `${Date.now()}-${compressedFile.name}`;
+      const fileType = compressedFile.type;
 
-      // Upload the compressed image to S3
-      const s3Response = await S3.uploadFile(
-        new File([compressedFile], uniqueFileName),
-        s3Config
-      );
-      const avatarUrl = s3Response.location;
-      console.log("Avatar URL:", avatarUrl);
-      // Update the avatar URL in MongoDB using the helper function
-      const imageStatus = await updateUserAvatar(user.id, avatarUrl);
+      // Request a pre-signed URL from the server
+      const response = await fetch("/api/s3Upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fileName: uniqueFileName, fileType }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to generate signed URL");
+      }
+
+      const { signedUrl, fileUrl } = data;
+
+      // Upload the file directly to S3
+      await fetch(signedUrl, {
+        method: "PUT",
+        headers: { "Content-Type": fileType },
+        body: compressedFile,
+      });
+
+      console.log("File uploaded successfully:", fileUrl);
+
+      // Update the avatar URL in your database
+      const imageStatus = await updateUserAvatar(user.id, fileUrl);
       if (imageStatus) {
         alert("Profile picture updated successfully!");
         window.location.reload();
       } else {
         console.error("Error updating the profile picture:", imageStatus);
       }
-
-      //alert("Profile picture updated successfully!");
     } catch (error) {
       console.error("Error uploading the image:", error);
       alert("Failed to upload the image. Please try again.");
