@@ -3,17 +3,16 @@ package main
 import (
     "os"
     "time"
-    //"net/http"
+    "log"
     
     "github.com/Somraj2929/lightweight-project-tracker/db"
     "github.com/Somraj2929/lightweight-project-tracker/routes"
     "github.com/Somraj2929/lightweight-project-tracker/utils"
     "github.com/newrelic/go-agent/v3/newrelic"
     nrgin "github.com/newrelic/go-agent/v3/integrations/nrgin"
-    "github.com/rs/zerolog"
-    "github.com/newrelic/go-agent/v3/integrations/logcontext-v2/zerologWriter"
     "github.com/gin-gonic/gin"
     "github.com/joho/godotenv"
+    "github.com/newrelic/go-agent/v3/integrations/logcontext-v2/logWriter"
 )
 
 func main() {
@@ -29,16 +28,15 @@ func main() {
         newrelic.ConfigAppLogForwardingEnabled(true),
     )
     if err != nil {
-        panic(err)
+        log.Fatalf("Error initializing New Relic application: %v", err)
     }
 
-    // Create a zerologWriter for New Relic
-    writer := zerologWriter.New(os.Stdout, app)
-    // Create a zerolog logger with the writer
-    logger := zerolog.New(writer).With().Timestamp().Logger()
+    writer := logWriter.New(os.Stdout, app)
+    log.SetOutput(writer)
+    log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
+    log.Println("New Relic application initialized successfully")
+    writer.DebugLogging(true)
 
-    // Log application startup
-    logger.Info().Msg("Application starting")
 
     // Seed the random number generator
     seedValue := time.Now().UnixNano()
@@ -74,7 +72,6 @@ func main() {
     // Start server
     err = router.Run(":" + os.Getenv("PORT"))
     if err != nil {
-        logger.Error().Err(err).Msg("Failed to start server")
-        panic(err)
+        log.Fatalf("Error starting server: %v", err)
     }
 }
