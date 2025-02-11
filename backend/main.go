@@ -4,6 +4,7 @@ import (
     "os"
     "time"
     "log"
+    "net/http"
     
     "github.com/Somraj2929/lightweight-project-tracker/db"
     "github.com/Somraj2929/lightweight-project-tracker/routes"
@@ -42,19 +43,19 @@ func main() {
     // Setup Gin
     router := gin.Default()
     router.Use(nrgin.Middleware(app))
-    // router.Use(func(c *gin.Context) {
-    //     c.Writer.Header().Set("Access-Control-Allow-Origin", "*") 
-    //     c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-    //     c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
-    //     c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+    router.Use(func(c *gin.Context) {
+        c.Writer.Header().Set("Access-Control-Allow-Origin", "https://project-tracker.somraj.tech") 
+        c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+        c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 
-    //     if c.Request.Method == "OPTIONS" {
-    //         c.AbortWithStatus(http.StatusOK)
-    //         return
-    //     }
+        if c.Request.Method == "OPTIONS" {
+            c.AbortWithStatus(http.StatusOK)
+            return
+        }
 
-    //     c.Next()
-    // })
+        c.Next()
+    })
 
     // Setup routes
     routes.AuthRoutes(router)
