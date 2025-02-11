@@ -30,8 +30,7 @@ COPY --from=builder /app/main .
 COPY .env /app/.env
 
 # Set environment variables
-ENV DOTENV_PATH=/app/.env \
-    GIN_MODE=release
+ENV GIN_MODE=release
 
 # Expose the application port
 EXPOSE 8081
