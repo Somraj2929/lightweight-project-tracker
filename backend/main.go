@@ -11,17 +11,11 @@ import (
     "github.com/newrelic/go-agent/v3/newrelic"
     nrgin "github.com/newrelic/go-agent/v3/integrations/nrgin"
     "github.com/gin-gonic/gin"
-    "github.com/joho/godotenv"
     "github.com/newrelic/go-agent/v3/integrations/logcontext-v2/logWriter"
 )
 
 func main() {
 
-    err := godotenv.Load()
-    if err != nil {
-        panic(err)
-    }
-    
     app, err := newrelic.NewApplication(
         newrelic.ConfigAppName("backend-tracker"),
         newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
