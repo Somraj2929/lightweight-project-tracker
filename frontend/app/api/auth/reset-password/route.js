@@ -5,7 +5,7 @@ export async function POST(req) {
     const { token, password } = await req.json();
 
     const res = await fetch(
-      "https://project-backend.somraj.tech/auth/reset-password",
+      "https://starfish-app-ilhlz.ondigitalocean.app/auth/reset-password",
       {
         method: "POST",
         headers: {

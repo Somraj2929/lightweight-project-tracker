@@ -81,7 +81,7 @@ const EditProject = ({ project, user, users }) => {
     try {
       trackCustomEvent("project-update", { projectId: project.name });
       const response = await fetch(
-        `https://project-backend.somraj.tech/projects/${project.id}`,
+        `https://starfish-app-ilhlz.ondigitalocean.app/projects/${project.id}`,
         {
           method: "PUT",
           headers: {
