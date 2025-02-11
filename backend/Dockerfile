@@ -26,9 +26,6 @@ WORKDIR /app
 # Copy the executable from the builder stage
 COPY --from=builder /app/main .
 
-# Copy the .env file (if applicable)
-COPY .env /app/.env
-
 # Set environment variables
 ENV GIN_MODE=release
 
