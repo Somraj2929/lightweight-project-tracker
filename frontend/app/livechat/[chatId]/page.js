@@ -34,7 +34,7 @@ function LiveChatData({ user }) {
       };
 
       const socket = new WebSocket(
-        `wss://project-backend.somraj.tech/chats/ws?chatID=${chatId}`
+        `wss://starfish-app-ilhlz.ondigitalocean.app/chats/ws?chatID=${chatId}`
       );
 
       socket.onopen = async () => {
