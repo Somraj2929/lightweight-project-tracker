@@ -171,7 +171,7 @@ const Discussion = ({ user }) => {
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
               <div className="flex flex-col justify-center bg-white p-4 rounded-lg shadow-lg">
                 <h2 className="text-lg text-center font-semibold mb-2">
-                  Oops🥲
+                  Oops🤨🥲
                 </h2>
                 <p>{error}</p>
                 <button
