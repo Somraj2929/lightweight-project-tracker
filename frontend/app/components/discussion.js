@@ -116,7 +116,7 @@ const Discussion = ({ user }) => {
                     <div className="md:w-[50%] border-1 rounded-lg p-4 bg-green-200">
                       <p className="text-center leading-10 font-semibold">
                         Already have a chat room? <br /> Enter the room code to
-                        join
+                        join.
                       </p>
                       <div className="flex justify-center gap-4">
                         <input
