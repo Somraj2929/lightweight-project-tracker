@@ -5,7 +5,7 @@ export async function POST(req) {
     const { name, email, team, role, password } = await req.json();
 
     const response = await fetch(
-      "https://starfish-app-ilhlz.ondigitalocean.app/auth/signup",
+      `${process.env.BACKEND_BASE_URL}/auth/signup`,
       {
         method: "POST",
         headers: {

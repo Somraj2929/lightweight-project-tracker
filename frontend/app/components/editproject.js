@@ -81,7 +81,7 @@ const EditProject = ({ project, user, users }) => {
     try {
       trackCustomEvent("project-update", { projectId: project.name });
       const response = await fetch(
-        `https://starfish-app-ilhlz.ondigitalocean.app/projects/${project.id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/projects/${project.id}`,
         {
           method: "PUT",
           headers: {

@@ -13,7 +13,7 @@ const useAuth = () => {
     const fetchUserInfo = async (userId, token) => {
       try {
         const response = await fetch(
-          `https://starfish-app-ilhlz.ondigitalocean.app/users/${userId}`,
+          `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/users/${userId}`,
           {
             method: "GET",
             headers: {

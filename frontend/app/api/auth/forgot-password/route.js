@@ -5,7 +5,7 @@ export async function POST(req) {
     const { email } = await req.json();
 
     const res = await fetch(
-      "https://starfish-app-ilhlz.ondigitalocean.app/auth/request-password-reset",
+      `${process.env.BACKEND_BASE_URL}/auth/request-password-reset`,
       {
         method: "POST",
         headers: {

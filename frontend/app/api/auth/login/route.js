@@ -4,16 +4,13 @@ export async function POST(req) {
   try {
     const { email, password } = await req.json();
 
-    const res = await fetch(
-      "https://starfish-app-ilhlz.ondigitalocean.app/auth/login",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      }
-    );
+    const res = await fetch(`${process.env.BACKEND_BASE_URL}/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
 
     const data = await res.json();
 

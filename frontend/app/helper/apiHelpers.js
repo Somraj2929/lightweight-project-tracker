@@ -2,7 +2,7 @@
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_BACKEND_BASE_URL ||
-  "https://starfish-app-ilhlz.ondigitalocean.app";
+  "${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}";
 
 //const token = getCookie("token");
 

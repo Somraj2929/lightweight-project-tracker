@@ -25,6 +25,7 @@ export async function GET(req) {
     // Verify the token with the correct JWT_SECRET
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("Decoded token:", decoded);
     return new Response(JSON.stringify(decoded), { status: 200 });
   } catch (error) {
     console.error("Error verifying token:", error);

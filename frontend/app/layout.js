@@ -15,16 +15,7 @@ export default function RootLayout({ children }) {
         {children}
         <SpeedInsights />
         <Analytics />
-        {/* <script src="https://scripts.simpleanalyticscdn.com/latest.js" /> */}
-
         <AnalyticsScript />
-        <noscript>
-          <img
-            src="https://api.project-tracker.somraj.tech/noscript.gif"
-            alt=""
-            referrerPolicy="no-referrer-when-downgrade"
-          />
-        </noscript>
       </body>
     </html>
   );

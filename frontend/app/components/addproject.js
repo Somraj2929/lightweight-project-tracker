@@ -60,7 +60,7 @@ const AddProject = ({ user, users }) => {
         });
       }
       const response = await fetch(
-        `https://starfish-app-ilhlz.ondigitalocean.app/projects/`,
+        `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/projects/`,
         {
           method: "POST",
           headers: {
